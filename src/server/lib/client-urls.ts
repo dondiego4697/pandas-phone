@@ -1,5 +1,4 @@
 import {Request} from 'express';
-import {URL, URLSearchParams} from 'url';
 
 import {config} from 'server/config';
 

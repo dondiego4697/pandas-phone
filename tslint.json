@@ -1,4 +1,4 @@
 {
-    "extends": "tslint-config-standard",
+    "extends": "tslint-config-loris",
     "rules": {}
 }

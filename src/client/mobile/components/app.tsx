@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-interface Props {
-
-}
+interface Props {}
 
 class App extends React.Component<Props, {}> {
     render() {
@@ -10,6 +8,6 @@ class App extends React.Component<Props, {}> {
             <h1>Mobile</h1>
         </div>);
     }
-};
+}
 
 export default App;
