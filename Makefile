@@ -28,7 +28,7 @@ server-dev:
 		node_modules/.bin/ts-node --files=true -r tsconfig-paths/register \
 			--project ./src/server/tsconfig.json \
 			./src/server/app.ts" \
-	-w ./src/server \
+	-w ./src \
 	-w ./res \
 	-e ts,mustache
 

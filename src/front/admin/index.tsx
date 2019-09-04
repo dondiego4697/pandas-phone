@@ -3,10 +3,10 @@ import {render} from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
-import App from 'admin/components/app';
-import reducers from 'admin/reducers';
+import {App} from 'admin/components/app';
+import reducer from 'admin/reducer';
 
-const store = createStore(reducers);
+const store = createStore(reducer);
 
 render(
     <Provider store={store}>

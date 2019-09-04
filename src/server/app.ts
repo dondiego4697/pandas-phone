@@ -10,8 +10,8 @@ import * as browserClient from 'browser-client';
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
-import {buildClientMiddleware} from 'server/middlewares/client-builder';
-import {buildAdminMiddleware} from 'server/middlewares/admin-builder';
+import {adminRouter} from './routers/admin';
+import {clientRouter} from './routers/client';
 
 declare global {
     namespace Express {
@@ -46,8 +46,8 @@ if (config['app.isNodeStatic']) {
 
 app
     .use(browserClient())
-    .get(['/root-panel'], buildAdminMiddleware)
-    .get(['/'], buildClientMiddleware);
+    .use('/root-panel', adminRouter)
+    .use('/', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

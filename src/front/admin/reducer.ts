@@ -1,7 +1,7 @@
 import {Reducer} from 'redux';
 
 import {Action} from 'admin/actions';
-import AppState from 'admin/app-state';
+import {AppState} from 'admin/app-state';
 
 const INITIAL_STATE: AppState = {
     foo: 600
