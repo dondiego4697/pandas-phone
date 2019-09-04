@@ -1,5 +1,5 @@
 {
-  "name": "pandas-phone",
+  "name": "panda-phone",
   "private": true,
   "husky": {
     "hooks": {

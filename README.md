@@ -1,1 +1,1 @@
-# `Pandas phone`
+# `Panda phone`
