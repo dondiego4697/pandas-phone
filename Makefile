@@ -15,8 +15,9 @@ validate: lint
 
 .PHONY: lint
 lint:
-	node_modules/.bin/tslint -p src/server/tsconfig.json -t codeFrame && \
-	node_modules/.bin/tslint -p src/client/tsconfig.json -t codeFrame
+	node_modules/.bin/tslint -p src/server/tsconfig.json -t codeFrame
+	node_modules/.bin/tslint -p src/front/client/tsconfig.json -t codeFrame
+	node_modules/.bin/tslint -p src/front/admin/tsconfig.json -t codeFrame
 
 .PHONY: dev
 dev:
@@ -66,6 +67,12 @@ build-client-watch:
 .PHONY: build-client-production
 build-client-production:
 	node_modules/.bin/parallel-webpack --mode=production
+
+.PHONY: migration
+migration:
+	node_modules/.bin/ts-node --files=true -r tsconfig-paths/register \
+		--project ./src/server/tsconfig.json \
+		./tools/make-migration.ts
 
 .PHONY: patch minor major
 patch minor major:
