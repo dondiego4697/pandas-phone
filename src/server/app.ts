@@ -10,7 +10,8 @@ import * as browserClient from 'browser-client';
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
-import {buildMiddleware} from 'middlewares/builder';
+import {buildClientMiddleware} from 'server/middlewares/client-builder';
+import {buildAdminMiddleware} from 'server/middlewares/admin-builder';
 
 declare global {
     namespace Express {
@@ -23,8 +24,6 @@ declare global {
         }
     }
 }
-
-const paths = ['/'];
 
 export const app = express()
     .disable('trust proxy')
@@ -42,12 +41,13 @@ export const app = express()
     .get('/ping', (_req: Request, res: Response) => res.end());
 
 if (config['app.isNodeStatic']) {
-    app.use(config['app.publicPath'], express.static(path.resolve('./out/src/client')));
+    app.use(config['app.publicPath'], express.static(path.resolve('./out/src/front')));
 }
 
 app
     .use(browserClient())
-    .get(paths, buildMiddleware);
+    .get(['/root-panel'], buildAdminMiddleware)
+    .get(['/'], buildClientMiddleware);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

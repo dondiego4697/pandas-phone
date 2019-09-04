@@ -2,7 +2,7 @@ import * as util from 'util';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 
-import ClientData from 'client/app-state';
+import ClientData from 'front/client/app-state';
 import {formBundleUrl} from 'server/lib/client-urls';
 
 interface RenderParams {
@@ -18,11 +18,11 @@ interface RenderParams {
     clientData: string;
 }
 
-export const buildMiddleware = wrap<Request, Response>(async (req, res) => {
+export const buildClientMiddleware = wrap<Request, Response>(async (req, res) => {
     const name = req.browserClient.mobile || req.browserClient.tablet ? 'mobile' : 'browser';
 
     const render = await util.promisify<string, RenderParams, string>(res.render.bind({req}));
-    const code = await render('index', {
+    const code = await render('client', {
         meta: {
             title: 'IOA'
         },

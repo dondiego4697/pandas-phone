@@ -21,8 +21,8 @@
             "server/*": [
                 "./*",
             ],
-            "client/*": [
-                "../client/*",
+            "front/*": [
+                "../front/*",
             ]
         },
         "types": [
@@ -32,6 +32,7 @@
     },
     "include": [
         "./**/*",
-        "../client/**/*"
+        "../front/admin/app-state",
+        "../front/client/app-state"
     ]
 }

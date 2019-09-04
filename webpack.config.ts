@@ -1,29 +1,54 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 
-const localNodeModulesPath = path.resolve(__dirname, 'node_modules');
-const clientPath = path.resolve('src/client');
+const localNodeModulesPath = path.resolve('./node_modules');
+const frontPath = path.resolve('./src/front');
 
-type ConfigKey = 'browser' | 'mobile';
-const CONFIG_KEYS: ConfigKey[] = ['browser', 'mobile'];
-
-function getConfig(key: ConfigKey, mode: string): webpack.Configuration {
-    const isProduction = mode === 'production';
-    return {
-        entry: () => path.resolve(clientPath, `./${key}/index.tsx`),
-        output: {
-            path: path.resolve(__dirname, 'out/src/client'),
-            filename: `${key}.bundle.js`
+const configs = [
+    {
+        webpack: {
+            entry: () => path.resolve(frontPath, `./admin/index.tsx`),
+            output: {
+                path: path.resolve('./out/src/front'),
+                filename: `admin.bundle.js`
+            }
         },
+        tsConfigFileName: path.resolve(frontPath, './admin/tsconfig.json')
+    },
+    {
+        webpack: {
+            entry: () => path.resolve(frontPath, `./client/mobile/index.tsx`),
+            output: {
+                path: path.resolve('./out/src/front'),
+                filename: `client-mobile.bundle.js`
+            }
+        },
+        tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')
+    },
+    {
+        webpack: {
+            entry: () => path.resolve(frontPath, `./client/browser/index.tsx`),
+            output: {
+                path: path.resolve('./out/src/front'),
+                filename: `client-browser.bundle.js`
+            }
+        },
+        tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')
+    }
+];
+
+function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack.Configuration {
+    return {
         mode: isProduction ? 'production' : 'development',
         devtool: isProduction ? false : 'source-map',
         target: 'web',
         resolve: {
             alias: {
-                client: path.resolve('./src/client')
+                client: path.resolve(frontPath, './client'),
+                admin: path.resolve(frontPath, './admin'),
             },
             modules: [
-                clientPath,
+                frontPath,
                 localNodeModulesPath
             ],
             extensions: ['.js', '.jsx', '.ts', '.tsx']
@@ -46,15 +71,22 @@ function getConfig(key: ConfigKey, mode: string): webpack.Configuration {
                         {
                             loader: 'awesome-typescript-loader',
                             options: {
-                                configFileName: path.resolve(clientPath, `tsconfig.json`),
+                                configFileName: tsConfigFileName
                             }
                         }
                     ]
                 }
             ]
         }
-    };
+    }
 }
 
-export default (argv) => CONFIG_KEYS.map((key) => getConfig(key, argv.mode));
+export default (argv) => configs.map((config) => {
+    const isProduction = argv.mode === 'production';
+
+    return {
+        ...config.webpack,
+        ...getBaseConfig(isProduction, config.tsConfigFileName)
+    }
+});
 

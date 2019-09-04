@@ -16,9 +16,6 @@
         "paths": {
             "client/*": [
                 "./*"
-            ],
-            "common/*": [
-                "../common/*"
             ]
         }
     },
