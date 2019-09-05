@@ -1,3 +1,3 @@
 export interface AppState {
-    readonly foo: number;
+    readonly adminForbidden: boolean;
 }

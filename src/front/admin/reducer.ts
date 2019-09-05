@@ -3,16 +3,16 @@ import {Reducer} from 'redux';
 import {Action} from 'admin/actions';
 import {AppState} from 'admin/app-state';
 
-const INITIAL_STATE: AppState = {
-    foo: 600
+const DEFAULT_APP_STATE: AppState = {
+    adminForbidden: true
 };
 
-function appReducer(state: AppState = INITIAL_STATE, action: Action): AppState {
+function appReducer(state: AppState = DEFAULT_APP_STATE, action: Action): AppState {
     switch (action.type) {
-        case 'SOME_ACTION':
+        case 'SET_ADMIN_ACCESS':
             return {
                 ...state,
-                foo: action.foo
+                adminForbidden: action.isAccess
             };
         default:
             return state;

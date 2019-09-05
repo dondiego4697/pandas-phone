@@ -16,10 +16,14 @@
         "paths": {
             "client/*": [
                 "./*"
+            ],
+            "lib/*": [
+                "../lib/*"
             ]
         }
     },
     "include": [
-        "../client"
+        "../client",
+        "../lib"
     ]
 }

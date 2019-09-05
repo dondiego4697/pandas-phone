@@ -21,7 +21,11 @@ lint:
 
 .PHONY: dev
 dev:
-	$(MAKE) -j2 server-dev build-client-watch
+	$(MAKE) -j3 server-dev build-client-watch localtunnel
+
+.PHONE: localtunnel
+localtunnel:
+	node_modules/.bin/lt --port 8080
 
 .PHONY: server-dev
 server-dev:

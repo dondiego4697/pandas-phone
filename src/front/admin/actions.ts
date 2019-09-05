@@ -1,13 +1,13 @@
-export type Action = SomeAction;
+export type Action = AdminAccessAction;
 
-export interface SomeAction {
-    type: 'SOME_ACTION';
-    foo: number;
+export interface AdminAccessAction {
+    type: 'SET_ADMIN_ACCESS';
+    isAccess: boolean;
 }
 
-export function someAction(foo: Readonly<number>): SomeAction {
+export function setAdminAccess(isAccess: Readonly<boolean>): Action {
     return {
-        type: 'SOME_ACTION',
-        foo
+        type: 'SET_ADMIN_ACCESS',
+        isAccess
     };
 }

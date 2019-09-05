@@ -2,8 +2,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS admin (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    login TEXT UNIQUE NOT NULL,
-    phone_number TEXT UNIQUE NOT NULL
+    telegram_id TEXT UNIQUE NOT NULL,
+    username TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS good_type (
@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS good (
     -- model 6, XS, 9, 7 plus
     model TEXT,
     -- in GB
-    capacity REAL
+    memory_capacity REAL,
+    color TEXT
 );
 
 CREATE TABLE IF NOT EXISTS shop (

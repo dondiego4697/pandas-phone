@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
+import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const localNodeModulesPath = path.resolve('./node_modules');
 const frontPath = path.resolve('./src/front');
@@ -11,7 +12,10 @@ const configs = [
             output: {
                 path: path.resolve('./out/src/front'),
                 filename: `admin.bundle.js`
-            }
+            },
+            plugins: [
+                new ExtractTextPlugin('admin.bundle.css')
+            ]
         },
         tsConfigFileName: path.resolve(frontPath, './admin/tsconfig.json')
     },
@@ -21,7 +25,10 @@ const configs = [
             output: {
                 path: path.resolve('./out/src/front'),
                 filename: `client-mobile.bundle.js`
-            }
+            },
+            plugins: [
+                new ExtractTextPlugin('client-mobile.bundle.css')
+            ]
         },
         tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')
     },
@@ -31,7 +38,10 @@ const configs = [
             output: {
                 path: path.resolve('./out/src/front'),
                 filename: `client-browser.bundle.js`
-            }
+            },
+            plugins: [
+                new ExtractTextPlugin('client-browser.bundle.css')
+            ]
         },
         tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')
     }
@@ -46,6 +56,7 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
             alias: {
                 client: path.resolve(frontPath, './client'),
                 admin: path.resolve(frontPath, './admin'),
+                lib: path.resolve(frontPath, './lib')
             },
             modules: [
                 frontPath,
@@ -75,6 +86,13 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.scss$/,
+                    use: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: ['css-loader', 'sass-loader']
+                    })
                 }
             ]
         }

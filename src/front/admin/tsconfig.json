@@ -16,10 +16,14 @@
         "paths": {
             "admin/*": [
                 "./*"
+            ],
+            "lib/*": [
+                "../lib/*"
             ]
         }
     },
     "include": [
-        "../admin"
+        "../admin",
+        "../lib"
     ]
 }

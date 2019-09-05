@@ -6,12 +6,13 @@ import {Request, Response, NextFunction} from 'express';
 import * as Boom from '@hapi/boom';
 import * as mustache from 'mustache';
 import * as browserClient from 'browser-client';
+import * as cookieParser from 'cookie-parser';
 
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
-import {adminRouter} from './routers/admin';
-import {clientRouter} from './routers/client';
+import {adminRouter} from 'server/routers/admin';
+import {clientRouter} from 'server/routers/client';
 
 declare global {
     namespace Express {
@@ -21,6 +22,7 @@ declare global {
                 tablet: boolean;
                 mobile: boolean;
             };
+            adminForbidden?: boolean;
         }
     }
 }
@@ -28,6 +30,7 @@ declare global {
 export const app = express()
     .disable('trust proxy')
     .disable('x-powered-by')
+    .use(cookieParser())
     .engine('mustache', (filePath, options, callback) => {
         callback(null, mustache.render(
             fs.readFileSync(filePath, 'utf-8'),

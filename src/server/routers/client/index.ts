@@ -31,7 +31,7 @@ clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
         urls: {
             bundle: {
                 css: '',
-                js: formBundleUrl(req, `client-${name}`, 'js')
+                js: formBundleUrl(`client-${name}`, 'js')
             }
         },
         clientData: JSON.stringify({
