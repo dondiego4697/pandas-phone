@@ -7,6 +7,7 @@ import {AppState as AdminData} from 'front/admin/app-state';
 import {formBundleUrl} from 'server/lib/client-urls';
 import {adminProxyRouter} from 'server/routers/admin/proxy';
 
+import {config} from 'server/config';
 import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const adminRouter = express.Router();
@@ -43,7 +44,8 @@ adminRouter
                 }
             },
             adminData: JSON.stringify({
-                adminForbidden: req.adminForbidden || false
+                adminForbidden: req.adminForbidden || false,
+                telegramBotName: config['telegram.botName']
             } as AdminData)
         };
 

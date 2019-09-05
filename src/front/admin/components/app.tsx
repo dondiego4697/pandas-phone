@@ -39,19 +39,23 @@ class App extends React.Component<MergedProps, State> {
 
     componentDidMount() {
         this.props.setAdminAccess(window.clientData.adminForbidden);
+
         const authScript = document.createElement('script');
         authScript.type = 'text/javascript';
         authScript.async = true;
         authScript.src = 'https://telegram.org/js/telegram-widget.js?7';
-        authScript.setAttribute('data-telegram-login', 'PandaPhoneShopBot');
+        authScript.setAttribute('data-telegram-login', window.clientData.telegramBotName);
         authScript.setAttribute('data-size', 'large');
         authScript.setAttribute('data-auth-url', '');
         authScript.setAttribute('data-request-access', 'write');
 
         this.telegramAuthRef.current!.appendChild(authScript);
+
+        delete window.clientData;
     }
 
     render() {
+        console.log(this.props.adminForbidden)
         let page;
         if (this.props.adminForbidden) {
             page = <div className={b('container')}>

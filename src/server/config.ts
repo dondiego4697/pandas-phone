@@ -8,6 +8,7 @@ interface Config {
     'app.isNodeStatic': boolean;
     'app.needPort': boolean;
     'app.publicPath': string;
+    'telegram.botName': string;
 }
 
 const production: Config = {
@@ -15,7 +16,8 @@ const production: Config = {
     'logger.level': 'info',
     'app.isNodeStatic': false,
     'app.needPort': false,
-    'app.publicPath': '/public'
+    'app.publicPath': '/public',
+    'telegram.botName': 'PandaPhoneShopBot'
 };
 
 const testing: Config = {
@@ -27,7 +29,8 @@ const development: Config = {
     'logger.colorize': true,
     'logger.level': 'silly',
     'app.isNodeStatic': true,
-    'app.needPort': true
+    'app.needPort': true,
+    'telegram.botName': 'PandaPhoneShopDevBot'
 };
 
 const stress: Config = {
