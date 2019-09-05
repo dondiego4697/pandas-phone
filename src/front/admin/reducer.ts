@@ -4,8 +4,7 @@ import {Action} from 'admin/actions';
 import {AppState} from 'admin/app-state';
 
 const DEFAULT_APP_STATE = {
-    adminForbidden: true,
-    telegramBotName: ''
+    adminForbidden: true
 };
 
 function appReducer(state: AppState = DEFAULT_APP_STATE as AppState, action: Action): AppState {
@@ -14,12 +13,6 @@ function appReducer(state: AppState = DEFAULT_APP_STATE as AppState, action: Act
             return {
                 ...state,
                 adminForbidden: action.isAccess
-            };
-
-        case 'SET_TELEGRAM_BOT_NAME':
-            return {
-                ...state,
-                telegramBotName: action.name
             };
         default:
             return state;
