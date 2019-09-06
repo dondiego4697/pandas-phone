@@ -3,12 +3,12 @@ import * as util from 'util';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 
-import {AppState as AdminData} from 'front/admin/app-state';
+import {ClientData} from 'front/admin/models/client-data';
 import {formBundleUrl} from 'server/lib/client-urls';
-import {adminProxyRouter} from 'server/routers/admin/proxy';
 
 import {config} from 'server/config';
 import {telegramAuth} from 'server/middlewares/telegram-auth';
+import {isMobile} from 'server/lib/mobile-check';
 
 export const adminRouter = express.Router();
 
@@ -22,20 +22,24 @@ interface RenderParams {
             js: string;
         };
     };
-    adminData: string;
+    clientData: string;
 }
 
 adminRouter
     .use(telegramAuth)
-    .use('/proxy', adminProxyRouter)
-    .get('/', wrap<Request, Response>(async (req, res) => {
-        if (req.browserClient.mobile || req.browserClient.tablet) {
+    .get('*', wrap<Request, Response>(async (req, res) => {
+        if (isMobile(req)) {
             req.adminForbidden = true;
         }
 
+        const clientData: ClientData = {
+            forbidden: req.adminForbidden || false,
+            telegramBotName: config['telegram.botName']
+        };
+
         const params: RenderParams = {
             meta: {
-                title: 'Root'
+                title: 'Admin Panel'
             },
             urls: {
                 bundle: {
@@ -43,10 +47,7 @@ adminRouter
                     js: formBundleUrl('admin', 'js')
                 }
             },
-            adminData: JSON.stringify({
-                adminForbidden: req.adminForbidden || false,
-                telegramBotName: config['telegram.botName']
-            } as AdminData)
+            clientData: JSON.stringify(clientData)
         };
 
         await renderPage(req, res, params);

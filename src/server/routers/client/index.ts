@@ -3,8 +3,9 @@ import * as util from 'util';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 
-import {AppState as ClientData} from 'front/client/app-state';
+import {ClientData} from 'front/client/models/client-data';
 import {formBundleUrl} from 'server/lib/client-urls';
+import {isMobile} from 'server/lib/mobile-check';
 
 interface RenderParams {
     meta: {
@@ -22,8 +23,9 @@ interface RenderParams {
 export const clientRouter = express.Router();
 
 clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
-    const name = req.browserClient.mobile || req.browserClient.tablet ? 'mobile' : 'browser';
+    const name = isMobile(req) ? 'mobile' : 'browser';
 
+    const clientData: ClientData = {};
     const params: RenderParams = {
         meta: {
             title: 'IOA'
@@ -34,9 +36,7 @@ clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
                 js: formBundleUrl(`client-${name}`, 'js')
             }
         },
-        clientData: JSON.stringify({
-            foo: 1
-        } as ClientData)
+        clientData: JSON.stringify(clientData)
     };
 
     await renderPage(req, res, params);

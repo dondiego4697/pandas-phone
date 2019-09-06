@@ -7,20 +7,29 @@ import * as Boom from '@hapi/boom';
 import * as mustache from 'mustache';
 import * as browserClient from 'browser-client';
 import * as cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
 
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
 import {adminRouter} from 'server/routers/admin';
+import {proxyRouter} from 'server/routers/proxy';
 import {clientRouter} from 'server/routers/client';
 
 declare global {
     namespace Express {
         interface Request {
             browserClient: {
-                desktop: boolean;
-                tablet: boolean;
+                iphone: boolean;
+                ipod: boolean;
+                ipad: boolean;
+                operaMini: boolean;
+                operaMobile: boolean;
+                mobileSafari: boolean;
+                android: boolean;
+                blackberry: boolean;
                 mobile: boolean;
+                tablet: boolean;
             };
             adminForbidden?: boolean;
         }
@@ -31,6 +40,7 @@ export const app = express()
     .disable('trust proxy')
     .disable('x-powered-by')
     .use(cookieParser())
+    .use(bodyParser.json())
     .engine('mustache', (filePath, options, callback) => {
         callback(null, mustache.render(
             fs.readFileSync(filePath, 'utf-8'),
@@ -49,7 +59,8 @@ if (config['app.isNodeStatic']) {
 
 app
     .use(browserClient())
-    .use('/root-panel', adminRouter)
+    .use('/admin-panel', adminRouter)
+    .use('/proxy', proxyRouter)
     .use('/', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));

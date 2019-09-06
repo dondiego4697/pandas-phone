@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS good_brand (
 
 CREATE TABLE IF NOT EXISTS good_brand_product (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    -- brand apple, sumsung
+    brand_id UUID REFERENCES good_brand(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS good (
@@ -27,9 +29,6 @@ CREATE TABLE IF NOT EXISTS good (
     description TEXT,
     -- type_id phone | protect_case
     type_id UUID REFERENCES good_type(id) ON DELETE RESTRICT NOT NULL,
-    -- count SMALLINT NOT NULL DEFAULT 0,
-    -- brand apple, sumsung
-    brand UUID REFERENCES good_brand(id) ON DELETE RESTRICT,
     -- product_name iPhone, iPad, Galaxy Note // search in lowercase
     brand_product UUID REFERENCES good_brand_product(id) ON DELETE RESTRICT,
     -- model 6, XS, 9, 7 plus

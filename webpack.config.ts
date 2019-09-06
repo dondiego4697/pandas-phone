@@ -47,6 +47,33 @@ const configs = [
     }
 ];
 
+const babelPlugins = [
+    '@babel/plugin-transform-react-display-name',
+    '@babel/plugin-syntax-dynamic-import',
+    ['@babel/plugin-proposal-decorators', {
+        legacy: true
+    }],
+    '@babel/plugin-proposal-class-properties',
+    ['@babel/plugin-proposal-object-rest-spread', {
+        useBuiltIns: true
+    }],
+    ['@babel/plugin-transform-runtime', {
+        regenerator: true
+    }]
+];
+
+const babelOptions = {
+    comments: true,
+    presets: [
+        '@babel/preset-react',
+        ['@babel/preset-env', {
+            modules: false,
+            loose: true
+        }]
+    ],
+    plugins: [] //babelPlugins
+};
+
 function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack.Configuration {
     return {
         mode: isProduction ? 'production' : 'development',
@@ -78,6 +105,10 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
                     use: [
                         {
                             loader: 'cache-loader'
+                        },
+                        {
+                            loader: 'babel-loader',
+                            options: babelOptions
                         },
                         {
                             loader: 'awesome-typescript-loader',

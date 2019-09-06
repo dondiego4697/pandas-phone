@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>{tmpl:"{meta.title}"}</title>
-    <link type="text/css" rel="stylesheet" href="{tmpl:"{urls.bundle.css}"}"></link>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <link href="{tmpl:"{urls.bundle.css}"}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet"/>
 </head>
 <body>
     <div id="root"></div>
-    <script>window.clientData = JSON.parse('{tmpl:"{adminData}"}');</script>
+    <script>window.clientData = JSON.parse('{tmpl:"{clientData}"}');</script>
     <script src="{tmpl:"{urls.bundle.js}"}"></script>
 </body>
 </html>

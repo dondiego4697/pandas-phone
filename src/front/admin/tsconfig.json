@@ -9,6 +9,7 @@
             "es2017"
         ],
         "strict": true,
+        "experimentalDecorators": true,
         "noEmitOnError": true,
         "pretty": true,
         "jsx": "react",

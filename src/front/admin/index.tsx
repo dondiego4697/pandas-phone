@@ -1,16 +1,20 @@
 import * as React from 'react';
 import {render} from 'react-dom';
-import {createStore} from 'redux';
-import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {Provider} from 'mobx-react';
 
-import App from 'admin/components/app';
-import reducer from 'admin/reducer';
+import * as models from 'admin/models';
+import RoutesApp from 'admin/routes';
 
-const store = createStore(reducer);
+import {history} from 'lib/history';
 
 render(
-    <Provider store={store}>
-        <App/>
+    <Provider {...models}>
+        <React.Fragment>
+            <Router history={history}>
+                <RoutesApp />
+            </Router>
+        </React.Fragment>
     </Provider>,
     document.getElementById('root')
 );
