@@ -6,7 +6,7 @@ import {Provider} from 'mobx-react';
 import * as models from 'client/models';
 import RoutesApp from 'client/mobile/routes';
 
-import {history} from 'lib/history';
+import {history} from 'libs/history';
 
 render(
     <Provider {...models}>

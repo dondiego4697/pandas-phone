@@ -3,7 +3,8 @@ import {Switch, Route} from 'react-router-dom';
 import {inject} from 'mobx-react';
 
 import App from 'admin/pages/app';
-import Shop from 'admin/pages/shop';
+import AdminPanel from 'admin/pages/admin-panel';
+import GoodBrand from 'admin/pages/good-brand';
 import NotFound from 'admin/pages/not-found';
 import Forbidden from 'admin/pages/forbidden';
 import {ClientDataModel} from 'admin/models/client-data';
@@ -23,7 +24,8 @@ export default class Router extends React.Component<Props> {
 
         return (
             <Switch>
-                <Route exact path='/admin-panel' component={Shop} />
+                <Route exact path='/admin-panel' component={AdminPanel} />
+                <Route exact path='/admin-panel/good-brand' component={GoodBrand} />
                 <Route component={NotFound} />
             </Switch>
         );

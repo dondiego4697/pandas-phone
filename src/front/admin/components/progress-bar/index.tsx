@@ -1,20 +1,18 @@
 import * as React from 'react';
-import {inject} from 'mobx-react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import bevis from 'libs/bevis';
 
-const b = bevis('not-found');
-
 import './index.scss';
 
-export default class NotFound extends React.Component<{}> {
+const b = bevis('progress-bar');
+
+export default class ProgressBar extends React.Component<{}> {
     render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <div className={b('text')}>
-                        <h1>Not found</h1>
-                    </div>
+                    <CircularProgress />
                 </div>
             </div>
         );

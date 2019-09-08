@@ -83,7 +83,7 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
             alias: {
                 client: path.resolve(frontPath, './client'),
                 admin: path.resolve(frontPath, './admin'),
-                lib: path.resolve(frontPath, './lib')
+                libs: path.resolve(frontPath, './libs')
             },
             modules: [
                 frontPath,

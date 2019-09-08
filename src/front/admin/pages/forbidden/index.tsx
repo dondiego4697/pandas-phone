@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {inject} from 'mobx-react';
 
-import bevis from 'lib/bevis';
+import bevis from 'libs/bevis';
 import {ClientDataModel} from 'admin/models/client-data';
 
 const b = bevis('forbidden');

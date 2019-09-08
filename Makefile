@@ -25,7 +25,7 @@ dev:
 
 .PHONE: localtunnel
 localtunnel:
-	node_modules/.bin/lt --subdomain panda-phone --port 8080
+	node_modules/.bin/lt --subdomain panda-phone-1 --port 8080
 
 .PHONY: server-dev
 server-dev:
