@@ -30,7 +30,10 @@ export class OrderPage extends React.Component<Props> {
         return this.props.orderPageModel!.tableColumns.map((columnName) => {
             return {
                 title: columnName,
-                field: columnName
+                field: columnName,
+                ...(['price', 'discount'].includes(columnName) ? {type: 'numeric'} : {}),
+                ...(['is_called'].includes(columnName) ? {type: 'boolean'} : {}),
+                ...(['id', 'order_date', 'sold_date'].includes(columnName) ? {editable: 'never'} : {})
             };
         });
     }
@@ -50,6 +53,21 @@ export class OrderPage extends React.Component<Props> {
         this.props.orderPageModel!.fetchData();
     }
 
+    showSnackbar = (err: Error) => {
+        this.props.orderPageModel!.snackbar.message = err.message;
+        this.props.orderPageModel!.snackbar.open = true;
+    }
+
+    handleUpdateRow = (order: Order): Promise<void> => {
+        return this.props.orderPageModel!.updateRow(order).catch(this.showSnackbar);
+    }
+
+    handleSellClick = (_: any, order: any) => {
+        delete order.tableData;
+
+        this.props.orderPageModel!.sell(order);
+    }
+
     render(): React.ReactNode {
         if (this.props.orderPageModel!.status === PageStatus.LOADING) {
             return <ProgressBar />;
@@ -67,6 +85,14 @@ export class OrderPage extends React.Component<Props> {
                         currentPage={this.props.orderPageModel!.offset / this.props.orderPageModel!.limit + 1}
                         handleChangePage={this.handleChangePage}
                         handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        handleUpdateRow={this.handleUpdateRow}
+                        actions={[
+                            {
+                                icon: 'save',
+                                tooltip: 'Sell it',
+                                onClick: this.handleSellClick
+                            }
+                        ]}
                     />
                 </div>
             </div>

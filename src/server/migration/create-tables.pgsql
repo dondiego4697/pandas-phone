@@ -21,12 +21,8 @@ CREATE TABLE IF NOT EXISTS good_pattern (
 CREATE TABLE IF NOT EXISTS shop_item (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     good_pattern_id UUID REFERENCES good_pattern(id) ON DELETE RESTRICT NOT NULL,
-    serial_number TEXT,
-    imei TEXT,
     price INTEGER NOT NULL,
-    discount SMALLINT DEFAULT 0,
-
-    UNIQUE(serial_number, imei)
+    discount SMALLINT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS "order" (
@@ -36,6 +32,11 @@ CREATE TABLE IF NOT EXISTS "order" (
     imei TEXT,
     price INTEGER NOT NULL,
     discount SMALLINT DEFAULT 0,
+
+    customer_name TEXT NOT NULL,
+    customer_email TEXT,
+    customer_phone TEXT,
+    is_called BOOLEAN DEFAULT FALSE,
 
     order_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
     sold_date TIMESTAMP WITH TIME ZONE DEFAULT NULL,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import {ClientDataModel} from 'admin/models/client-data';
 import {ShopItemPageModel, ShopItem} from 'admin/models/shop-item';
@@ -30,7 +31,9 @@ export class ShopItemPage extends React.Component<Props> {
         return this.props.shopItemPageModel!.tableColumns.map((columnName) => {
             return {
                 title: columnName,
-                field: columnName
+                field: columnName,
+                ...(['price', 'discount'].includes(columnName) ? {type: 'numeric'} : {}),
+                ...(columnName === 'id' ? {editable: 'never'} : {})
             };
         });
     }
@@ -50,6 +53,27 @@ export class ShopItemPage extends React.Component<Props> {
         this.props.shopItemPageModel!.fetchData();
     }
 
+    showSnackbar = (err: Error) => {
+        this.props.shopItemPageModel!.snackbar.message = err.message;
+        this.props.shopItemPageModel!.snackbar.open = true;
+    }
+
+    handleDeleteRow = (shopItem: ShopItem): Promise<void> => {
+        return this.props.shopItemPageModel!.deleteRow(shopItem).catch(this.showSnackbar);
+    }
+
+    handleUpdateRow = (shopItem: ShopItem): Promise<void> => {
+        return this.props.shopItemPageModel!.updateRow(shopItem).catch(this.showSnackbar);
+    }
+
+    handleAddRow = (shopItem: ShopItem): Promise<void> => {
+        return this.props.shopItemPageModel!.insertRow(shopItem).catch(this.showSnackbar);
+    }
+
+    handleCloseSnackbar = () => {
+        this.props.shopItemPageModel!.snackbar.open = false;
+    }
+
     render(): React.ReactNode {
         if (this.props.shopItemPageModel!.status === PageStatus.LOADING) {
             return <ProgressBar />;
@@ -67,8 +91,20 @@ export class ShopItemPage extends React.Component<Props> {
                         currentPage={this.props.shopItemPageModel!.offset / this.props.shopItemPageModel!.limit + 1}
                         handleChangePage={this.handleChangePage}
                         handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        handleDeleteRow={this.handleDeleteRow}
+                        handleUpdateRow={this.handleUpdateRow}
+                        handleAddRow={this.handleAddRow}
                     />
                 </div>
+                <Snackbar
+                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    key='top_center'
+                    autoHideDuration={6000}
+                    onClose={this.handleCloseSnackbar}
+                    open={this.props.shopItemPageModel!.snackbar.open}
+                    ContentProps={{'aria-describedby': 'message-id'}}
+                    message={<span id='message-id'>{this.props.shopItemPageModel!.snackbar.message}</span>}
+                />
             </div>
         </div>;
     }

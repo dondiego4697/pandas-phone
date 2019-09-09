@@ -43,6 +43,21 @@ export function getShopItemsColumns(): Promise<string[]> {
     return getRequest<string[]>(`/api/v1/shop-item/columns`);
 }
 
+export function deleteShopItem(id: string): Promise<ShopItem> {
+    return deleteRequest<ShopItem[]>(`/api/v1/shop-item/${id}`, {})
+        .then((data) => nullReplace(data)[0]);
+}
+
+export function updateShopItem(id: string, data: ShopItem): Promise<ShopItem> {
+    return postRequest<ShopItem[]>(`/api/v1/shop-item/update/${id}`, data)
+        .then((data) => nullReplace(data)[0]);
+}
+
+export function insertShopItem(data: ShopItem): Promise<ShopItem> {
+    return postRequest<ShopItem[]>(`/api/v1/shop-item/create`, data)
+        .then((data) => nullReplace(data)[0]);
+}
+
 // GOOD-PATTERN
 export function getGoodPatterns(params: DefaultParams): Promise<GoodPattern[]> {
     const {limit, offset} = params;
@@ -80,6 +95,10 @@ export function getOrdersColumns(): Promise<string[]> {
     return getRequest<string[]>(`/api/v1/order/columns`);
 }
 
+export function updateOrder(id: string, data: Order): Promise<Order> {
+    return postRequest<Order[]>(`/api/v1/order/update/${id}`, data)
+        .then((data) => nullReplace(data)[0]);
+}
 
 /* export function getDataFromDB(tableName: string): Promise<any[]> {
     // TODO make pagination

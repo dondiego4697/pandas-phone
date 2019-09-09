@@ -1,11 +1,24 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from 'admin/libs/types';
-import {getShopItems, getShopItemsColumns} from 'admin/libs/db-request';
+import {
+    getShopItems,
+    getShopItemsColumns,
+    deleteShopItem,
+    updateShopItem,
+    insertShopItem
+} from 'admin/libs/db-request';
 
 export interface ShopItem {
-    // id: string;
-    // value: string;
+    id: string;
+    good_pattern_id: string;
+    price: number;
+    discount?: number;
+}
+
+interface Snackbar {
+    message: string;
+    open: boolean;
 }
 
 export class ShopItemPageModel {
@@ -14,6 +27,7 @@ export class ShopItemPageModel {
     @observable offset = 0;
     @observable data: ShopItem[] = [];
     @observable tableColumns: string[] = [];
+    @observable snackbar: Snackbar = {message: '', open: false};
 
     constructor() {}
 
@@ -39,6 +53,51 @@ export class ShopItemPageModel {
                     this.data = data;
                     this.status = PageStatus.DONE;
                 }));
+        });
+    }
+
+    @action deleteRow(row: ShopItem): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                deleteShopItem(row.id).then((deleted: ShopItem) => {
+                    const index = this.data.findIndex((item) => item.id === deleted.id);
+                    const buff = [...this.data];
+                    buff.splice(index, 1);
+
+                    this.data = buff;
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+
+    @action updateRow(row: ShopItem): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                const id = row.id;
+                delete row.id;
+
+                updateShopItem(id, row).then((updated: ShopItem) => {
+                    const index = this.data.findIndex((item) => item.id === updated.id);
+                    const buff = [...this.data];
+                    buff.splice(index, 1, updated);
+
+                    this.data = buff;
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+
+    @action insertRow(row: ShopItem): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                insertShopItem(row).then((inserted: ShopItem) => {
+                    const buff = [...this.data, inserted];
+                    this.data = buff;
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
         });
     }
 }

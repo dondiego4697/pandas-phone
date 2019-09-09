@@ -12,11 +12,11 @@ import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
 
+// apiV1Router.get('/public/', () )
+
 apiV1Router
     .use(telegramAuth)
     .use((req, res, next) => {
-        // if request === post ? check admin
-        // if request === get ? allow, but I will think about secure in this way
         if (req.adminForbidden) {
             throw Boom.forbidden();
         }
@@ -35,6 +35,18 @@ apiV1Router.get('/shop-item', wrap<Request, Response>(async (req, res) => {
 
 apiV1Router.get('/shop-item/columns', wrap<Request, Response>(async (_req, res) => {
     res.json(await ShopItem.getColumns());
+}));
+
+apiV1Router.post('/shop-item/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await ShopItem.insertItem(req.body));
+}));
+
+apiV1Router.post('/shop-item/update/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await ShopItem.updateItem(req.params.id, req.body));
+}));
+
+apiV1Router.delete('/shop-item/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await ShopItem.deleteItem(req.params.id));
 }));
 
 // GOOD-PATTERN
@@ -65,4 +77,8 @@ apiV1Router.get('/order', wrap<Request, Response>(async (req, res) => {
 
 apiV1Router.get('/order/columns', wrap<Request, Response>(async (_req, res) => {
     res.json(await Order.getColumns());
+}));
+
+apiV1Router.post('/order/update/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.updateItem(req.params.id, req.body));
 }));
