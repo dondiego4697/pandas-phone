@@ -9,6 +9,7 @@ import ProgressBar from 'admin/components/progress-bar';
 import Table from 'admin/components/table';
 import TableTitle from 'admin/components/table-title';
 import {PageStatus} from 'admin/libs/types';
+
 import bevis from 'libs/bevis';
 
 import './index.scss';
@@ -30,14 +31,7 @@ export class GoodPatternPage extends React.Component<Props> {
     }
 
     getColumns(): Column<any>[] {
-        return this.props.goodPatternPageModel!.tableColumns.map((columnName) => {
-            return {
-                title: columnName,
-                field: columnName,
-                ...(columnName === 'memory_capacity' ? {type: 'numeric'} : {}),
-                ...(columnName === 'id' ? {editable: 'never'} : {})
-            };
-        });
+        return this.props.goodPatternPageModel!.tableColumns;
     }
 
     getRows(): GoodPattern[] {
@@ -81,7 +75,7 @@ export class GoodPatternPage extends React.Component<Props> {
             return <ProgressBar />;
         }
 
-        const tableName = 'Good pattern';
+        const tableName = 'Good patterns';
         return <div className={b()}>
             <TableTitle value={tableName} />
             <div className={b('container')}>

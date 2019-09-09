@@ -28,14 +28,7 @@ export class ShopItemPage extends React.Component<Props> {
     }
 
     getColumns(): Column<any>[] {
-        return this.props.shopItemPageModel!.tableColumns.map((columnName) => {
-            return {
-                title: columnName,
-                field: columnName,
-                ...(['price', 'discount'].includes(columnName) ? {type: 'numeric'} : {}),
-                ...(columnName === 'id' ? {editable: 'never'} : {})
-            };
-        });
+        return this.props.shopItemPageModel!.tableColumns;
     }
 
     getRows(): ShopItem[] {
@@ -79,7 +72,7 @@ export class ShopItemPage extends React.Component<Props> {
             return <ProgressBar />;
         }
 
-        const tableName = 'Shop item';
+        const tableName = 'Shop items';
         return <div className={b()}>
             <TableTitle value={tableName} />
             <div className={b('container')}>

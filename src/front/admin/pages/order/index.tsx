@@ -27,15 +27,7 @@ export class OrderPage extends React.Component<Props> {
     }
 
     getColumns(): Column<any>[] {
-        return this.props.orderPageModel!.tableColumns.map((columnName) => {
-            return {
-                title: columnName,
-                field: columnName,
-                ...(['price', 'discount'].includes(columnName) ? {type: 'numeric'} : {}),
-                ...(['is_called'].includes(columnName) ? {type: 'boolean'} : {}),
-                ...(['id', 'order_date', 'sold_date'].includes(columnName) ? {editable: 'never'} : {})
-            };
-        });
+        return this.props.orderPageModel!.tableColumns;
     }
 
     getRows(): Order[] {
@@ -73,7 +65,7 @@ export class OrderPage extends React.Component<Props> {
             return <ProgressBar />;
         }
 
-        const tableName = 'Order';
+        const tableName = 'Orders';
         return <div className={b()}>
             <TableTitle value={tableName} />
             <div className={b('container')}>

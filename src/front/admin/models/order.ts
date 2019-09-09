@@ -1,7 +1,8 @@
 import {observable, action, runInAction} from 'mobx';
+import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
-import {getOrders, getOrdersColumns, updateOrder} from 'admin/libs/db-request';
+import {getOrders, updateOrder} from 'admin/libs/db-request';
 
 export interface Order {
     id: string;
@@ -30,33 +31,71 @@ export class OrderPageModel {
     @observable limit = 10;
     @observable offset = 0;
     @observable data: Order[] = [];
-    @observable tableColumns: string[] = [];
+    @observable tableColumns: Column<any>[] = [
+        {
+            title: 'ID',
+            field: 'id',
+            editable: 'never'
+        },
+        {
+            title: 'Good pattern id',
+            field: 'good_pattern_id'
+        },
+        {
+            title: 'Serial number',
+            field: 'serial_number'
+        },
+        {
+            title: 'IMEI',
+            field: 'imei'
+        },
+        {
+            title: 'Price',
+            field: 'price',
+            type: 'numeric'
+        },
+        {
+            title: 'Discount',
+            field: 'discount',
+            type: 'numeric'
+        },
+        {
+            title: 'Customer name',
+            field: 'customer_name'
+        },
+        {
+            title: 'Customer email',
+            field: 'customer_email'
+        },
+        {
+            title: 'Customer phone',
+            field: 'customer_phone'
+        },
+        {
+            title: 'Is called',
+            field: 'is_called',
+            type: 'boolean'
+        },
+        {
+            title: 'Order date',
+            field: 'order_date',
+            type: 'datetime',
+            editable: 'never'
+        },
+    ];
     @observable snackbar: Snackbar = {message: '', open: false};
 
     constructor() {}
 
-    @action setTableColumns(): Promise<string[]> {
-        return new Promise((resolve) => {
-            if (this.tableColumns.length > 0) {
-                resolve();
-            } else {
-                getOrdersColumns().then((columns) => {
-                    this.tableColumns = columns;
-                    resolve();
-                });
-            }
-        });
-    }
-
     @action fetchData() {
         runInAction(() => {
             this.status = PageStatus.LOADING;
-            this.setTableColumns()
-                .then(() => getOrders({limit: this.limit, offset: this.offset})
+
+            getOrders({limit: this.limit, offset: this.offset})
                 .then((data) => {
                     this.data = data;
                     this.status = PageStatus.DONE;
-                }));
+                });
         });
     }
 

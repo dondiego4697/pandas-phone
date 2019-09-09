@@ -6,35 +6,19 @@ import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
 
 const insertSchema = Joi.object().keys({
     good_pattern_id: Joi.string().required(),
-    serial_number: Joi.string().allow(null, ''),
-    imei: Joi.string().allow(null, ''),
+    serial_number: Joi.string().allow(''),
+    imei: Joi.string().allow(''),
     price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).allow(null, ''),
-    customer_name: Joi.string().allow(null, ''),
-    customer_email: Joi.string().allow(null, ''),
-    customer_phone: Joi.string().allow(null, ''),
-    is_called: Joi.bool().allow(null, ''),
+    discount: Joi.number().min(0).max(100).allow(''),
+    customer_name: Joi.string().allow(''),
+    customer_email: Joi.string().allow(''),
+    customer_phone: Joi.string().allow(''),
+    is_called: Joi.bool().allow(''),
     order_date: Joi.string().required(),
-    sold_date: Joi.string().allow(null, '')
+    sold_date: Joi.string().allow('')
 });
 
 export class Order {
-    static async getColumns() {
-        const data = await makeRequest({
-            text: `
-                SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE table_name = 'order';
-            `,
-            values: []
-        });
-
-        if (!data) {
-            throw Boom.badData();
-        }
-
-        return data.rows.map((row) => row.column_name);
-    }
-
     static async getItems(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
@@ -72,7 +56,31 @@ export class Order {
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values]
+            values: [id, ...values].map((x) => x === '' ? null : x)
+        });
+
+        if (!data) {
+            throw Boom.badData();
+        }
+
+        return data.rows;
+    }
+
+    static async insertItem(body: Record<string, any>) {
+        const result = Joi.validate(body, insertSchema);
+        if (result.error) {
+            throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
+        }
+
+        const {names, values} = makeInsert(result.value);
+        const data = await makeRequest({
+            text: `
+                INSERT INTO "order"
+                (${names.join(', ')})
+                VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
+                RETURNING *;
+            `,
+            values: [...values]
         });
 
         if (!data) {

@@ -12,7 +12,13 @@ import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
 
-// apiV1Router.get('/public/', () )
+apiV1Router.get('/public/shop-items', wrap<Request, Response>(async (req, res) => {
+    res.json(await ShopItem.getItemsFull(req.query));
+}));
+
+apiV1Router.post('/public/order/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.insertItem(req.body));
+}));
 
 apiV1Router
     .use(telegramAuth)
@@ -33,10 +39,6 @@ apiV1Router.get('/shop-item', wrap<Request, Response>(async (req, res) => {
     res.json(await ShopItem.getItems(req.query));
 }));
 
-apiV1Router.get('/shop-item/columns', wrap<Request, Response>(async (_req, res) => {
-    res.json(await ShopItem.getColumns());
-}));
-
 apiV1Router.post('/shop-item/create', wrap<Request, Response>(async (req, res) => {
     res.json(await ShopItem.insertItem(req.body));
 }));
@@ -54,10 +56,6 @@ apiV1Router.get('/good-pattern', wrap<Request, Response>(async (req, res) => {
     res.json(await GoodPattern.getItems(req.query));
 }));
 
-apiV1Router.get('/good-pattern/columns', wrap<Request, Response>(async (_req, res) => {
-    res.json(await GoodPattern.getColumns());
-}));
-
 apiV1Router.post('/good-pattern/create', wrap<Request, Response>(async (req, res) => {
     res.json(await GoodPattern.insertItem(req.body));
 }));
@@ -73,10 +71,6 @@ apiV1Router.delete('/good-pattern/:id', wrap<Request, Response>(async (req, res)
 // ORDER
 apiV1Router.get('/order', wrap<Request, Response>(async (req, res) => {
     res.json(await Order.getItems(req.query));
-}));
-
-apiV1Router.get('/order/columns', wrap<Request, Response>(async (_req, res) => {
-    res.json(await Order.getColumns());
 }));
 
 apiV1Router.post('/order/update/:id', wrap<Request, Response>(async (req, res) => {

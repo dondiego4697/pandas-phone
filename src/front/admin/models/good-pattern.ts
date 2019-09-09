@@ -1,9 +1,9 @@
 import {observable, action, runInAction} from 'mobx';
+import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
 import {
     getGoodPatterns,
-    getGoodPatternsColumns,
     deleteGoodPattern,
     updateGoodPattern,
     insertGoodPattern
@@ -31,41 +31,67 @@ export class GoodPatternPageModel {
     @observable limit = 10;
     @observable offset = 0;
     @observable data: GoodPattern[] = [];
-    @observable tableColumns: string[] = [];
+    @observable tableColumns: Column<any>[] = [
+        {
+            title: 'ID',
+            field: 'id',
+            editable: 'never'
+        },
+        {
+            title: 'Title',
+            field: 'title'
+        },
+        {
+            title: 'Description',
+            field: 'description'
+        },
+        {
+            title: 'Brand',
+            field: 'brand'
+        },
+        {
+            title: 'Product',
+            field: 'product'
+        },
+        {
+            title: 'Model',
+            field: 'model'
+        },
+        {
+            title: 'Color',
+            field: 'color'
+        },
+        {
+            title: 'Category',
+            field: 'category'
+        },
+        {
+            title: 'Memory capacity [GB]',
+            field: 'memory_capacity',
+            type: 'numeric'
+        }
+    ];
     @observable snackbar: Snackbar = {message: '', open: false};
 
     constructor() {}
 
-    @action setTableColumns(): Promise<string[]> {
-        return new Promise((resolve) => {
-            if (this.tableColumns.length > 0) {
-                resolve();
-            } else {
-                getGoodPatternsColumns().then((columns) => {
-                    this.tableColumns = columns;
-                    resolve();
-                });
-            }
-        });
-    }
-
     @action fetchData() {
         runInAction(() => {
             this.status = PageStatus.LOADING;
-            this.setTableColumns()
-                .then(() => getGoodPatterns({limit: this.limit, offset: this.offset})
+
+            getGoodPatterns({limit: this.limit, offset: this.offset})
                 .then((data) => {
                     this.data = data;
                     this.status = PageStatus.DONE;
-                }));
+                });
         });
     }
 
-    @action deleteRow(row: GoodPattern): Promise<void> {
+    @action deleteRow(goodPattern: GoodPattern): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                deleteGoodPattern(row.id).then((deletedGoodPattern: GoodPattern) => {
-                    const index = this.data.findIndex((goodPattern) => goodPattern.id === deletedGoodPattern.id);
+                deleteGoodPattern(goodPattern.id).then((deleted: GoodPattern) => {
+                    const index = this.data.findIndex((item) => item.id === deleted.id);
                     const buff = [...this.data];
                     buff.splice(index, 1);
 
@@ -76,16 +102,16 @@ export class GoodPatternPageModel {
         });
     }
 
-    @action updateRow(row: GoodPattern): Promise<void> {
+    @action updateRow(goodPattern: GoodPattern): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                const id = row.id;
-                delete row.id;
+                const id = goodPattern.id;
+                delete goodPattern.id;
 
-                updateGoodPattern(id, row).then((updatedGoodPattern: GoodPattern) => {
-                    const index = this.data.findIndex((goodPattern) => goodPattern.id === updatedGoodPattern.id);
+                updateGoodPattern(id, goodPattern).then((updated: GoodPattern) => {
+                    const index = this.data.findIndex((item) => item.id === updated.id);
                     const buff = [...this.data];
-                    buff.splice(index, 1, updatedGoodPattern);
+                    buff.splice(index, 1, updated);
 
                     this.data = buff;
                     resolve();
@@ -94,12 +120,13 @@ export class GoodPatternPageModel {
         });
     }
 
-    @action insertRow(row: GoodPattern): Promise<void> {
+    @action insertRow(goodPattern: GoodPattern): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                insertGoodPattern(row).then((insertedGoodPattern: GoodPattern) => {
-                    const buff = [...this.data, insertedGoodPattern];
+                insertGoodPattern(goodPattern).then((inserted: GoodPattern) => {
+                    const buff = [...this.data, inserted];
                     this.data = buff;
+
                     resolve();
                 }).catch((err) => reject(err.response.data));
             });

@@ -7,26 +7,10 @@ import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
 const insertSchema = Joi.object().keys({
     good_pattern_id: Joi.string().required(),
     price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).allow(null, '')
+    discount: Joi.number().min(0).max(100).allow('')
 });
 
 export class ShopItem {
-    static async getColumns() {
-        const data = await makeRequest({
-            text: `
-                SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE table_name = 'shop_item';
-            `,
-            values: []
-        });
-
-        if (!data) {
-            throw Boom.badData();
-        }
-
-        return data.rows.map((row) => row.column_name);
-    }
-
     static async getItems(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
@@ -88,7 +72,7 @@ export class ShopItem {
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values]
+            values: [id, ...values].map((x) => x === '' ? null : x)
         });
 
         if (!data) {
@@ -102,6 +86,31 @@ export class ShopItem {
         const data = await makeRequest({
             text: `DELETE FROM shop_item WHERE id=$1 RETURNING *;`,
             values: [id]
+        });
+
+        if (!data) {
+            throw Boom.badData();
+        }
+
+        return data.rows;
+    }
+
+    static async getItemsFull(query: Record<string, any>) {
+        const pagination = seizePaginationParams(query);
+
+        const whereParams = makeWhere(query);
+        const whereText = whereParams.pairsText.length > 0 ?
+            `WHERE ${whereParams.pairsText.join(' AND ')}` :
+            '';
+
+        const data = await makeRequest({
+            text: `
+                SELECT * FROM shop_item
+                INNER JOIN good_pattern ON shop_item.good_pattern_id=good_pattern.id
+                ${whereText}
+                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
+            `,
+            values: [...whereParams.values]
         });
 
         if (!data) {

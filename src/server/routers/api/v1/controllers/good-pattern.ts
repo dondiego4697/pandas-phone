@@ -5,33 +5,17 @@ import {makeRequest} from 'server/db/client';
 import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
 
 const insertSchema = Joi.object().keys({
-    title: Joi.string().allow(null, ''),
-    description: Joi.string().allow(null, ''),
+    title: Joi.string().allow(''),
+    description: Joi.string().allow(''),
     brand: Joi.string().required(),
     product: Joi.string().required(),
     model: Joi.string().required(),
     color: Joi.string().required(),
     category: Joi.string().required(),
-    memory_capacity: Joi.number().positive()
+    memory_capacity: Joi.number().positive().allow('')
 });
 
 export class GoodPattern {
-    static async getColumns() {
-        const data = await makeRequest({
-            text: `
-                SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE table_name = 'good_pattern';
-            `,
-            values: []
-        });
-
-        if (!data) {
-            throw Boom.badData();
-        }
-
-        return data.rows.map((row) => row.column_name);
-    }
-
     static async getItems(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
@@ -93,7 +77,7 @@ export class GoodPattern {
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values]
+            values: [id, ...values].map((x) => x === '' ? null : x)
         });
 
         if (!data) {

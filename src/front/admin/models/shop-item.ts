@@ -1,9 +1,9 @@
 import {observable, action, runInAction} from 'mobx';
+import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
 import {
     getShopItems,
-    getShopItemsColumns,
     deleteShopItem,
     updateShopItem,
     insertShopItem
@@ -26,33 +26,40 @@ export class ShopItemPageModel {
     @observable limit = 10;
     @observable offset = 0;
     @observable data: ShopItem[] = [];
-    @observable tableColumns: string[] = [];
+    @observable tableColumns: Column<any>[] = [
+        {
+            title: 'ID',
+            field: 'id',
+            editable: 'never'
+        },
+        {
+            title: 'Good pattern ID',
+            field: 'good_pattern_id'
+        },
+        {
+            title: 'Price',
+            field: 'price',
+            type: 'numeric'
+        },
+        {
+            title: 'Discount [0-100]%',
+            field: 'discount',
+            type: 'numeric'
+        }
+    ];
     @observable snackbar: Snackbar = {message: '', open: false};
 
     constructor() {}
 
-    @action setTableColumns(): Promise<string[]> {
-        return new Promise((resolve) => {
-            if (this.tableColumns.length > 0) {
-                resolve();
-            } else {
-                getShopItemsColumns().then((columns) => {
-                    this.tableColumns = columns;
-                    resolve();
-                });
-            }
-        });
-    }
-
     @action fetchData() {
         runInAction(() => {
             this.status = PageStatus.LOADING;
-            this.setTableColumns()
-                .then(() => getShopItems({limit: this.limit, offset: this.offset})
+
+            getShopItems({limit: this.limit, offset: this.offset})
                 .then((data) => {
                     this.data = data;
                     this.status = PageStatus.DONE;
-                }));
+                });
         });
     }
 

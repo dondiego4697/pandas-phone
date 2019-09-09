@@ -39,10 +39,6 @@ export function getShopItems(params: DefaultParams): Promise<ShopItem[]> {
         .then((data) => nullReplace(data));
 }
 
-export function getShopItemsColumns(): Promise<string[]> {
-    return getRequest<string[]>(`/api/v1/shop-item/columns`);
-}
-
 export function deleteShopItem(id: string): Promise<ShopItem> {
     return deleteRequest<ShopItem[]>(`/api/v1/shop-item/${id}`, {})
         .then((data) => nullReplace(data)[0]);
@@ -80,10 +76,6 @@ export function insertGoodPattern(data: GoodPattern): Promise<GoodPattern> {
         .then((data) => nullReplace(data)[0]);
 }
 
-export function getGoodPatternsColumns(): Promise<string[]> {
-    return getRequest<string[]>(`/api/v1/good-pattern/columns`);
-}
-
 // ORDER
 export function getOrders(params: DefaultParams): Promise<Order[]> {
     const {limit, offset} = params;
@@ -91,20 +83,7 @@ export function getOrders(params: DefaultParams): Promise<Order[]> {
         .then((data) => nullReplace(data));
 }
 
-export function getOrdersColumns(): Promise<string[]> {
-    return getRequest<string[]>(`/api/v1/order/columns`);
-}
-
 export function updateOrder(id: string, data: Order): Promise<Order> {
     return postRequest<Order[]>(`/api/v1/order/update/${id}`, data)
         .then((data) => nullReplace(data)[0]);
 }
-
-/* export function getDataFromDB(tableName: string): Promise<any[]> {
-    // TODO make pagination
-    return getRequest<any[]>(`/proxy/${tableName.replace(/\_/gmi, '-')}`);
-}
-
-export function insertDataToDB(tableName: string, data: any): Promise<any[]> {
-    return postRequest<any[]>(`/proxy/${tableName.replace(/\_/gmi, '-')}`, data);
-} */
