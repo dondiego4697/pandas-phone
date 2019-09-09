@@ -1,0 +1,75 @@
+import * as React from 'react';
+import {inject, observer} from 'mobx-react';
+import {Column} from 'material-table';
+
+import {ClientDataModel} from 'admin/models/client-data';
+import {Order, OrderPageModel} from 'admin/models/order';
+import ProgressBar from 'admin/components/progress-bar';
+import Table from 'admin/components/table';
+import TableTitle from 'admin/components/table-title';
+import bevis from 'libs/bevis';
+import {PageStatus} from 'admin/libs/types';
+
+import './index.scss';
+
+interface Props {
+    clientDataModel?: ClientDataModel;
+    orderPageModel?: OrderPageModel;
+}
+
+const b = bevis('order');
+
+@inject('clientDataModel', 'orderPageModel')
+@observer
+export class OrderPage extends React.Component<Props> {
+    componentDidMount() {
+        this.props.orderPageModel!.fetchData();
+    }
+
+    getColumns(): Column<any>[] {
+        return this.props.orderPageModel!.tableColumns.map((columnName) => {
+            return {
+                title: columnName,
+                field: columnName
+            };
+        });
+    }
+
+    getRows(): Order[] {
+        return this.props.orderPageModel!.data;
+    }
+
+    handleChangePage = (diff: number) => {
+        this.props.orderPageModel!.offset += this.props.orderPageModel!.limit * diff;
+        this.props.orderPageModel!.fetchData();
+    }
+
+    handleChangeRowsPerPage = (rows: number) => {
+        this.props.orderPageModel!.limit = rows;
+        this.props.orderPageModel!.offset = 0;
+        this.props.orderPageModel!.fetchData();
+    }
+
+    render(): React.ReactNode {
+        if (this.props.orderPageModel!.status === PageStatus.LOADING) {
+            return <ProgressBar />;
+        }
+
+        const tableName = 'Order';
+        return <div className={b()}>
+            <TableTitle value={tableName} />
+            <div className={b('container')}>
+                <div className={b('table-container')}>
+                    <Table
+                        columns={this.getColumns()}
+                        rows={this.getRows()}
+                        rowsPerPage={this.props.orderPageModel!.limit}
+                        currentPage={this.props.orderPageModel!.offset / this.props.orderPageModel!.limit + 1}
+                        handleChangePage={this.handleChangePage}
+                        handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
+                </div>
+            </div>
+        </div>;
+    }
+}

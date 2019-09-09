@@ -1,8 +1,10 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import IconButton from '@material-ui/core/IconButton';
+import BackIcon from '@material-ui/icons/ChevronLeft';
+import NextIcon from '@material-ui/icons/ChevronRight';
 
 import bevis from 'libs/bevis';
 
@@ -38,13 +40,13 @@ export default class Pagination extends React.Component<Props> {
                             <MenuItem value={100}>100</MenuItem>
                         </Select>
                     </FormControl>
-                    <Button color='primary' size='small' variant='contained' onClick={this.handleClickBack}>
-                        Back
-                    </Button>
+                    <IconButton onClick={this.handleClickBack}>
+                        <BackIcon />
+                    </IconButton>
                     <p className={b('page')}>{this.props.currentPage}</p>
-                    <Button color='primary' size='small' variant='contained' onClick={this.handleClickNext}>
-                        Next
-                    </Button>
+                    <IconButton onClick={this.handleClickNext}>
+                        <NextIcon/>
+                    </IconButton>
                 </div>
             </div>
         );

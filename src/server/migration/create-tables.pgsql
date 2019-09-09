@@ -6,48 +6,38 @@ CREATE TABLE IF NOT EXISTS admin (
     username TEXT UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS good_brand (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    value TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS good_product (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    value TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS good_model (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    value TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS good_color (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    value TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS good_type (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    value TEXT UNIQUE NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS good_pattern (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    brand UUID REFERENCES good_brand(id) ON DELETE RESTRICT NOT NULL,
-    product UUID REFERENCES good_product(id) ON DELETE RESTRICT NOT NULL,
-    model UUID REFERENCES good_model(id) ON DELETE RESTRICT NOT NULL,
-    color UUID REFERENCES good_color(id) ON DELETE RESTRICT NOT NULL,
-    type UUID REFERENCES good_type(id) ON DELETE RESTRICT NOT NULL,
+    title TEXT,
     description TEXT,
+    brand TEXT NOT NULL,
+    product TEXT NOT NULL,
+    model TEXT NOT NULL,
+    color TEXT NOT NULL,
+    category TEXT NOT NULL,
     memory_capacity INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS shop (
+CREATE TABLE IF NOT EXISTS shop_item (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     good_pattern_id UUID REFERENCES good_pattern(id) ON DELETE RESTRICT NOT NULL,
     serial_number TEXT,
     imei TEXT,
     price INTEGER NOT NULL,
     discount SMALLINT DEFAULT 0,
-    sold_date TIMESTAMP WITH TIME ZONE DEFAULT NULL
+
+    UNIQUE(serial_number, imei)
+);
+
+CREATE TABLE IF NOT EXISTS "order" (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    good_pattern_id UUID REFERENCES good_pattern(id) ON DELETE RESTRICT NOT NULL,
+    serial_number TEXT,
+    imei TEXT,
+    price INTEGER NOT NULL,
+    discount SMALLINT DEFAULT 0,
+
+    order_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    sold_date TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    UNIQUE(serial_number, imei)
 );

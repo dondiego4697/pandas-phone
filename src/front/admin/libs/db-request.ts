@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-import {GoodBrand} from 'admin/models/good-brand';
+import {ShopItem} from 'admin/models/shop-item';
+import {GoodPattern} from 'admin/models/good-pattern';
+import {Order} from 'admin/models/order';
+import {nullReplace} from 'admin/libs/null-replacer';
 
 interface DefaultParams {
     limit: number;
@@ -19,18 +22,65 @@ function postRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
+function deleteRequest<T>(url: string, data: any): Promise<T> {
+    return axios
+        .delete(url, data)
+        .then((response) => response.data);
+}
+
 export function getTables(): Promise<string[]> {
-    return getRequest<string[]>(`/proxy/tables`);
+    return getRequest<string[]>(`/api/v1/tables`);
 }
 
-export function getGoodBrands(params: DefaultParams): Promise<GoodBrand[]> {
+// SHOP-ITEM
+export function getShopItems(params: DefaultParams): Promise<ShopItem[]> {
     const {limit, offset} = params;
-    return getRequest<GoodBrand[]>(`/proxy/good-brand?limit=${limit}&offset=${offset}`);
+    return getRequest<ShopItem[]>(`/api/v1/shop-item?limit=${limit}&offset=${offset}`)
+        .then((data) => nullReplace(data));
 }
 
-export function getGoodBrandsColumns(): Promise<string[]> {
-    return getRequest<string[]>(`/proxy/good-brand/columns`);
+export function getShopItemsColumns(): Promise<string[]> {
+    return getRequest<string[]>(`/api/v1/shop-item/columns`);
 }
+
+// GOOD-PATTERN
+export function getGoodPatterns(params: DefaultParams): Promise<GoodPattern[]> {
+    const {limit, offset} = params;
+    return getRequest<GoodPattern[]>(`/api/v1/good-pattern?limit=${limit}&offset=${offset}`)
+        .then((data) => nullReplace(data));
+}
+
+export function deleteGoodPattern(id: string): Promise<GoodPattern> {
+    return deleteRequest<GoodPattern[]>(`/api/v1/good-pattern/${id}`, {})
+        .then((data) => nullReplace(data)[0]);
+}
+
+export function updateGoodPattern(id: string, data: GoodPattern): Promise<GoodPattern> {
+    return postRequest<GoodPattern[]>(`/api/v1/good-pattern/update/${id}`, data)
+        .then((data) => nullReplace(data)[0]);
+}
+
+export function insertGoodPattern(data: GoodPattern): Promise<GoodPattern> {
+    return postRequest<GoodPattern[]>(`/api/v1/good-pattern/create`, data)
+        .then((data) => nullReplace(data)[0]);
+}
+
+export function getGoodPatternsColumns(): Promise<string[]> {
+    return getRequest<string[]>(`/api/v1/good-pattern/columns`);
+}
+
+// ORDER
+export function getOrders(params: DefaultParams): Promise<Order[]> {
+    const {limit, offset} = params;
+    return getRequest<Order[]>(`/api/v1/order?limit=${limit}&offset=${offset}`)
+        .then((data) => nullReplace(data));
+}
+
+export function getOrdersColumns(): Promise<string[]> {
+    return getRequest<string[]>(`/api/v1/order/columns`);
+}
+
+
 /* export function getDataFromDB(tableName: string): Promise<any[]> {
     // TODO make pagination
     return getRequest<any[]>(`/proxy/${tableName.replace(/\_/gmi, '-')}`);

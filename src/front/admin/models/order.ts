@@ -1,18 +1,18 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from 'admin/libs/types';
-import {getGoodBrands, getGoodBrandsColumns} from 'admin/libs/db-request';
+import {getOrders, getOrdersColumns} from 'admin/libs/db-request';
 
-export interface GoodBrand {
-    id: string;
-    value: string;
+export interface Order {
+    // id: string;
+    // value: string;
 }
 
-export class GoodBrandPageModel {
+export class OrderPageModel {
     @observable status = PageStatus.LOADING;
     @observable limit = 10;
     @observable offset = 0;
-    @observable data: GoodBrand[] = [];
+    @observable data: Order[] = [];
     @observable tableColumns: string[] = [];
 
     constructor() {}
@@ -22,7 +22,7 @@ export class GoodBrandPageModel {
             if (this.tableColumns.length > 0) {
                 resolve();
             } else {
-                getGoodBrandsColumns().then((columns) => {
+                getOrdersColumns().then((columns) => {
                     this.tableColumns = columns;
                     resolve();
                 });
@@ -34,7 +34,7 @@ export class GoodBrandPageModel {
         runInAction(() => {
             this.status = PageStatus.LOADING;
             this.setTableColumns()
-                .then(() => getGoodBrands({limit: this.limit, offset: this.offset})
+                .then(() => getOrders({limit: this.limit, offset: this.offset})
                 .then((data) => {
                     this.data = data;
                     this.status = PageStatus.DONE;

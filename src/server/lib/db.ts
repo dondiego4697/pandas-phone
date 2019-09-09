@@ -27,3 +27,16 @@ export function makeWhere(data: Record<string, any>): GetWhere {
         return res;
     }, {pairsText: [], values: []} as GetWhere);
 }
+
+interface Insert {
+    names: string[];
+    values: any[];
+}
+
+export function makeInsert(data: Record<string, any>): Insert {
+    return Object.entries(data).reduce((res, [key, value], i) => {
+        res.names.push(key);
+        res.values.push(value);
+        return res;
+    }, {names: [], values: []} as Insert);
+}

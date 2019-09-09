@@ -3,12 +3,12 @@ import * as Boom from '@hapi/boom';
 import {makeRequest} from 'server/db/client';
 import {seizePaginationParams, makeWhere} from 'server/lib/db';
 
-export class GoodBrand {
+export class Order {
     static async getColumns() {
         const data = await makeRequest({
             text: `
                 SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE table_name = 'good_brand';
+                WHERE table_name = 'order';
             `,
             values: []
         });
@@ -30,7 +30,7 @@ export class GoodBrand {
 
         const data = await makeRequest({
             text: `
-                SELECT * FROM good_brand
+                SELECT * FROM "order"
                 ${whereText}
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,

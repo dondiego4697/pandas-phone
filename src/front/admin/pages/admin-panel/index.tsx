@@ -19,7 +19,7 @@ const b = bevis('admin-panel');
 
 @inject('clientDataModel', 'adminPanelPageModel')
 @observer
-export default class AdminPanelPage extends React.Component<Props> {
+export class AdminPanelPage extends React.Component<Props> {
     componentDidMount() {
         this.props.adminPanelPageModel!.fetchTables();
     }

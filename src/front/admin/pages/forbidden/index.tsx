@@ -13,7 +13,7 @@ interface Props {
 import './index.scss';
 
 @inject('clientDataModel')
-export default class Forbidden extends React.Component<Props> {
+export class ForbiddenPage extends React.Component<Props> {
     private telegramAuthRef = React.createRef<HTMLDivElement>();
 
     componentDidMount() {

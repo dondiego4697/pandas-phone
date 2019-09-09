@@ -7,7 +7,7 @@ const b = bevis('not-found');
 
 import './index.scss';
 
-export default class NotFound extends React.Component<{}> {
+export class NotFoundPage extends React.Component<{}> {
     render(): React.ReactNode {
         return (
             <div className={b()}>

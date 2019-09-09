@@ -1,0 +1,30 @@
+.good-pattern {
+    width: 100%;
+    height: 100%;
+
+    &__container {
+        width: 100%;
+        height: 100%;
+        display: flexbox;
+    }
+
+    &__table-container {
+        margin: auto;
+        height: 100%;
+        margin-left: 24px;
+        margin-right: 24px;
+    }
+
+    &__empty-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+
+        & h1 {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            color: rgb(26, 33, 76);
+            margin: auto;
+        }
+    }
+}
