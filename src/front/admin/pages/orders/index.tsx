@@ -92,6 +92,6 @@ export class OrdersPage extends React.Component<IProps> {
     private handleDetailsClick = (_: any, order: any): void => {
         delete order.tableData;
 
-        this.props.history.push(`/admin-panel/order/${order.id}`);
+        this.props.history.push(`/bender-root/order/${order.id}`);
     }
 }

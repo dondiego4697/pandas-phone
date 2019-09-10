@@ -36,11 +36,11 @@ export default class Router extends React.Component<IProps> {
 
         return (
             <Switch>
-                <Route exact path='/admin-panel' component={AdminPanelPage} />
-                <Route exact path='/admin-panel/iphone' component={IphonePage} />
-                <Route exact path='/admin-panel/airpods' component={AirpodsPage} />
-                <Route exact path='/admin-panel/order' component={OrdersPage} />
-                <Route exact path='/admin-panel/order/:orderId' component={OrderPage} />;
+                <Route exact path='/bender-root' component={AdminPanelPage} />
+                <Route exact path='/bender-root/iphone' component={IphonePage} />
+                <Route exact path='/bender-root/airpods' component={AirpodsPage} />
+                <Route exact path='/bender-root/order' component={OrdersPage} />
+                <Route exact path='/bender-root/order/:orderId' component={OrderPage} />;
                 <Route component={NotFoundPage} />
             </Switch>
         );

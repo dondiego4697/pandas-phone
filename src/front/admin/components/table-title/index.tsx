@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import bevis from 'libs/bevis';
+import {Bender} from 'admin/components/bender';
 
 import './index.scss';
 
@@ -14,6 +15,7 @@ export class TableTitle extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
+                <Bender/>
                 <h1>{this.props.value}</h1>
             </div>
         );

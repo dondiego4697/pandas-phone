@@ -39,7 +39,7 @@ adminRouter
 
         const params: IRenderParams = {
             meta: {
-                title: 'Admin Panel'
+                title: 'Bender Root'
             },
             urls: {
                 bundle: {

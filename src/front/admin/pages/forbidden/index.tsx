@@ -3,6 +3,7 @@ import {inject} from 'mobx-react';
 
 import bevis from 'libs/bevis';
 import {ClientDataModel} from 'admin/models/client-data';
+import {Bender} from 'admin/components/bender';
 
 const b = bevis('forbidden');
 
@@ -32,6 +33,7 @@ export class ForbiddenPage extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
+                <Bender/>
                 <div className={b('auth-container')}>
                     <div className={b('text')}>
                         <h1>Forbidden</h1>
