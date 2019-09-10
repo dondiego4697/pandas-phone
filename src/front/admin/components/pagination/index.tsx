@@ -12,18 +12,15 @@ import './index.scss';
 
 const b = bevis('pagination');
 
-interface Props {
+interface IProps {
     rowsPerPage: number;
     currentPage: number;
     handleChangePage: (diff: number) => void;
     handleChangeRowsPerPage: (rows: number) => void;
 }
 
-export default class Pagination extends React.Component<Props> {
-    handleClickBack = () => this.props.handleChangePage(-1);
-    handleClickNext = () => this.props.handleChangePage(1);
-
-    render(): React.ReactNode {
+export class Pagination extends React.Component<IProps> {
+    public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>
@@ -51,4 +48,7 @@ export default class Pagination extends React.Component<Props> {
             </div>
         );
     }
+
+    private handleClickBack = () => this.props.handleChangePage(-1);
+    private handleClickNext = () => this.props.handleChangePage(1);
 }

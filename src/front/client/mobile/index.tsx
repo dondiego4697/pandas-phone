@@ -9,12 +9,14 @@ import RoutesApp from 'client/mobile/routes';
 import {history} from 'libs/history';
 
 render(
-    <Provider {...models}>
-        <React.Fragment>
-            <Router history={history}>
-                <RoutesApp />
-            </Router>
-        </React.Fragment>
-    </Provider>,
+    (
+        <Provider {...models}>
+            <React.Fragment>
+                <Router history={history}>
+                    <RoutesApp />
+                </Router>
+            </React.Fragment>
+        </Provider>
+    ),
     document.getElementById('root')
 );

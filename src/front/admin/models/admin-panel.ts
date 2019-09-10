@@ -1,20 +1,9 @@
-import {observable, action, runInAction} from 'mobx';
-
-import {PageStatus} from 'admin/libs/types';
-import {getTables} from 'admin/libs/db-request';
+import {observable} from 'mobx';
 
 export class AdminPanelPageModel {
-    @observable status = PageStatus.LOADING;
-    @observable tables: string[] = [];
-
-    constructor() {}
-
-    @action fetchTables() {
-        runInAction(() => {
-            getTables().then((tables) => {
-                this.tables = tables;
-                this.status = PageStatus.DONE;
-            });
-        });
-    }
+    @observable public tables: string[] = [
+        'iphone',
+        'airpods',
+        'order'
+    ];
 }

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import {env} from 'server/lib/env';
 
-interface Config {
+interface IConfig {
     'logger.colorize': boolean;
     'logger.level': 'info' | 'silly';
     'app.isNodeStatic': boolean;
@@ -11,7 +11,7 @@ interface Config {
     'telegram.botName': string;
 }
 
-const production: Config = {
+const production: IConfig = {
     'logger.colorize': false,
     'logger.level': 'info',
     'app.isNodeStatic': false,
@@ -20,11 +20,11 @@ const production: Config = {
     'telegram.botName': 'PandaPhoneShopBot'
 };
 
-const testing: Config = {
+const testing: IConfig = {
     ...production
 };
 
-const development: Config = {
+const development: IConfig = {
     ...testing,
     'logger.colorize': true,
     'logger.level': 'silly',
@@ -33,11 +33,11 @@ const development: Config = {
     'telegram.botName': 'PandaPhoneShopDevBot'
 };
 
-const stress: Config = {
+const stress: IConfig = {
     ...testing
 };
 
-const configs: {[key: string]: Config} = {production, testing, stress, development};
+const configs: {[key: string]: IConfig} = {production, testing, stress, development};
 const config = configs[env];
 assert(config, `There is no configuration for environment "${env}"`);
 

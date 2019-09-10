@@ -7,8 +7,8 @@ import './index.scss';
 
 const b = bevis('progress-bar');
 
-export default class ProgressBar extends React.Component<{}> {
-    render(): React.ReactNode {
+export class ProgressBar extends React.Component<{}> {
+    public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>

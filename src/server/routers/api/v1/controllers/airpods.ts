@@ -2,35 +2,46 @@ import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
 import {makeRequest} from 'server/db/client';
-import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
+import {seizePaginationParams, makeInsert} from 'server/lib/db';
 
-const insertSchema = Joi.object().keys({
-    title: Joi.string().allow(''),
-    description: Joi.string().allow(''),
-    brand: Joi.string().required(),
-    product: Joi.string().required(),
-    model: Joi.string().required(),
-    color: Joi.string().required(),
-    category: Joi.string().required(),
-    memory_capacity: Joi.number().positive().allow('')
+const schema = Joi.object().keys({
+    series: Joi.string().required(),
+    is_original: Joi.bool().default(true),
+    is_charging_case: Joi.bool().default(true),
+    price: Joi.number().positive().required(),
+    discount: Joi.number().min(0).max(100).default(0),
+    count: Joi.number().min(0).default(0)
 });
 
-export class GoodPattern {
+const TABLE_NAME = 'airpods';
+
+export class Airpods {
+    static async getEnums() {
+        const data = await Promise.all(['AIRPODS_SERIES_T'].map(async (key) => {
+            return makeRequest({
+                text: `SELECT unnest(enum_range(NULL::${key}))::text;`,
+                values: []
+            });
+        }));
+
+        if (data.some((x) => !x)) {
+            throw Boom.badData();
+        }
+
+        return {
+            series: data[0]!.rows.map((x) => x.unnest)
+        };
+    }
+
     static async getItems(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
-        const whereParams = makeWhere(query);
-        const whereText = whereParams.pairsText.length > 0 ?
-            `WHERE ${whereParams.pairsText.join(' AND ')}` :
-            '';
-
         const data = await makeRequest({
             text: `
-                SELECT * FROM good_pattern
-                ${whereText}
+                SELECT * FROM ${TABLE_NAME}
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
-            values: [...whereParams.values]
+            values: []
         });
 
         if (!data) {
@@ -41,7 +52,7 @@ export class GoodPattern {
     }
 
     static async insertItem(body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
+        const result = Joi.validate(body, schema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }
@@ -49,7 +60,7 @@ export class GoodPattern {
         const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                INSERT INTO good_pattern
+                INSERT INTO ${TABLE_NAME}
                 (${names.join(', ')})
                 VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
                 RETURNING *;
@@ -65,7 +76,7 @@ export class GoodPattern {
     }
 
     static async updateItem(id: string, body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
+        const result = Joi.validate(body, schema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }
@@ -73,11 +84,11 @@ export class GoodPattern {
         const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                UPDATE good_pattern
+                UPDATE ${TABLE_NAME}
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values].map((x) => x === '' ? null : x)
+            values: [id, ...values]
         });
 
         if (!data) {
@@ -89,7 +100,7 @@ export class GoodPattern {
 
     static async deleteItem(id: string) {
         const data = await makeRequest({
-            text: `DELETE FROM good_pattern WHERE id=$1 RETURNING *;`,
+            text: `DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING *;`,
             values: [id]
         });
 

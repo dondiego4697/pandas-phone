@@ -2,30 +2,48 @@ import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
 import {makeRequest} from 'server/db/client';
-import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
+import {seizePaginationParams, makeInsert} from 'server/lib/db';
 
-const insertSchema = Joi.object().keys({
-    good_pattern_id: Joi.string().required(),
+const schema = Joi.object().keys({
+    model: Joi.string().required(),
+    color: Joi.string().required(),
+    memory_capacity: Joi.string().required(),
     price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).allow('')
+    discount: Joi.number().min(0).max(100).default(0),
+    count: Joi.number().min(0).default(0)
 });
 
-export class ShopItem {
+const TABLE_NAME = 'iphone';
+
+export class Iphone {
+    static async getEnums() {
+        const data = await Promise.all(['IPHONE_MODEL_T', 'IPHONE_MEMORY_T', 'IPHONE_COLOR_T'].map(async (key) => {
+            return makeRequest({
+                text: `SELECT unnest(enum_range(NULL::${key}))::text;`,
+                values: []
+            });
+        }));
+
+        if (data.some((x) => !x)) {
+            throw Boom.badData();
+        }
+
+        return {
+            models: data[0]!.rows.map((x) => x.unnest),
+            memories: data[1]!.rows.map((x) => x.unnest),
+            colors: data[2]!.rows.map((x) => x.unnest)
+        };
+    }
+
     static async getItems(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
-        const whereParams = makeWhere(query);
-        const whereText = whereParams.pairsText.length > 0 ?
-            `WHERE ${whereParams.pairsText.join(' AND ')}` :
-            '';
-
         const data = await makeRequest({
             text: `
-                SELECT * FROM shop_item
-                ${whereText}
+                SELECT * FROM ${TABLE_NAME}
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
-            values: [...whereParams.values]
+            values: []
         });
 
         if (!data) {
@@ -36,7 +54,7 @@ export class ShopItem {
     }
 
     static async insertItem(body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
+        const result = Joi.validate(body, schema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }
@@ -44,7 +62,7 @@ export class ShopItem {
         const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                INSERT INTO shop_item
+                INSERT INTO ${TABLE_NAME}
                 (${names.join(', ')})
                 VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
                 RETURNING *;
@@ -60,7 +78,7 @@ export class ShopItem {
     }
 
     static async updateItem(id: string, body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
+        const result = Joi.validate(body, schema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }
@@ -68,11 +86,11 @@ export class ShopItem {
         const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                UPDATE shop_item
+                UPDATE ${TABLE_NAME}
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values].map((x) => x === '' ? null : x)
+            values: [id, ...values]
         });
 
         if (!data) {
@@ -84,33 +102,8 @@ export class ShopItem {
 
     static async deleteItem(id: string) {
         const data = await makeRequest({
-            text: `DELETE FROM shop_item WHERE id=$1 RETURNING *;`,
+            text: `DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING *;`,
             values: [id]
-        });
-
-        if (!data) {
-            throw Boom.badData();
-        }
-
-        return data.rows;
-    }
-
-    static async getItemsFull(query: Record<string, any>) {
-        const pagination = seizePaginationParams(query);
-
-        const whereParams = makeWhere(query);
-        const whereText = whereParams.pairsText.length > 0 ?
-            `WHERE ${whereParams.pairsText.join(' AND ')}` :
-            '';
-
-        const data = await makeRequest({
-            text: `
-                SELECT * FROM shop_item
-                INNER JOIN good_pattern ON shop_item.good_pattern_id=good_pattern.id
-                ${whereText}
-                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
-            `,
-            values: [...whereParams.values]
         });
 
         if (!data) {

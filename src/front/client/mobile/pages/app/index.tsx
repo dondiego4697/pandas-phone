@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-interface Props {}
+interface IProps {}
 
-class App extends React.Component<Props, {}> {
-    render() {
-        return (<div>
-            <h1>Mobile</h1>
-        </div>);
+export class App extends React.Component<IProps> {
+    public render(): React.ReactNode {
+        return (
+            <div>
+                <h1>Mobile</h1>
+            </div>
+        );
     }
 }
-
-export default App;

@@ -1,9 +1,9 @@
-interface Pagination {
+interface IPagination {
     limit: number;
     offset: number;
 }
 
-export function seizePaginationParams(data: Record<string, any>): Pagination {
+export function seizePaginationParams(data: Record<string, any>): IPagination {
     const result = {
         limit: data.limit || 10,
         offset: data.offset || 0
@@ -15,28 +15,28 @@ export function seizePaginationParams(data: Record<string, any>): Pagination {
     return result;
 }
 
-interface GetWhere {
+interface IGetWhere {
     pairsText: string[];
     values: any[];
 }
 
-export function makeWhere(data: Record<string, any>): GetWhere {
+export function makeWhere(data: Record<string, any>): IGetWhere {
     return Object.entries(data).reduce((res, [key, value], i) => {
         res.pairsText.push(`${key}=$${i + 1}`);
         res.values.push(value);
         return res;
-    }, {pairsText: [], values: []} as GetWhere);
+    }, {pairsText: [], values: []} as IGetWhere);
 }
 
-interface Insert {
+interface IInsert {
     names: string[];
     values: any[];
 }
 
-export function makeInsert(data: Record<string, any>): Insert {
+export function makeInsert(data: Record<string, any>): IInsert {
     return Object.entries(data).reduce((res, [key, value], i) => {
         res.names.push(key);
         res.values.push(value);
         return res;
-    }, {names: [], values: []} as Insert);
+    }, {names: [], values: []} as IInsert);
 }

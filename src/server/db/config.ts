@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-interface Config {
+interface IConfig {
     host: string;
     user: string;
     password: string;
@@ -8,7 +8,7 @@ interface Config {
     port: number;
 }
 
-export const config: Config = {
+export const config: IConfig = {
     host: process.env.PANDA_PHONE_DB_HOST!,
     user: process.env.PANDA_PHONE_DB_USER!,
     password: process.env.PANDA_PHONE_DB_PASSWORD!,

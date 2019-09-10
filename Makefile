@@ -15,9 +15,10 @@ validate: lint
 
 .PHONY: lint
 lint:
-	node_modules/.bin/tslint -p src/server/tsconfig.json -t codeFrame
-	node_modules/.bin/tslint -p src/front/client/tsconfig.json -t codeFrame
-	node_modules/.bin/tslint -p src/front/admin/tsconfig.json -t codeFrame
+	node_modules/.bin/tslint -p src/server/tsconfig.json -c tslint.json -t codeFrame 'src/server/**/*.ts'
+	node_modules/.bin/tslint -p src/front/client/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/client/**/*.{ts,tsx}'
+	node_modules/.bin/tslint -p src/front/admin/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/admin/**/*.{ts,tsx}'
+	node_modules/.bin/tslint -c tslint.web.json -t codeFrame 'src/front/lib/**/*.{ts,tsx}'
 
 .PHONY: dev
 dev:
@@ -25,7 +26,7 @@ dev:
 
 .PHONE: localtunnel
 localtunnel:
-	node_modules/.bin/lt --subdomain panda-phone --port 8080
+	node_modules/.bin/lt --subdomain panda-phone-1 --port 8080
 
 .PHONY: server-dev
 server-dev:

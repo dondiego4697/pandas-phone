@@ -1,21 +1,22 @@
-import {ClientDataModel, ClientData} from 'admin/models/client-data';
+import {ClientDataModel, IClientData} from 'admin/models/client-data';
 import {AdminPanelPageModel} from 'admin/models/admin-panel';
 
-import {ShopItemPageModel} from 'admin/models/shop-item';
-import {GoodPatternPageModel} from 'admin/models/good-pattern';
-import {OrderPageModel} from 'admin/models/order';
+import {IphonePageModel} from 'admin/models/iphone';
+import {AirpodsPageModel} from 'admin/models/airpods';
+import {OrdersPageModel} from 'admin/models/orders';
 
 declare global {
+    // tslint:disable-next-line
     interface Window {
-        clientData: ClientData;
+        clientData: IClientData;
     }
 }
 
 export const clientDataModel = new ClientDataModel(window.clientData);
 export const adminPanelPageModel = new AdminPanelPageModel();
 
-export const goodPatternPageModel = new GoodPatternPageModel();
-export const shopItemPageModel = new ShopItemPageModel();
-export const orderPageModel = new OrderPageModel();
+export const iphonePageModel = new IphonePageModel();
+export const airpodsPageModel = new AirpodsPageModel();
+export const ordersPageModel = new OrdersPageModel();
 
 delete window.clientData;

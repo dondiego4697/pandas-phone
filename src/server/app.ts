@@ -18,6 +18,7 @@ import {clientRouter} from 'server/routers/client';
 
 declare global {
     namespace Express {
+        // tslint:disable-next-line
         interface Request {
             browserClient: {
                 iphone: boolean;

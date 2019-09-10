@@ -4,21 +4,30 @@ import {inject} from 'mobx-react';
 
 import App from 'admin/pages/app';
 import {AdminPanelPage} from 'admin/pages/admin-panel';
-import {ShopItemPage} from 'admin/pages/shop-item';
-import {GoodPatternPage} from 'admin/pages/good-pattern';
-import {OrderPage} from 'admin/pages/order';
-import {NotFoundPage} from 'admin/pages/not-found';
+import {AirpodsPage} from 'admin/pages/airpods';
 import {ForbiddenPage} from 'admin/pages/forbidden';
+import {IphonePage} from 'admin/pages/iphone';
+import {NotFoundPage} from 'admin/pages/not-found';
+import {OrderPage} from 'admin/pages/order';
+import {OrdersPage} from 'admin/pages/orders';
 
 import {ClientDataModel} from 'admin/models/client-data';
 
-interface Props {
+interface IProps {
     clientDataModel?: ClientDataModel;
 }
 
 @inject('clientDataModel')
-export default class Router extends React.Component<Props> {
-    private _renderRouter(): React.ReactNode {
+export default class Router extends React.Component<IProps> {
+    public render(): React.ReactNode {
+        return (
+            <App>
+                {this.renderRouter()}
+            </App>
+        );
+    }
+
+    private renderRouter(): React.ReactNode {
         const {forbidden} = this.props.clientDataModel!;
 
         if (forbidden) {
@@ -28,19 +37,12 @@ export default class Router extends React.Component<Props> {
         return (
             <Switch>
                 <Route exact path='/admin-panel' component={AdminPanelPage} />
-                <Route exact path='/admin-panel/shop-item' component={ShopItemPage} />
-                <Route exact path='/admin-panel/good-pattern' component={GoodPatternPage} />
-                <Route exact path='/admin-panel/order' component={OrderPage} />
+                <Route exact path='/admin-panel/iphone' component={IphonePage} />
+                <Route exact path='/admin-panel/airpods' component={AirpodsPage} />
+                <Route exact path='/admin-panel/order' component={OrdersPage} />
+                <Route exact path='/admin-panel/order/:orderId' component={OrderPage} />;
                 <Route component={NotFoundPage} />
             </Switch>
-        );
-    }
-
-    render(): React.ReactNode {
-        return (
-            <App>
-                {this._renderRouter()}
-            </App>
         );
     }
 }

@@ -1,11 +1,11 @@
 export type State = Record<string, string | boolean | void | number>;
 
-export interface ClassNameGenerator {
+export interface IClassNameGenerator {
     (elementName?: string, state?: State): string;
     (state?: State): string;
 }
 
-export default function bevis(blockName: string): ClassNameGenerator {
+export default function bevis(blockName: string): IClassNameGenerator {
     return (elementNameOrState?: string | State, state?: State): string => {
         let className = blockName;
 

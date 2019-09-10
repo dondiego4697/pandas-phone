@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-import MaterialTable, {Column, Action} from 'material-table';
+import MaterialTable, {Column, Action, Options} from 'material-table';
 
-import Pagination from 'admin/components/pagination';
+import {Pagination} from 'admin/components/pagination';
 import bevis from 'libs/bevis';
-
-import './index.scss';
 
 const b = bevis('table');
 
-interface Props<T extends object> {
+interface IProps<T extends object> {
     columns: Column<any>[];
     rows: T[];
     rowsPerPage: number;
@@ -22,10 +20,11 @@ interface Props<T extends object> {
     handleAddRow?: (row: T) => Promise<void>;
 
     actions?: Action<T>[];
+    options?: Options;
 }
 
-export default class Table<T extends Record<string, any>> extends React.Component<Props<T>> {
-    render(): React.ReactNode {
+export class Table<T extends Record<string, any>> extends React.Component<IProps<T>> {
+    public render(): React.ReactNode {
         const {columns, rows} = this.props;
 
         return (
@@ -34,7 +33,11 @@ export default class Table<T extends Record<string, any>> extends React.Componen
                     <MaterialTable
                         title=''
                         columns={columns}
-                        options={{search: false, paging: false}}
+                        options={{
+                            paging: false,
+                            search: false,
+                            ...(this.props.options || {})
+                        }}
                         data={rows}
                         editable={{
                             ...(this.props.handleAddRow ? {

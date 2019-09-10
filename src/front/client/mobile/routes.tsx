@@ -3,28 +3,25 @@ import {Switch} from 'react-router-dom';
 import {inject} from 'mobx-react';
 
 import {ClientDataModel} from 'client/models/client-data';
-import App from 'client/mobile/pages/app';
+import {App} from 'client/mobile/pages/app';
 
-interface Props {
+interface IProps {
     clientDataModel?: ClientDataModel;
 }
 
 @inject('clientDataModel')
-export default class Router extends React.Component<Props> {
-    private _renderRouter(): React.ReactNode {
+export default class Router extends React.Component<IProps> {
+    public render(): React.ReactNode {
         return (
-            <Switch>
-                {/* <Route exact path='/' component={<div/>} />
-                <Route component={NotFound} /> */}
-            </Switch>
+            <App>
+                {this.renderRouter()}
+            </App>
         );
     }
 
-    render(): React.ReactNode {
+    private renderRouter(): React.ReactNode {
         return (
-            <App>
-                {this._renderRouter()}
-            </App>
+            <Switch/>
         );
     }
 }

@@ -1,9 +1,9 @@
-export interface ClientData {
+export interface IClientData {
 
 }
 
 export class ClientDataModel {
-    constructor(clientData: ClientData) {
+    constructor(clientData: IClientData) {
 
     }
 }

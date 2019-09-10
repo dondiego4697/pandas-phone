@@ -1,0 +1,142 @@
+import {observable, action, runInAction} from 'mobx';
+import {Column} from 'material-table';
+
+import {PageStatus} from 'admin/libs/types';
+import {
+    getIphoneEnums,
+    getIphones,
+    insertIphone,
+    updateIphone,
+    deleteIphone
+} from 'admin/libs/db-request';
+
+export interface IIphone {
+    id: string;
+    model: string;
+    color: string;
+    memory_capacity: string;
+    price: number;
+    discount: number;
+    count: number;
+}
+
+interface ISnackbar {
+    message: string;
+    open: boolean;
+}
+
+export class IphonePageModel {
+    @observable public status = PageStatus.LOADING;
+    @observable public limit = 10;
+    @observable public offset = 0;
+    @observable public data: IIphone[] = [];
+    @observable public tableColumns: Column<IIphone>[] = [];
+    @observable public snackbar: ISnackbar = {message: '', open: false};
+
+    @action public setTableColumns(): Promise<void> {
+        const makeLookup = (data: string[]) => {
+            return data.reduce(
+                (res: Record<string, string>, curr) => {
+                    res[curr] = curr;
+                    return res;
+                },
+                {}
+            );
+        };
+
+        if (this.tableColumns.length === 0) {
+            return getIphoneEnums().then((enums) => {
+                this.tableColumns = [
+                    {
+                        field: 'model',
+                        lookup: makeLookup(enums.models),
+                        title: 'Model'
+                    },
+                    {
+                        field: 'color',
+                        lookup: makeLookup(enums.colors),
+                        title: 'Color'
+                    },
+                    {
+                        field: 'memory_capacity',
+                        lookup: makeLookup(enums.memories),
+                        title: 'Memory capacity [GB]'
+                    },
+                    {
+                        field: 'price',
+                        title: 'Price',
+                        type: 'numeric'
+                    },
+                    {
+                        field: 'discount',
+                        title: 'Discount',
+                        type: 'numeric'
+                    },
+                    {
+                        field: 'count',
+                        title: 'Count',
+                        type: 'numeric'
+                    }
+                ];
+            });
+        }
+
+        return Promise.resolve();
+    }
+
+    @action public fetchData(): void {
+        runInAction(() => {
+            this.status = PageStatus.LOADING;
+
+            this.setTableColumns().then(() => {
+                getIphones({limit: this.limit, offset: this.offset})
+                    .then((data) => {
+                        this.data = data;
+                        this.status = PageStatus.DONE;
+                    });
+            });
+        });
+    }
+
+    @action public deleteRow(iphone: IIphone): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                deleteIphone(iphone.id).then((deleted: IIphone) => {
+                    const index = this.data.findIndex((item) => item.id === deleted.id);
+                    const buff = [...this.data];
+                    buff.splice(index, 1);
+                    this.data = buff;
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+
+    @action public updateRow(iphone: IIphone): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                const id = iphone.id;
+                delete iphone.id;
+
+                updateIphone(id, iphone).then((updated: IIphone) => {
+                    const index = this.data.findIndex((item) => item.id === updated.id);
+                    const buff = [...this.data];
+                    buff.splice(index, 1, updated);
+                    this.data = buff;
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+
+    @action public insertRow(iphone: IIphone): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                insertIphone(iphone).then((inserted: IIphone) => {
+                    this.data = [...this.data, inserted];
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+}

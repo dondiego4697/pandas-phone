@@ -10,7 +10,7 @@ import {makeRequest} from 'server/db/client';
 const PRIVATE_TOKEN = process.env.PANDA_PHONE_TELEGRAM_BOT_API_TOKEN!;
 assert(PRIVATE_TOKEN, 'There is empty api token');
 
-interface AdminData {
+interface IAdminData {
     id: string;
     username: string;
 }
@@ -31,7 +31,7 @@ function checkValidAuthData(checkHash: string, data: Record<string, any>): boole
     return hash === checkHash;
 }
 
-async function checkAccess(adminData: AdminData): Promise<boolean> {
+async function checkAccess(adminData: IAdminData): Promise<boolean> {
     const dbResponse = await makeRequest({
         text: 'SELECT * FROM admin WHERE telegram_id=$1 AND username=$2',
         values: [adminData.id, adminData.username]
@@ -54,7 +54,7 @@ export const telegramAuth = wrap<Request, Response>(async (req, res, next) => {
         if (!checkValidAuthData(checkHash, req.query)) {
             req.adminForbidden = true;
         } else {
-            const adminData: AdminData = {
+            const adminData: IAdminData = {
                 id: req.query.id,
                 username: req.query.username
             };
@@ -70,7 +70,7 @@ export const telegramAuth = wrap<Request, Response>(async (req, res, next) => {
         }
     } else {
         try {
-            const adminData = jwt.verify(token, PRIVATE_TOKEN) as AdminData;
+            const adminData = jwt.verify(token, PRIVATE_TOKEN) as IAdminData;
             if (!(await checkAccess(adminData))) {
                 req.adminForbidden = true;
             }

@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-import {ShopItem} from 'admin/models/shop-item';
-import {GoodPattern} from 'admin/models/good-pattern';
-import {Order} from 'admin/models/order';
-import {nullReplace} from 'admin/libs/null-replacer';
+import {IIphone} from 'admin/models/iphone';
+import {IAirpods} from 'admin/models/airpods';
+import {IOrder} from 'admin/models/orders';
 
-interface DefaultParams {
+interface IDefaultParams {
     limit: number;
     offset: number;
 }
@@ -28,62 +27,75 @@ function deleteRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
-export function getTables(): Promise<string[]> {
-    return getRequest<string[]>(`/api/v1/tables`);
-}
-
-// SHOP-ITEM
-export function getShopItems(params: DefaultParams): Promise<ShopItem[]> {
+// IPHONE
+export function getIphones(params: IDefaultParams): Promise<IIphone[]> {
     const {limit, offset} = params;
-    return getRequest<ShopItem[]>(`/api/v1/shop-item?limit=${limit}&offset=${offset}`)
-        .then((data) => nullReplace(data));
+    return getRequest<IIphone[]>(`/api/v1/iphone?limit=${limit}&offset=${offset}`);
 }
 
-export function deleteShopItem(id: string): Promise<ShopItem> {
-    return deleteRequest<ShopItem[]>(`/api/v1/shop-item/${id}`, {})
-        .then((data) => nullReplace(data)[0]);
+interface IIphoneEnums {
+    models: string[];
+    colors: string[];
+    memories: string[];
 }
 
-export function updateShopItem(id: string, data: ShopItem): Promise<ShopItem> {
-    return postRequest<ShopItem[]>(`/api/v1/shop-item/update/${id}`, data)
-        .then((data) => nullReplace(data)[0]);
+export function getIphoneEnums(): Promise<IIphoneEnums> {
+    return getRequest<IIphoneEnums>(`/api/v1/iphone/enums`);
 }
 
-export function insertShopItem(data: ShopItem): Promise<ShopItem> {
-    return postRequest<ShopItem[]>(`/api/v1/shop-item/create`, data)
-        .then((data) => nullReplace(data)[0]);
+export function deleteIphone(id: string): Promise<IIphone> {
+    return deleteRequest<IIphone[]>(`/api/v1/iphone/${id}`, {}).then((data) => data[0]);
 }
 
-// GOOD-PATTERN
-export function getGoodPatterns(params: DefaultParams): Promise<GoodPattern[]> {
+export function updateIphone(id: string, data: IIphone): Promise<IIphone> {
+    return postRequest<IIphone[]>(`/api/v1/iphone/update/${id}`, data).then((data) => data[0]);
+}
+
+export function insertIphone(data: IIphone): Promise<IIphone> {
+    return postRequest<IIphone[]>(`/api/v1/iphone/create`, data).then((data) => data[0]);
+}
+
+// AIRPODS
+export function getAirpods(params: IDefaultParams): Promise<IAirpods[]> {
     const {limit, offset} = params;
-    return getRequest<GoodPattern[]>(`/api/v1/good-pattern?limit=${limit}&offset=${offset}`)
-        .then((data) => nullReplace(data));
+    return getRequest<IAirpods[]>(`/api/v1/airpods?limit=${limit}&offset=${offset}`);
 }
 
-export function deleteGoodPattern(id: string): Promise<GoodPattern> {
-    return deleteRequest<GoodPattern[]>(`/api/v1/good-pattern/${id}`, {})
-        .then((data) => nullReplace(data)[0]);
+interface IAirpodsEnums {
+    series: string[];
 }
 
-export function updateGoodPattern(id: string, data: GoodPattern): Promise<GoodPattern> {
-    return postRequest<GoodPattern[]>(`/api/v1/good-pattern/update/${id}`, data)
-        .then((data) => nullReplace(data)[0]);
+export function getAirpodsEnums(): Promise<IAirpodsEnums> {
+    return getRequest<IAirpodsEnums>(`/api/v1/airpods/enums`);
 }
 
-export function insertGoodPattern(data: GoodPattern): Promise<GoodPattern> {
-    return postRequest<GoodPattern[]>(`/api/v1/good-pattern/create`, data)
-        .then((data) => nullReplace(data)[0]);
+export function deleteAirpods(id: string): Promise<IAirpods> {
+    return deleteRequest<IAirpods[]>(`/api/v1/airpods/${id}`, {}).then((data) => data[0]);
+}
+
+export function updateAirpods(id: string, data: IAirpods): Promise<IAirpods> {
+    return postRequest<IAirpods[]>(`/api/v1/airpods/update/${id}`, data).then((data) => data[0]);
+}
+
+export function insertAirpods(data: IAirpods): Promise<IAirpods> {
+    return postRequest<IAirpods[]>(`/api/v1/airpods/create`, data).then((data) => data[0]);
 }
 
 // ORDER
-export function getOrders(params: DefaultParams): Promise<Order[]> {
+export function getOpendOrders(params: IDefaultParams): Promise<IOrder[]> {
     const {limit, offset} = params;
-    return getRequest<Order[]>(`/api/v1/order?limit=${limit}&offset=${offset}`)
-        .then((data) => nullReplace(data));
+    return getRequest<IOrder[]>(`/api/v1/order/opened?limit=${limit}&offset=${offset}`);
 }
 
-export function updateOrder(id: string, data: Order): Promise<Order> {
-    return postRequest<Order[]>(`/api/v1/order/update/${id}`, data)
-        .then((data) => nullReplace(data)[0]);
+interface IOrderEnums {
+    statuses: string[];
+    good_types: string[];
+}
+
+export function getOrderEnums(): Promise<IOrderEnums> {
+    return getRequest<IOrderEnums>(`/api/v1/order/enums`);
+}
+
+export function updateOrder(id: string, data: IOrder): Promise<IOrder> {
+    return postRequest<IOrder[]>(`/api/v1/order/update/${id}`, data).then((data) => data[0]);
 }

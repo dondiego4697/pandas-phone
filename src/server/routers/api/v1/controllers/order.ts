@@ -2,61 +2,53 @@ import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
 import {makeRequest} from 'server/db/client';
-import {seizePaginationParams, makeWhere, makeInsert} from 'server/lib/db';
+import {seizePaginationParams, makeInsert} from 'server/lib/db';
 
-const insertSchema = Joi.object().keys({
-    good_pattern_id: Joi.string().required(),
-    serial_number: Joi.string().allow(''),
-    imei: Joi.string().allow(''),
-    price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).allow(''),
-    customer_name: Joi.string().allow(''),
-    customer_email: Joi.string().allow(''),
-    customer_phone: Joi.string().allow(''),
-    is_called: Joi.bool().allow(''),
+const updateOrderSchema = Joi.object().keys({
+    customer_name: Joi.string().required(),
+    customer_phone: Joi.string().required(),
+    status: Joi.string().required(),
     order_date: Joi.string().required(),
-    sold_date: Joi.string().allow('')
+    sold_date: Joi.string().allow(null).default('')
 });
 
+const ORDER_TABLE_NAME = '"order"';
+const ORDER_ITEM_TABLE_NAME = 'order_item';
+
 export class Order {
-    static async getItems(query: Record<string, any>) {
-        const pagination = seizePaginationParams(query);
+    static async getEnums() {
+        const data = await Promise.all(['ORDER_STATUS_T', 'ORDER_GOOD_TYPE_T'].map(async (key) => {
+            return makeRequest({
+                text: `SELECT unnest(enum_range(NULL::${key}))::text;`,
+                values: []
+            });
+        }));
 
-        const whereParams = makeWhere(query);
-        const whereText = whereParams.pairsText.length > 0 ?
-            `WHERE ${whereParams.pairsText.join(' AND ')}` :
-            '';
-
-        const data = await makeRequest({
-            text: `
-                SELECT * FROM "order"
-                ${whereText !== '' ? `${whereText} AND sold_date IS NULL` : 'WHERE sold_date IS NULL'}
-                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
-            `,
-            values: [...whereParams.values]
-        });
-
-        if (!data) {
+        if (data.some((x) => !x)) {
             throw Boom.badData();
         }
 
-        return data.rows;
+        return {
+            statuses: data[0]!.rows.map((x) => x.unnest),
+            good_types: data[1]!.rows.map((x) => x.unnest)
+        };
     }
 
-    static async updateItem(id: string, body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
+    static async updateOrder(orderId: string, body: Record<string, any>) {
+        const result = Joi.validate(body, updateOrderSchema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }
 
+        // TODO if status === 'reject' || bought -> sold_date:now()
         const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                UPDATE "order"
+                UPDATE ${ORDER_TABLE_NAME}
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
-            values: [id, ...values].map((x) => x === '' ? null : x)
+            values: [orderId, ...values]
         });
 
         if (!data) {
@@ -66,21 +58,29 @@ export class Order {
         return data.rows;
     }
 
-    static async insertItem(body: Record<string, any>) {
-        const result = Joi.validate(body, insertSchema);
-        if (result.error) {
-            throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
-        }
+    static async getOpenedOrders(query: Record<string, any>) {
+        const pagination = seizePaginationParams(query);
 
-        const {names, values} = makeInsert(result.value);
         const data = await makeRequest({
             text: `
-                INSERT INTO "order"
-                (${names.join(', ')})
-                VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
-                RETURNING *;
+                SELECT * FROM ${ORDER_TABLE_NAME}
+                WHERE status='new' OR status='called'
+                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
-            values: [...values]
+            values: []
+        });
+
+        if (!data) {
+            throw Boom.badData();
+        }
+
+        return data.rows;
+    }
+
+    static async getOrderItems(orderId: string) {
+        const data = await makeRequest({
+            text: `SELECT * FROM ${ORDER_ITEM_TABLE_NAME} WHERE order_id=$1;`,
+            values: [orderId]
         });
 
         if (!data) {

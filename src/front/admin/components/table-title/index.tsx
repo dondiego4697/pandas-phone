@@ -6,12 +6,12 @@ import './index.scss';
 
 const b = bevis('table-title');
 
-interface Props {
+interface IProps {
     value: string;
 }
 
-export default class TableTitle extends React.Component<Props> {
-    render(): React.ReactNode {
+export class TableTitle extends React.Component<IProps> {
+    public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <h1>{this.props.value}</h1>

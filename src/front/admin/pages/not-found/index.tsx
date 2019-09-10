@@ -8,7 +8,7 @@ const b = bevis('not-found');
 import './index.scss';
 
 export class NotFoundPage extends React.Component<{}> {
-    render(): React.ReactNode {
+    public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>

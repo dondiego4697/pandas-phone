@@ -3,22 +3,13 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import * as Boom from '@hapi/boom';
 
-import {ShopItem} from 'server/routers/api/v1/controllers/shop-item';
-import {GoodPattern} from 'server/routers/api/v1/controllers/good-pattern';
+import {Iphone} from 'server/routers/api/v1/controllers/iphone';
+import {Airpods} from 'server/routers/api/v1/controllers/airpods';
 import {Order} from 'server/routers/api/v1/controllers/order';
-import {Schema} from 'server/routers/api/v1/controllers/schema';
 
 import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
-
-apiV1Router.get('/public/shop-items', wrap<Request, Response>(async (req, res) => {
-    res.json(await ShopItem.getItemsFull(req.query));
-}));
-
-apiV1Router.post('/public/order/create', wrap<Request, Response>(async (req, res) => {
-    res.json(await Order.insertItem(req.body));
-}));
 
 apiV1Router
     .use(telegramAuth)
@@ -30,49 +21,61 @@ apiV1Router
         next();
     });
 
-apiV1Router.get('/tables', wrap<Request, Response>(async (req, res) => {
-    res.json(await Schema.getTables());
+// IPHONE
+apiV1Router.get('/iphone', wrap<Request, Response>(async (req, res) => {
+    res.json(await Iphone.getItems(req.query));
 }));
 
-// SHOP-ITEM
-apiV1Router.get('/shop-item', wrap<Request, Response>(async (req, res) => {
-    res.json(await ShopItem.getItems(req.query));
+apiV1Router.get('/iphone/enums', wrap<Request, Response>(async (req, res) => {
+    res.json(await Iphone.getEnums());
 }));
 
-apiV1Router.post('/shop-item/create', wrap<Request, Response>(async (req, res) => {
-    res.json(await ShopItem.insertItem(req.body));
+apiV1Router.post('/iphone/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await Iphone.insertItem(req.body));
 }));
 
-apiV1Router.post('/shop-item/update/:id', wrap<Request, Response>(async (req, res) => {
-    res.json(await ShopItem.updateItem(req.params.id, req.body));
+apiV1Router.post('/iphone/update/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Iphone.updateItem(req.params.id, req.body));
 }));
 
-apiV1Router.delete('/shop-item/:id', wrap<Request, Response>(async (req, res) => {
-    res.json(await ShopItem.deleteItem(req.params.id));
+apiV1Router.delete('/iphone/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Iphone.deleteItem(req.params.id));
 }));
 
-// GOOD-PATTERN
-apiV1Router.get('/good-pattern', wrap<Request, Response>(async (req, res) => {
-    res.json(await GoodPattern.getItems(req.query));
+// AIRPODS
+apiV1Router.get('/airpods', wrap<Request, Response>(async (req, res) => {
+    res.json(await Airpods.getItems(req.query));
 }));
 
-apiV1Router.post('/good-pattern/create', wrap<Request, Response>(async (req, res) => {
-    res.json(await GoodPattern.insertItem(req.body));
+apiV1Router.get('/airpods/enums', wrap<Request, Response>(async (req, res) => {
+    res.json(await Airpods.getEnums());
 }));
 
-apiV1Router.post('/good-pattern/update/:id', wrap<Request, Response>(async (req, res) => {
-    res.json(await GoodPattern.updateItem(req.params.id, req.body));
+apiV1Router.post('/airpods/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await Airpods.insertItem(req.body));
 }));
 
-apiV1Router.delete('/good-pattern/:id', wrap<Request, Response>(async (req, res) => {
-    res.json(await GoodPattern.deleteItem(req.params.id));
+apiV1Router.post('/airpods/update/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Airpods.updateItem(req.params.id, req.body));
+}));
+
+apiV1Router.delete('/airpods/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Airpods.deleteItem(req.params.id));
 }));
 
 // ORDER
-apiV1Router.get('/order', wrap<Request, Response>(async (req, res) => {
-    res.json(await Order.getItems(req.query));
+apiV1Router.get('/order/opened', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.getOpenedOrders(req.query));
+}));
+
+apiV1Router.get('/order/enums', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.getEnums());
+}));
+
+apiV1Router.get('/order/:id/items', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.getOrderItems(req.params.id));
 }));
 
 apiV1Router.post('/order/update/:id', wrap<Request, Response>(async (req, res) => {
-    res.json(await Order.updateItem(req.params.id, req.body));
+    res.json(await Order.updateOrder(req.params.id, req.body));
 }));

@@ -1,23 +1,16 @@
-import {observable, action} from 'mobx';
+import {observable} from 'mobx';
 
-export interface ClientData {
+export interface IClientData {
     readonly forbidden: boolean;
     readonly telegramBotName: string;
 }
 
 export class ClientDataModel {
-    @observable forbidden: boolean;
-    @observable telegramBotName: string;
-    @observable tabItem: number;
+    @observable public forbidden: boolean;
+    @observable public telegramBotName: string;
 
-    constructor(clientData: ClientData) {
+    constructor(clientData: IClientData) {
         this.forbidden = clientData.forbidden;
         this.telegramBotName = clientData.telegramBotName;
-
-        this.tabItem = 0;
-    }
-
-    @action setTabItem(newValue: number): void {
-        this.tabItem = newValue;
     }
 }
