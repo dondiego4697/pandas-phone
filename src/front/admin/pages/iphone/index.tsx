@@ -5,9 +5,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import {ClientDataModel} from 'admin/models/client-data';
 import {IIphone, IphonePageModel} from 'admin/models/iphone';
-import ProgressBar from 'admin/components/progress-bar';
-import Table from 'admin/components/table';
-import TableTitle from 'admin/components/table-title';
+import {ProgressBar} from 'admin/components/progress-bar';
+import {Table} from 'admin/components/table';
+import {TableTitle} from 'admin/components/table-title';
 import {PageStatus} from 'admin/libs/types';
 
 import bevis from 'libs/bevis';
