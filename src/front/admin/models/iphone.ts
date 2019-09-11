@@ -48,6 +48,11 @@ export class IphonePageModel {
             return getIphoneEnums().then((enums) => {
                 this.tableColumns = [
                     {
+                        editable: 'never',
+                        field: 'id',
+                        title: 'ID'
+                    },
+                    {
                         field: 'model',
                         lookup: makeLookup(enums.models),
                         title: 'Model'

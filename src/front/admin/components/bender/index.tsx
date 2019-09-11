@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 
 import bevis from 'libs/bevis';
 
@@ -10,7 +11,10 @@ export class Bender extends React.Component<{}> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
-                <div className={b('img')}/>
+                <Link
+                    className={b('img')}
+                    to='/bender-root'
+                />
             </div>
         );
     }

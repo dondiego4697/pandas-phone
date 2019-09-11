@@ -72,8 +72,28 @@ apiV1Router.get('/order/enums', wrap<Request, Response>(async (req, res) => {
     res.json(await Order.getEnums());
 }));
 
+apiV1Router.get('/order/id/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.getOrder(req.params.id));
+}));
+
+apiV1Router.post('/order/:id/update/status', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.changeOrderStatus(req.params.id, req.body.status));
+}));
+
 apiV1Router.get('/order/:id/items', wrap<Request, Response>(async (req, res) => {
     res.json(await Order.getOrderItems(req.params.id));
+}));
+
+apiV1Router.post('/order/item/update/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.updateOrderItem(req.params.id, req.body));
+}));
+
+apiV1Router.post('/order/item/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.insertOrderItem(req.body));
+}));
+
+apiV1Router.delete('/order/item/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.deleteOrderItem(req.params.id));
 }));
 
 apiV1Router.post('/order/update/:id', wrap<Request, Response>(async (req, res) => {

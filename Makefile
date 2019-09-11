@@ -16,9 +16,9 @@ validate: lint
 .PHONY: lint
 lint:
 	node_modules/.bin/tslint -p src/server/tsconfig.json -c tslint.json -t codeFrame 'src/server/**/*.ts'
-	node_modules/.bin/tslint -p src/front/client/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/client/**/*.{ts,tsx}'
 	node_modules/.bin/tslint -p src/front/admin/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/admin/**/*.{ts,tsx}'
 	node_modules/.bin/tslint -c tslint.web.json -t codeFrame 'src/front/lib/**/*.{ts,tsx}'
+	node_modules/.bin/tslint -p src/front/client/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/client/**/*.{ts,tsx}'
 
 .PHONY: dev
 dev:

@@ -24,10 +24,6 @@ export class Iphone {
             });
         }));
 
-        if (data.some((x) => !x)) {
-            throw Boom.badData();
-        }
-
         return {
             models: data[0]!.rows.map((x) => x.unnest),
             memories: data[1]!.rows.map((x) => x.unnest),
@@ -45,10 +41,6 @@ export class Iphone {
             `,
             values: []
         });
-
-        if (!data) {
-            throw Boom.badData();
-        }
 
         return data.rows;
     }
@@ -70,10 +62,6 @@ export class Iphone {
             values: [...values]
         });
 
-        if (!data) {
-            throw Boom.badData();
-        }
-
         return data.rows;
     }
 
@@ -93,10 +81,6 @@ export class Iphone {
             values: [id, ...values]
         });
 
-        if (!data) {
-            throw Boom.badData();
-        }
-
         return data.rows;
     }
 
@@ -105,10 +89,6 @@ export class Iphone {
             text: `DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING *;`,
             values: [id]
         });
-
-        if (!data) {
-            throw Boom.badData();
-        }
 
         return data.rows;
     }

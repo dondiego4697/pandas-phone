@@ -1,4 +1,6 @@
 import * as pg from 'pg';
+import * as Boom from '@hapi/boom';
+
 import {logger} from 'server/lib/logger';
 
 import {config as dbConfig} from 'server/db/config';
@@ -27,6 +29,7 @@ export async function makeRequest(query: pg.QueryConfig) {
         result = await client.query(query);
     } catch (err) {
         logger.error(`Database query error: ${err.message}, ${JSON.stringify(query)}`);
+        throw Boom.badRequest(err.message);
     } finally {
         if (client) {
             client.release();

@@ -24,10 +24,6 @@ export class Airpods {
             });
         }));
 
-        if (data.some((x) => !x)) {
-            throw Boom.badData();
-        }
-
         return {
             series: data[0]!.rows.map((x) => x.unnest)
         };
@@ -43,10 +39,6 @@ export class Airpods {
             `,
             values: []
         });
-
-        if (!data) {
-            throw Boom.badData();
-        }
 
         return data.rows;
     }
@@ -68,10 +60,6 @@ export class Airpods {
             values: [...values]
         });
 
-        if (!data) {
-            throw Boom.badData();
-        }
-
         return data.rows;
     }
 
@@ -91,10 +79,6 @@ export class Airpods {
             values: [id, ...values]
         });
 
-        if (!data) {
-            throw Boom.badData();
-        }
-
         return data.rows;
     }
 
@@ -103,10 +87,6 @@ export class Airpods {
             text: `DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING *;`,
             values: [id]
         });
-
-        if (!data) {
-            throw Boom.badData();
-        }
 
         return data.rows;
     }

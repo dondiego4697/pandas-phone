@@ -3,6 +3,7 @@ import axios from 'axios';
 import {IIphone} from 'admin/models/iphone';
 import {IAirpods} from 'admin/models/airpods';
 import {IOrder} from 'admin/models/orders';
+import {IOrderItem} from 'admin/models/order';
 
 interface IDefaultParams {
     limit: number;
@@ -87,7 +88,11 @@ export function getOpendOrders(params: IDefaultParams): Promise<IOrder[]> {
     return getRequest<IOrder[]>(`/api/v1/order/opened?limit=${limit}&offset=${offset}`);
 }
 
-interface IOrderEnums {
+export function getOrder(id: string): Promise<IOrder> {
+    return getRequest<IOrder[]>(`/api/v1/order/id/${id}`).then((data) => data[0]);
+}
+
+export interface IOrderEnums {
     statuses: string[];
     good_types: string[];
 }
@@ -98,4 +103,24 @@ export function getOrderEnums(): Promise<IOrderEnums> {
 
 export function updateOrder(id: string, data: IOrder): Promise<IOrder> {
     return postRequest<IOrder[]>(`/api/v1/order/update/${id}`, data).then((data) => data[0]);
+}
+
+export function getOrderItems(orderId: string): Promise<IOrderItem[]> {
+    return getRequest<IOrderItem[]>(`/api/v1/order/${orderId}/items`);
+}
+
+export function insertOrderItem(data: IOrderItem): Promise<IOrderItem> {
+    return postRequest<IOrderItem[]>(`/api/v1/order/item/create`, data).then((data) => data[0]);
+}
+
+export function deleteOrderItem(id: string): Promise<IOrderItem> {
+    return deleteRequest<IOrderItem[]>(`/api/v1/order/item/${id}`, {}).then((data) => data[0]);
+}
+
+export function updateOrderItem(id: string, data: IOrderItem): Promise<IOrderItem> {
+    return postRequest<IOrderItem[]>(`/api/v1/order/item/update/${id}`, data).then((data) => data[0]);
+}
+
+export function changeOrderStatus(id: string, status: 'reject' | 'bought' | 'called'): Promise<IOrder> {
+    return postRequest<IOrder[]>(`/api/v1/order/${id}/update/status`, {status}).then((data) => data[0]);
 }

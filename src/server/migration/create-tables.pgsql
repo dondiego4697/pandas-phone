@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "order" (
     sold_date TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );
 
-CREATE TYPE ORDER_GOOD_TYPE_T as enum('iphone', 'airpods');
+CREATE TYPE ORDER_GOOD_TYPE_T as enum('iphone', 'airpods'); -- database name
 CREATE TABLE IF NOT EXISTS order_item (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     order_id UUID REFERENCES "order"(id) ON DELETE RESTRICT,
@@ -60,3 +60,32 @@ CREATE TABLE IF NOT EXISTS order_item (
     good_type ORDER_GOOD_TYPE_T NOT NULL,
     good_id UUID NOT NULL
 );
+
+CREATE OR REPLACE FUNCTION beforeOrderItemInsert() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    item_id UUID;
+BEGIN
+    EXECUTE FORMAT('SELECT id FROM %I WHERE id=$1 LIMIT 1;', NEW.good_type) USING NEW.good_id INTO item_id;
+    IF item_id IS NULL THEN
+        RAISE EXCEPTION '% is not from % table', NEW.good_id, NEW.good_type;
+    END IF;
+    RETURN new;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER beforeOrderItemInsert BEFORE INSERT ON order_item FOR EACH ROW EXECUTE PROCEDURE beforeOrderItemInsert();
+
+CREATE OR REPLACE FUNCTION afterOrderUpdate() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.status='bought' OR NEW.status='reject' THEN
+        UPDATE "order" SET sold_date='now()' WHERE id=NEW.id;
+    END IF;
+    RETURN new;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER afterOrderUpdate AFTER UPDATE ON "order" FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE afterOrderUpdate();

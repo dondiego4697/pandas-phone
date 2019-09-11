@@ -48,6 +48,11 @@ export class AirpodsPageModel {
             return getAirpodsEnums().then((enums) => {
                 this.tableColumns = [
                     {
+                        editable: 'never',
+                        field: 'id',
+                        title: 'ID'
+                    },
+                    {
                         field: 'series',
                         lookup: makeLookup(enums.series),
                         title: 'Series'

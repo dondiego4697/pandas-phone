@@ -3,7 +3,6 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import {RouteComponentProps} from 'react-router';
 
-import {ClientDataModel} from 'admin/models/client-data';
 import {IOrder, OrdersPageModel} from 'admin/models/orders';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
@@ -14,13 +13,12 @@ import {PageStatus} from 'admin/libs/types';
 import './index.scss';
 
 interface IProps extends RouteComponentProps {
-    clientDataModel?: ClientDataModel;
     ordersPageModel?: OrdersPageModel;
 }
 
 const b = bevis('orders');
 
-@inject('clientDataModel', 'ordersPageModel')
+@inject('ordersPageModel')
 @observer
 export class OrdersPage extends React.Component<IProps> {
     public componentDidMount(): void {
@@ -41,10 +39,13 @@ export class OrdersPage extends React.Component<IProps> {
                         <Table
                             columns={this.getColumns()}
                             rows={this.getRows()}
-                            rowsPerPage={this.props.ordersPageModel!.limit}
-                            currentPage={this.props.ordersPageModel!.offset / this.props.ordersPageModel!.limit + 1}
-                            handleChangePage={this.handleChangePage}
-                            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            pagination={{
+                                currentPage: this.props.ordersPageModel!.offset /
+                                    this.props.ordersPageModel!.limit + 1,
+                                handleChangePage: this.handleChangePage,
+                                handleChangeRowsPerPage: this.handleChangeRowsPerPage,
+                                rowsPerPage: this.props.ordersPageModel!.limit
+                            }}
                             handleUpdateRow={this.handleUpdateRow}
                             actions={[
                                 {

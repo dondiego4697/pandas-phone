@@ -1,11 +1,14 @@
 .bender {
+    position: relative;
+
     &__img {
         width: 100px;
         height: 100px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
-        position: fixed;
-        background-image: url(/public/imgs/bender.png)
+        position: absolute;
+        background-image: url(/public/imgs/bender.png);
+        cursor: pointer;
     }
 }

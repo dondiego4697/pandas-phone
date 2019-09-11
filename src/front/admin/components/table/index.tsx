@@ -7,13 +7,18 @@ import bevis from 'libs/bevis';
 
 const b = bevis('table');
 
-interface IProps<T extends object> {
-    columns: Column<any>[];
-    rows: T[];
+interface IPagination {
     rowsPerPage: number;
     currentPage: number;
     handleChangePage: (diff: number) => void;
     handleChangeRowsPerPage: (rows: number) => void;
+}
+
+interface IProps<T extends object> {
+    columns: Column<any>[];
+    rows: T[];
+
+    pagination?: IPagination;
 
     handleUpdateRow?: (row: T) => Promise<void>;
     handleDeleteRow?: (row: T) => Promise<void>;
@@ -52,22 +57,22 @@ export class Table<T extends Record<string, any>> extends React.Component<IProps
                         }}
                         actions={this.props.actions || []}
                     />
-                    <Pagination
-                        currentPage={this.props.currentPage}
-                        rowsPerPage={this.props.rowsPerPage}
+                    {this.props.pagination && <Pagination
+                        currentPage={this.props.pagination!.currentPage}
+                        rowsPerPage={this.props.pagination!.rowsPerPage}
                         handleChangePage={(diff: number) => {
-                            if (diff === -1 && this.props.currentPage === 1) {
+                            if (diff === -1 && this.props.pagination!.currentPage === 1) {
                                 return;
                             }
 
-                            if (diff === 1 && this.props.rows.length < this.props.rowsPerPage) {
+                            if (diff === 1 && this.props.rows.length < this.props.pagination!.rowsPerPage) {
                                 return;
                             }
 
-                            this.props.handleChangePage(diff);
+                            this.props.pagination!.handleChangePage(diff);
                         }}
-                        handleChangeRowsPerPage={this.props.handleChangeRowsPerPage}
-                    />
+                        handleChangeRowsPerPage={this.props.pagination!.handleChangeRowsPerPage}
+                    />}
                 </div>
             </div>
         );

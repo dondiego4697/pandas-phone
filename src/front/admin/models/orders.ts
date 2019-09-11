@@ -3,7 +3,6 @@ import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
 import {
-    getOrderEnums,
     getOpendOrders,
     updateOrder
 } from 'admin/libs/db-request';
@@ -31,40 +30,28 @@ export class OrdersPageModel {
     @observable public snackbar: ISnackbar = {message: '', open: false};
 
     @action public setTableColumns(): Promise<void> {
-        const makeLookup = (data: string[]) => {
-            return data.reduce(
-                (res: Record<string, string>, curr) => {
-                    res[curr] = curr;
-                    return res;
-                },
-                {}
-            );
-        };
-
         if (this.tableColumns.length === 0) {
-            return getOrderEnums().then((enums) => {
-                this.tableColumns = [
-                    {
-                        field: 'customer_name',
-                        title: 'Customer name'
-                    },
-                    {
-                        editable: 'never',
-                        field: 'customer_phone',
-                        title: 'Customer phone'
-                    },
-                    {
-                        field: 'status',
-                        lookup: makeLookup(enums.statuses),
-                        title: 'Status'
-                    },
-                    {
-                        editable: 'never',
-                        field: 'order_date',
-                        title: 'Order date'
-                    }
-                ];
-            });
+            this.tableColumns = [
+                {
+                    field: 'customer_name',
+                    title: 'Customer name'
+                },
+                {
+                    editable: 'never',
+                    field: 'customer_phone',
+                    title: 'Customer phone'
+                },
+                {
+                    editable: 'never',
+                    field: 'status',
+                    title: 'Status'
+                },
+                {
+                    editable: 'never',
+                    field: 'order_date',
+                    title: 'Order date'
+                }
+            ];
         }
 
         return Promise.resolve();
@@ -95,6 +82,7 @@ export class OrdersPageModel {
                     const buff = [...this.data];
                     buff.splice(index, 1, updated);
                     this.data = buff;
+
                     resolve();
                 }).catch((err) => reject(err.response.data));
             });

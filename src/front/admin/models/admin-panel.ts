@@ -1,7 +1,7 @@
 import {observable} from 'mobx';
 
 export class AdminPanelPageModel {
-    @observable public tables: string[] = [
+    @observable public pages: string[] = [
         'iphone',
         'airpods',
         'order'

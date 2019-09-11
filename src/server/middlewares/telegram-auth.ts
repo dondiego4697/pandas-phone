@@ -67,6 +67,7 @@ export const telegramAuth = wrap<Request, Response>(async (req, res, next) => {
 
             res.cookie('admin_session', token, {maxAge: 60 * 60 * 1000});
             res.redirect('/bender-root');
+            return;
         }
     } else {
         try {

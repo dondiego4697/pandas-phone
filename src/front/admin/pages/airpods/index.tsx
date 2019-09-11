@@ -3,7 +3,6 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import {ClientDataModel} from 'admin/models/client-data';
 import {IAirpods, AirpodsPageModel} from 'admin/models/airpods';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
@@ -15,13 +14,12 @@ import bevis from 'libs/bevis';
 import './index.scss';
 
 interface IProps {
-    clientDataModel?: ClientDataModel;
     airpodsPageModel?: AirpodsPageModel;
 }
 
 const b = bevis('airpods');
 
-@inject('clientDataModel', 'airpodsPageModel')
+@inject('airpodsPageModel')
 @observer
 export class AirpodsPage extends React.Component<IProps> {
     public componentDidMount(): void {
@@ -42,10 +40,13 @@ export class AirpodsPage extends React.Component<IProps> {
                         <Table
                             columns={this.getColumns()}
                             rows={this.getRows()}
-                            rowsPerPage={this.props.airpodsPageModel!.limit}
-                            currentPage={this.props.airpodsPageModel!.offset / this.props.airpodsPageModel!.limit + 1}
-                            handleChangePage={this.handleChangePage}
-                            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            pagination={{
+                                currentPage: this.props.airpodsPageModel!.offset /
+                                this.props.airpodsPageModel!.limit + 1,
+                                handleChangePage: this.handleChangePage,
+                                handleChangeRowsPerPage: this.handleChangeRowsPerPage,
+                                rowsPerPage: this.props.airpodsPageModel!.limit
+                            }}
                             handleDeleteRow={this.handleDeleteRow}
                             handleUpdateRow={this.handleUpdateRow}
                             handleAddRow={this.handleAddRow}

@@ -3,7 +3,6 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import {ClientDataModel} from 'admin/models/client-data';
 import {IIphone, IphonePageModel} from 'admin/models/iphone';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
@@ -15,13 +14,12 @@ import bevis from 'libs/bevis';
 import './index.scss';
 
 interface IProps {
-    clientDataModel?: ClientDataModel;
     iphonePageModel?: IphonePageModel;
 }
 
 const b = bevis('iphone');
 
-@inject('clientDataModel', 'iphonePageModel')
+@inject('iphonePageModel')
 @observer
 export class IphonePage extends React.Component<IProps> {
     public componentDidMount(): void {
@@ -42,10 +40,12 @@ export class IphonePage extends React.Component<IProps> {
                         <Table
                             columns={this.getColumns()}
                             rows={this.getRows()}
-                            rowsPerPage={this.props.iphonePageModel!.limit}
-                            currentPage={this.props.iphonePageModel!.offset / this.props.iphonePageModel!.limit + 1}
-                            handleChangePage={this.handleChangePage}
-                            handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            pagination={{
+                                currentPage: this.props.iphonePageModel!.offset / this.props.iphonePageModel!.limit + 1,
+                                handleChangePage: this.handleChangePage,
+                                handleChangeRowsPerPage: this.handleChangeRowsPerPage,
+                                rowsPerPage: this.props.iphonePageModel!.limit
+                            }}
                             handleDeleteRow={this.handleDeleteRow}
                             handleUpdateRow={this.handleUpdateRow}
                             handleAddRow={this.handleAddRow}
