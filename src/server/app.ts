@@ -80,7 +80,7 @@ function sendError(res: Response, err: Boom): void {
 }
 
 if (!module.parent) {
-    const port = getCustomPort() || 8080;
+    const port = getCustomPort() || 3000;
     app.listen(port, () => {
         logger.info(`Application started on port ${port}`);
     });

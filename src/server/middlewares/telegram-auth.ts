@@ -44,10 +44,22 @@ async function checkAccess(adminData: IAdminData): Promise<boolean> {
     return dbResponse.rows.length > 0;
 }
 
+async function log(req: Request): Promise<void> {
+    logger.info(`Request without token: ${JSON.stringify({
+        url: req.originalUrl,
+        query: req.query,
+        method: req.method,
+        ip: req.ip,
+        headers: req.headers
+    })}`);
+}
+
 export const telegramAuth = wrap<Request, Response>(async (req, res, next) => {
     const token = req.cookies['admin_session'];
 
     if (!token) {
+        log(req);
+
         const checkHash = req.query.hash;
         delete req.query.hash;
 
