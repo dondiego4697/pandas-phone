@@ -3,27 +3,22 @@ import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
 import {IOrder} from 'admin/models/orders';
+import {IAirpod} from 'admin/models/airpods';
+import {IIphone} from 'admin/models/iphones';
 
 import {
-    getOrderItems,
-    deleteOrderItem,
-    insertOrderItem,
-    updateOrderItem,
-    getOrderEnums,
     getOrder,
+    getOrderItems,
     changeOrderStatus,
-    IOrderEnums
+    insertAirpodOrder,
+    insertIphoneOrder,
+    deleteAirpodOrder,
+    deleteIphoneOrder
 } from 'admin/libs/db-request';
 
-export interface IOrderItem {
-    id: string;
-    order_id: string;
-    serial_number: string;
-    imei: string;
-    price: number;
-    discount: number;
-    good_type: string;
-    good_id: string;
+export interface IOrderItems {
+    iphones: IIphone[];
+    airpods: IAirpod[];
 }
 
 interface ISnackbar {
@@ -34,10 +29,16 @@ interface ISnackbar {
 export class OrderPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public totalPrice = Number(0).toFixed(2);
-    @observable public data: IOrderItem[] = [];
+
+    @observable public airpodsData: IAirpod[] = [];
+    @observable public iphonesData: IIphone[] = [];
+
+    @observable public tableAipodColumns: Column<IAirpod>[] = [];
+    @observable public tableIphoneColumns: Column<IIphone>[] = [];
+
     @observable public orderData: IOrder | undefined;
+
     @observable public notFound = false;
-    @observable public tableColumns: Column<IOrderItem>[] = [];
     @observable public snackbar: ISnackbar = {message: '', open: false};
 
     @action public fetchData(orderId: string): void {
@@ -47,7 +48,7 @@ export class OrderPageModel {
             this.setMainData(orderId).then(() => {
                 getOrderItems(orderId)
                     .then((data) => {
-                        this.data = data;
+                        this.fillData(data);
                         this.calcPrice();
 
                         this.status = PageStatus.DONE;
@@ -74,112 +75,145 @@ export class OrderPageModel {
         });
     }
 
-    @action public deleteRow(orderItem: IOrderItem): Promise<void> {
+    @action public handleActionResponse(orderId: string, promise: Promise<any>): Promise<void> {
         return new Promise((resolve, reject) => {
-            runInAction(() => {
-                deleteOrderItem(orderItem.id).then((deleted: IOrderItem) => {
-                    const index = this.data.findIndex((item) => item.id === deleted.id);
-                    const buff = [...this.data];
-                    buff.splice(index, 1);
-                    this.data = buff;
-
+            promise
+                .then(() => getOrderItems(orderId))
+                .then((data) => {
+                    this.fillData(data);
                     this.calcPrice();
                     resolve();
-                }).catch((err) => reject(err.response.data));
-            });
+                })
+                .catch((err) => reject(err.response.data))
+                .finally(() => {
+                    this.status = PageStatus.DONE;
+                });
         });
     }
 
-    @action public updateRow(orderItem: IOrderItem): Promise<void> {
-        return new Promise((resolve, reject) => {
-            runInAction(() => {
-                const id = orderItem.id;
-                delete orderItem.id;
-
-                updateOrderItem(id, orderItem).then((updated: IOrderItem) => {
-                    const index = this.data.findIndex((item) => item.id === updated.id);
-                    const buff = [...this.data];
-                    buff.splice(index, 1, updated);
-                    this.data = buff;
-
-                    this.calcPrice();
-                    resolve();
-                }).catch((err) => reject(err.response.data));
-            });
-        });
+    @action public deleteAirpodRow(orderId: string, airpod: IAirpod): Promise<void> {
+        return this.handleActionResponse(orderId, deleteAirpodOrder(orderId, airpod.id));
     }
 
-    @action public insertRow(orderId: string, orderItem: IOrderItem): Promise<void> {
-        return new Promise((resolve, reject) => {
-            runInAction(() => {
-                orderItem.order_id = orderId;
-                insertOrderItem(orderItem).then((inserted: IOrderItem) => {
-                    this.data = [...this.data, inserted];
+    @action public deleteIphoneRow(orderId: string, iphone: IIphone): Promise<void> {
+        return this.handleActionResponse(orderId, deleteIphoneOrder(orderId, iphone.id));
+    }
 
-                    this.calcPrice();
-                    resolve();
-                }).catch((err) => reject(err.response.data));
-            });
-        });
+    @action public insertAirpodRow(orderId: string, airpod: IAirpod): Promise<void> {
+        return this.handleActionResponse(orderId, insertAirpodOrder(orderId, airpod.id));
+    }
+
+    @action public insertIphoneRow(orderId: string, iphone: IIphone): Promise<void> {
+        return this.handleActionResponse(orderId, insertIphoneOrder(orderId, iphone.id));
     }
 
     @action private setMainData(orderId: string): Promise<void> {
-        const makeLookup = (data: string[]) => {
-            return data.reduce(
-                (res: Record<string, string>, curr) => {
-                    res[curr] = curr;
-                    return res;
-                },
-                {}
-            );
-        };
-
-        return Promise.all([
-            this.tableColumns.length === 0 ? getOrderEnums().then((enums) => {
-                this.tableColumns = [
-                    {
-                        editable: 'onAdd',
-                        field: 'good_type',
-                        lookup: makeLookup(enums.good_types),
-                        title: 'Type'
-                    },
-                    {
-                        editable: 'onAdd',
-                        field: 'good_id',
-                        title: 'Good ID'
-                    },
-                    {
-                        field: 'serial_number',
-                        title: 'Serial'
-                    },
-                    {
-                        field: 'imei',
-                        title: 'IMEI'
-                    },
-                    {
-                        field: 'price',
-                        title: 'Price',
-                        type: 'numeric'
-                    },
-                    {
-                        field: 'discount',
-                        title: 'Discount',
-                        type: 'numeric'
-                    }
-                ];
-            }) : Promise.resolve(),
-            getOrder(orderId)
-        ]).then(([_, order]) => {
+        return getOrder(orderId).then((order) => {
             this.orderData = order;
+        }).then(() => {
+            this.tableAipodColumns = [
+                {
+                    editable: 'onAdd',
+                    field: 'id',
+                    title: 'ID'
+                },
+                {
+                    editable: 'never',
+                    field: 'series',
+                    title: 'Series'
+                },
+                {
+                    editable: 'never',
+                    field: 'is_original',
+                    title: 'Original',
+                    type: 'boolean'
+                },
+                {
+                    editable: 'never',
+                    field: 'is_charging_case',
+                    title: 'Charging case',
+                    type: 'boolean'
+                },
+                {
+                    editable: 'never',
+                    field: 'price',
+                    title: 'Price',
+                    type: 'numeric'
+                },
+                {
+                    editable: 'never',
+                    field: 'discount',
+                    title: 'Discount',
+                    type: 'numeric'
+                },
+                {
+                    editable: 'never',
+                    field: 'serial_number',
+                    title: 'Serial number'
+                }
+            ];
+
+            this.tableIphoneColumns = [
+                {
+                    editable: 'onAdd',
+                    field: 'id',
+                    title: 'ID'
+                },
+                {
+                    editable: 'never',
+                    field: 'model',
+                    title: 'Model'
+                },
+                {
+                    editable: 'never',
+                    field: 'color',
+                    title: 'Color'
+                },
+                {
+                    editable: 'never',
+                    field: 'memory_capacity',
+                    title: 'Memory capacity [GB]'
+                },
+                {
+                    editable: 'never',
+                    field: 'price',
+                    title: 'Price',
+                    type: 'numeric'
+                },
+                {
+                    editable: 'never',
+                    field: 'discount',
+                    title: 'Discount',
+                    type: 'numeric'
+                },
+                {
+                    editable: 'never',
+                    field: 'serial_number',
+                    title: 'Serial number'
+                },
+                {
+                    editable: 'never',
+                    field: 'imei',
+                    title: 'IMEI'
+                }
+            ];
         });
     }
 
+    @action private fillData(data: IOrderItems): void {
+        this.airpodsData = data.airpods;
+        this.iphonesData = data.iphones;
+    }
+
     @action private calcPrice(): void {
-        this.totalPrice = (this.data.reduce(
-            (res, item) => {
-                return res + item.price * ((100 - item.discount) / 100);
-            },
-            0
-        )).toFixed(2);
+        const calcWithDiscount = (price: number, discount: number) => {
+            return price * ((100 - discount) / 100);
+        };
+
+        let totalPrice = 0;
+        this.airpodsData.forEach((airpod) => totalPrice += calcWithDiscount(airpod.price, airpod.discount));
+        this.iphonesData.forEach((iphone) => totalPrice += calcWithDiscount(iphone.price, iphone.discount));
+
+        this.totalPrice = totalPrice.toFixed(2);
     }
 }

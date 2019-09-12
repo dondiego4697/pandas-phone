@@ -4,12 +4,14 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import {Button, Snackbar} from '@material-ui/core';
 
-import {OrderPageModel, IOrderItem} from 'admin/models/order';
+import {OrderPageModel} from 'admin/models/order';
 import {TableTitle} from 'admin/components/table-title';
 import {Table} from 'admin/components/table';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {PageStatus} from 'admin/libs/types';
 import {NotFoundPage} from 'admin/pages/not-found';
+import {IAirpod} from 'admin/models/airpods';
+import {IIphone} from 'admin/models/iphones';
 import bevis from 'libs/bevis';
 
 const b = bevis('order');
@@ -50,11 +52,20 @@ export class OrderPage extends React.Component<IProps> {
                 <div className={b('container')}>
                     <div className={b('table-container')}>
                         <Table
-                            columns={this.getColumns()}
-                            rows={this.getRows()}
-                            handleDeleteRow={this.handleDeleteRow}
-                            handleUpdateRow={this.handleUpdateRow}
-                            handleAddRow={this.handleAddRow}
+                            title='iPhones'
+                            columns={this.getColumns().iphones}
+                            rows={this.getRows().iphones}
+                            handleDeleteRow={this.handleDeleteIphoneRow}
+                            handleAddRow={this.handleAddIphoneRow}
+                            options={{actionsColumnIndex: -1}}
+                        />
+                        <Table
+                            className={b('airpods-table')}
+                            title='airPods'
+                            columns={this.getColumns().airpods}
+                            rows={this.getRows().airpods}
+                            handleDeleteRow={this.handleDeleteAirpodRow}
+                            handleAddRow={this.handleAddAirpodRow}
                             options={{actionsColumnIndex: -1}}
                         />
                     </div>
@@ -112,22 +123,34 @@ export class OrderPage extends React.Component<IProps> {
 
     private handleSell = () => {
         this.props.orderPageModel!.updateStatus(this.props.match.params.orderId, 'bought')
-            .then(() => this.props.history.replace('/bender-root/order'))
+            .then(() => this.props.history.replace('/bender-root/orders'))
             .catch(this.showSnackbar);
     }
 
     private handleReject = () => {
         this.props.orderPageModel!.updateStatus(this.props.match.params.orderId, 'reject')
-            .then(() => this.props.history.replace('/bender-root/order'))
+            .then(() => this.props.history.replace('/bender-root/orders'))
             .catch(this.showSnackbar);
     }
 
-    private getColumns(): Column<IOrderItem>[] {
-        return this.props.orderPageModel!.tableColumns;
+    private getColumns(): {
+        airpods: Column<IAirpod>[];
+        iphones: Column<IIphone>[];
+    } {
+        return {
+            airpods: this.props.orderPageModel!.tableAipodColumns,
+            iphones: this.props.orderPageModel!.tableIphoneColumns
+        };
     }
 
-    private getRows(): IOrderItem[] {
-        return this.props.orderPageModel!.data;
+    private getRows(): {
+        airpods: IAirpod[];
+        iphones: IIphone[];
+    } {
+        return {
+            airpods: this.props.orderPageModel!.airpodsData,
+            iphones: this.props.orderPageModel!.iphonesData
+        };
     }
 
     private showSnackbar = (err: Error): void => {
@@ -135,16 +158,23 @@ export class OrderPage extends React.Component<IProps> {
         this.props.orderPageModel!.snackbar.open = true;
     }
 
-    private handleDeleteRow = (orderItem: IOrderItem): Promise<void> => {
-        return this.props.orderPageModel!.deleteRow(orderItem).catch(this.showSnackbar);
+    private handleAddAirpodRow = (airpod: IAirpod): Promise<void> => {
+        return this.props.orderPageModel!.insertAirpodRow(this.props.match.params.orderId, airpod)
+            .catch(this.showSnackbar);
     }
 
-    private handleUpdateRow = (orderItem: IOrderItem): Promise<void> => {
-        return this.props.orderPageModel!.updateRow(orderItem).catch(this.showSnackbar);
+    private handleAddIphoneRow = (iphone: IIphone): Promise<void> => {
+        return this.props.orderPageModel!.insertIphoneRow(this.props.match.params.orderId, iphone)
+            .catch(this.showSnackbar);
     }
 
-    private handleAddRow = (orderItem: IOrderItem): Promise<void> => {
-        return this.props.orderPageModel!.insertRow(this.props.match.params.orderId, orderItem)
+    private handleDeleteAirpodRow = (airpod: IAirpod): Promise<void> => {
+        return this.props.orderPageModel!.deleteAirpodRow(this.props.match.params.orderId, airpod)
+            .catch(this.showSnackbar);
+    }
+
+    private handleDeleteIphoneRow = (iphone: IIphone): Promise<void> => {
+        return this.props.orderPageModel!.deleteIphoneRow(this.props.match.params.orderId, iphone)
             .catch(this.showSnackbar);
     }
 

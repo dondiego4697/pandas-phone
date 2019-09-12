@@ -6,18 +6,19 @@ import {seizePaginationParams, makeInsert} from 'server/lib/db';
 
 const schema = Joi.object().keys({
     series: Joi.string().required(),
-    is_original: Joi.bool().default(true),
-    is_charging_case: Joi.bool().default(true),
+    is_original: Joi.bool().default(false),
+    is_charging_case: Joi.bool().default(false),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).default(0),
-    count: Joi.number().min(0).default(0)
+    serial_number: Joi.string().required(),
+    is_sold: Joi.boolean().default(false)
 });
 
-const TABLE_NAME = 'airpods';
+const TABLE_NAME = 'airpod';
 
-export class Airpods {
+export class Airpod {
     static async getEnums() {
-        const data = await Promise.all(['AIRPODS_SERIES_T'].map(async (key) => {
+        const data = await Promise.all(['AIRPOD_SERIES_T'].map(async (key) => {
             return makeRequest({
                 text: `SELECT unnest(enum_range(NULL::${key}))::text;`,
                 values: []
@@ -35,6 +36,7 @@ export class Airpods {
         const data = await makeRequest({
             text: `
                 SELECT * FROM ${TABLE_NAME}
+                WHERE is_sold=false
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
             values: []

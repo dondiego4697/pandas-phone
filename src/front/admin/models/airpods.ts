@@ -2,22 +2,24 @@ import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
+import {makeLookup} from 'admin/libs/table-lookup';
 import {
     getAirpodsEnums,
     getAirpods,
-    deleteAirpods,
-    updateAirpods,
-    insertAirpods
+    deleteAirpod,
+    updateAirpod,
+    insertAirpod
 } from 'admin/libs/db-request';
 
-export interface IAirpods {
+export interface IAirpod {
     id: string;
     series: string;
     is_original: boolean;
     is_charging_case: boolean;
     price: number;
     discount: number;
-    count: number;
+    serial_number: string;
+    is_sold: boolean;
 }
 
 interface ISnackbar {
@@ -29,21 +31,11 @@ export class AirpodsPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public limit = 10;
     @observable public offset = 0;
-    @observable public data: IAirpods[] = [];
-    @observable public tableColumns: Column<IAirpods>[] = [];
+    @observable public data: IAirpod[] = [];
+    @observable public tableColumns: Column<IAirpod>[] = [];
     @observable public snackbar: ISnackbar = {message: '', open: false};
 
     @action public setTableColumns(): Promise<any> {
-        const makeLookup = (data: string[]) => {
-            return data.reduce(
-                (res: Record<string, string>, curr) => {
-                    res[curr] = curr;
-                    return res;
-                },
-                {}
-            );
-        };
-
         if (this.tableColumns.length === 0) {
             return getAirpodsEnums().then((enums) => {
                 this.tableColumns = [
@@ -78,9 +70,8 @@ export class AirpodsPageModel {
                         type: 'numeric'
                     },
                     {
-                        field: 'count',
-                        title: 'Count',
-                        type: 'numeric'
+                        field: 'serial_number',
+                        title: 'Serial number'
                     }
                 ];
             });
@@ -103,10 +94,10 @@ export class AirpodsPageModel {
         });
     }
 
-    @action public deleteRow(airpods: IAirpods): Promise<void> {
+    @action public deleteRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                deleteAirpods(airpods.id).then((deleted: IAirpods) => {
+                deleteAirpod(airpod.id).then((deleted: IAirpod) => {
                     const index = this.data.findIndex((item) => item.id === deleted.id);
                     const buff = [...this.data];
                     buff.splice(index, 1);
@@ -117,13 +108,13 @@ export class AirpodsPageModel {
         });
     }
 
-    @action public updateRow(airpods: IAirpods): Promise<void> {
+    @action public updateRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                const id = airpods.id;
-                delete airpods.id;
+                const id = airpod.id;
+                delete airpod.id;
 
-                updateAirpods(id, airpods).then((updated: IAirpods) => {
+                updateAirpod(id, airpod).then((updated: IAirpod) => {
                     const index = this.data.findIndex((item) => item.id === updated.id);
                     const buff = [...this.data];
                     buff.splice(index, 1, updated);
@@ -134,10 +125,10 @@ export class AirpodsPageModel {
         });
     }
 
-    @action public insertRow(airpods: IAirpods): Promise<void> {
+    @action public insertRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                insertAirpods(airpods).then((inserted: IAirpods) => {
+                insertAirpod(airpod).then((inserted: IAirpod) => {
                     this.data = [...this.data, inserted];
                     resolve();
                 }).catch((err) => reject(err.response.data));

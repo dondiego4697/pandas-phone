@@ -10,7 +10,9 @@ const schema = Joi.object().keys({
     memory_capacity: Joi.string().required(),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).default(0),
-    count: Joi.number().min(0).default(0)
+    serial_number: Joi.string().required(),
+    imei: Joi.string().required(),
+    is_sold: Joi.boolean().default(false)
 });
 
 const TABLE_NAME = 'iphone';
@@ -37,6 +39,7 @@ export class Iphone {
         const data = await makeRequest({
             text: `
                 SELECT * FROM ${TABLE_NAME}
+                WHERE is_sold=false
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
             values: []

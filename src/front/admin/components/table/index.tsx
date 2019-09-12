@@ -26,6 +26,9 @@ interface IProps<T extends object> {
 
     actions?: Action<T>[];
     options?: Options;
+
+    title?: string;
+    className?: string;
 }
 
 export class Table<T extends Record<string, any>> extends React.Component<IProps<T>> {
@@ -34,9 +37,9 @@ export class Table<T extends Record<string, any>> extends React.Component<IProps
 
         return (
             <div className={b()}>
-                <div className={b('container')}>
+                <div className={`${b('container')} ${this.props.className || ''}`}>
                     <MaterialTable
-                        title=''
+                        title={this.props.title || ''}
                         columns={columns}
                         options={{
                             paging: false,

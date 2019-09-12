@@ -3,7 +3,7 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import {IIphone, IphonePageModel} from 'admin/models/iphone';
+import {IIphone, IphonesPageModel} from 'admin/models/iphones';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
@@ -14,24 +14,24 @@ import bevis from 'libs/bevis';
 import './index.scss';
 
 interface IProps {
-    iphonePageModel?: IphonePageModel;
+    iphonesPageModel?: IphonesPageModel;
 }
 
 const b = bevis('iphone');
 
-@inject('iphonePageModel')
+@inject('iphonesPageModel')
 @observer
-export class IphonePage extends React.Component<IProps> {
+export class IphonesPage extends React.Component<IProps> {
     public componentDidMount(): void {
-        this.props.iphonePageModel!.fetchData();
+        this.props.iphonesPageModel!.fetchData();
     }
 
     public render(): React.ReactNode {
-        if (this.props.iphonePageModel!.status === PageStatus.LOADING) {
+        if (this.props.iphonesPageModel!.status === PageStatus.LOADING) {
             return <ProgressBar />;
         }
 
-        const tableName = 'IPhones';
+        const tableName = 'iPhones';
         return (
             <div className={b()}>
                 <TableTitle value={tableName} />
@@ -41,10 +41,11 @@ export class IphonePage extends React.Component<IProps> {
                             columns={this.getColumns()}
                             rows={this.getRows()}
                             pagination={{
-                                currentPage: this.props.iphonePageModel!.offset / this.props.iphonePageModel!.limit + 1,
+                                currentPage: this.props.iphonesPageModel!.offset /
+                                    this.props.iphonesPageModel!.limit + 1,
                                 handleChangePage: this.handleChangePage,
                                 handleChangeRowsPerPage: this.handleChangeRowsPerPage,
-                                rowsPerPage: this.props.iphonePageModel!.limit
+                                rowsPerPage: this.props.iphonesPageModel!.limit
                             }}
                             handleDeleteRow={this.handleDeleteRow}
                             handleUpdateRow={this.handleUpdateRow}
@@ -57,9 +58,9 @@ export class IphonePage extends React.Component<IProps> {
                         key='top_center'
                         autoHideDuration={6000}
                         onClose={this.handleCloseSnackbar}
-                        open={this.props.iphonePageModel!.snackbar.open}
+                        open={this.props.iphonesPageModel!.snackbar.open}
                         ContentProps={{'aria-describedby': 'message-id'}}
-                        message={<span id='message-id'>{this.props.iphonePageModel!.snackbar.message}</span>}
+                        message={<span id='message-id'>{this.props.iphonesPageModel!.snackbar.message}</span>}
                     />
                 </div>
             </div>
@@ -67,42 +68,42 @@ export class IphonePage extends React.Component<IProps> {
     }
 
     private getColumns(): Column<IIphone>[] {
-        return this.props.iphonePageModel!.tableColumns;
+        return this.props.iphonesPageModel!.tableColumns;
     }
 
     private getRows(): IIphone[] {
-        return this.props.iphonePageModel!.data;
+        return this.props.iphonesPageModel!.data;
     }
 
     private handleChangePage = (diff: number): void => {
-        this.props.iphonePageModel!.offset += this.props.iphonePageModel!.limit * diff;
-        this.props.iphonePageModel!.fetchData();
+        this.props.iphonesPageModel!.offset += this.props.iphonesPageModel!.limit * diff;
+        this.props.iphonesPageModel!.fetchData();
     }
 
     private handleChangeRowsPerPage = (rows: number): void => {
-        this.props.iphonePageModel!.limit = rows;
-        this.props.iphonePageModel!.offset = 0;
-        this.props.iphonePageModel!.fetchData();
+        this.props.iphonesPageModel!.limit = rows;
+        this.props.iphonesPageModel!.offset = 0;
+        this.props.iphonesPageModel!.fetchData();
     }
 
     private showSnackbar = (err: Error): void => {
-        this.props.iphonePageModel!.snackbar.message = err.message;
-        this.props.iphonePageModel!.snackbar.open = true;
+        this.props.iphonesPageModel!.snackbar.message = err.message;
+        this.props.iphonesPageModel!.snackbar.open = true;
     }
 
     private handleDeleteRow = (iphone: IIphone): Promise<void> => {
-        return this.props.iphonePageModel!.deleteRow(iphone).catch(this.showSnackbar);
+        return this.props.iphonesPageModel!.deleteRow(iphone).catch(this.showSnackbar);
     }
 
     private handleUpdateRow = (iphone: IIphone): Promise<void> => {
-        return this.props.iphonePageModel!.updateRow(iphone).catch(this.showSnackbar);
+        return this.props.iphonesPageModel!.updateRow(iphone).catch(this.showSnackbar);
     }
 
     private handleAddRow = (iphone: IIphone): Promise<void> => {
-        return this.props.iphonePageModel!.insertRow(iphone).catch(this.showSnackbar);
+        return this.props.iphonesPageModel!.insertRow(iphone).catch(this.showSnackbar);
     }
 
     private handleCloseSnackbar = (): void => {
-        this.props.iphonePageModel!.snackbar.open = false;
+        this.props.iphonesPageModel!.snackbar.open = false;
     }
 }

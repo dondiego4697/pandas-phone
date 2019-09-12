@@ -2,6 +2,7 @@ import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
+import {makeLookup} from 'admin/libs/table-lookup';
 import {
     getIphoneEnums,
     getIphones,
@@ -17,7 +18,9 @@ export interface IIphone {
     memory_capacity: string;
     price: number;
     discount: number;
-    count: number;
+    serial_number: string;
+    imei: string;
+    is_sold: boolean;
 }
 
 interface ISnackbar {
@@ -25,7 +28,7 @@ interface ISnackbar {
     open: boolean;
 }
 
-export class IphonePageModel {
+export class IphonesPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public limit = 10;
     @observable public offset = 0;
@@ -34,16 +37,6 @@ export class IphonePageModel {
     @observable public snackbar: ISnackbar = {message: '', open: false};
 
     @action public setTableColumns(): Promise<void> {
-        const makeLookup = (data: string[]) => {
-            return data.reduce(
-                (res: Record<string, string>, curr) => {
-                    res[curr] = curr;
-                    return res;
-                },
-                {}
-            );
-        };
-
         if (this.tableColumns.length === 0) {
             return getIphoneEnums().then((enums) => {
                 this.tableColumns = [
@@ -78,9 +71,12 @@ export class IphonePageModel {
                         type: 'numeric'
                     },
                     {
-                        field: 'count',
-                        title: 'Count',
-                        type: 'numeric'
+                        field: 'serial_number',
+                        title: 'Serial number'
+                    },
+                    {
+                        field: 'imei',
+                        title: 'IMEI'
                     }
                 ];
             });

@@ -3,7 +3,7 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import {IAirpods, AirpodsPageModel} from 'admin/models/airpods';
+import {IAirpod, AirpodsPageModel} from 'admin/models/airpods';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
@@ -31,7 +31,7 @@ export class AirpodsPage extends React.Component<IProps> {
             return <ProgressBar />;
         }
 
-        const tableName = 'Airpods';
+        const tableName = 'AirPods';
         return (
             <div className={b()}>
                 <TableTitle value={tableName} />
@@ -67,11 +67,11 @@ export class AirpodsPage extends React.Component<IProps> {
         );
     }
 
-    private getColumns(): Column<IAirpods>[] {
+    private getColumns(): Column<IAirpod>[] {
         return this.props.airpodsPageModel!.tableColumns;
     }
 
-    private getRows(): IAirpods[] {
+    private getRows(): IAirpod[] {
         return this.props.airpodsPageModel!.data;
     }
 
@@ -91,15 +91,15 @@ export class AirpodsPage extends React.Component<IProps> {
         this.props.airpodsPageModel!.snackbar.open = true;
     }
 
-    private handleDeleteRow = (airpods: IAirpods): Promise<void> => {
+    private handleDeleteRow = (airpods: IAirpod): Promise<void> => {
         return this.props.airpodsPageModel!.deleteRow(airpods).catch(this.showSnackbar);
     }
 
-    private handleUpdateRow = (airpods: IAirpods): Promise<void> => {
+    private handleUpdateRow = (airpods: IAirpod): Promise<void> => {
         return this.props.airpodsPageModel!.updateRow(airpods).catch(this.showSnackbar);
     }
 
-    private handleAddRow = (airpods: IAirpods): Promise<void> => {
+    private handleAddRow = (airpods: IAirpod): Promise<void> => {
         return this.props.airpodsPageModel!.insertRow(airpods).catch(this.showSnackbar);
     }
 

@@ -3,7 +3,7 @@ import {Column} from 'material-table';
 
 import {PageStatus} from 'admin/libs/types';
 import {
-    getOpendOrders,
+    getOpenedOrders,
     updateOrder
 } from 'admin/libs/db-request';
 
@@ -29,7 +29,7 @@ export class OrdersPageModel {
     @observable public tableColumns: Column<IOrder>[] = [];
     @observable public snackbar: ISnackbar = {message: '', open: false};
 
-    @action public setTableColumns(): Promise<void> {
+    @action public setTableColumns(): void {
         if (this.tableColumns.length === 0) {
             this.tableColumns = [
                 {
@@ -53,21 +53,19 @@ export class OrdersPageModel {
                 }
             ];
         }
-
-        return Promise.resolve();
     }
 
     @action public fetchData(): void {
         runInAction(() => {
             this.status = PageStatus.LOADING;
 
-            this.setTableColumns().then(() => {
-                getOpendOrders({limit: this.limit, offset: this.offset})
-                    .then((data) => {
-                        this.data = data;
-                        this.status = PageStatus.DONE;
-                    });
-            });
+            this.setTableColumns();
+
+            getOpenedOrders({limit: this.limit, offset: this.offset})
+                .then((data) => {
+                    this.data = data;
+                    this.status = PageStatus.DONE;
+                });
         });
     }
 

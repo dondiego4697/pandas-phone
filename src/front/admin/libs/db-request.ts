@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import {IIphone} from 'admin/models/iphone';
-import {IAirpods} from 'admin/models/airpods';
+import {IIphone} from 'admin/models/iphones';
+import {IAirpod} from 'admin/models/airpods';
 import {IOrder} from 'admin/models/orders';
-import {IOrderItem} from 'admin/models/order';
+import {IOrderItems} from 'admin/models/order';
 
 interface IDefaultParams {
     limit: number;
@@ -31,7 +31,7 @@ function deleteRequest<T>(url: string, data: any): Promise<T> {
 // IPHONE
 export function getIphones(params: IDefaultParams): Promise<IIphone[]> {
     const {limit, offset} = params;
-    return getRequest<IIphone[]>(`/api/v1/iphone?limit=${limit}&offset=${offset}`);
+    return getRequest<IIphone[]>(`/api/v1/iphones?limit=${limit}&offset=${offset}`);
 }
 
 interface IIphoneEnums {
@@ -56,45 +56,40 @@ export function insertIphone(data: IIphone): Promise<IIphone> {
     return postRequest<IIphone[]>(`/api/v1/iphone/create`, data).then((data) => data[0]);
 }
 
-// AIRPODS
-export function getAirpods(params: IDefaultParams): Promise<IAirpods[]> {
+// AIRPOD
+export function getAirpods(params: IDefaultParams): Promise<IAirpod[]> {
     const {limit, offset} = params;
-    return getRequest<IAirpods[]>(`/api/v1/airpods?limit=${limit}&offset=${offset}`);
+    return getRequest<IAirpod[]>(`/api/v1/airpods?limit=${limit}&offset=${offset}`);
 }
 
-interface IAirpodsEnums {
+interface IAirpodEnums {
     series: string[];
 }
 
-export function getAirpodsEnums(): Promise<IAirpodsEnums> {
-    return getRequest<IAirpodsEnums>(`/api/v1/airpods/enums`);
+export function getAirpodsEnums(): Promise<IAirpodEnums> {
+    return getRequest<IAirpodEnums>(`/api/v1/airpod/enums`);
 }
 
-export function deleteAirpods(id: string): Promise<IAirpods> {
-    return deleteRequest<IAirpods[]>(`/api/v1/airpods/${id}`, {}).then((data) => data[0]);
+export function deleteAirpod(id: string): Promise<IAirpod> {
+    return deleteRequest<IAirpod[]>(`/api/v1/airpod/${id}`, {}).then((data) => data[0]);
 }
 
-export function updateAirpods(id: string, data: IAirpods): Promise<IAirpods> {
-    return postRequest<IAirpods[]>(`/api/v1/airpods/update/${id}`, data).then((data) => data[0]);
+export function updateAirpod(id: string, data: IAirpod): Promise<IAirpod> {
+    return postRequest<IAirpod[]>(`/api/v1/airpod/update/${id}`, data).then((data) => data[0]);
 }
 
-export function insertAirpods(data: IAirpods): Promise<IAirpods> {
-    return postRequest<IAirpods[]>(`/api/v1/airpods/create`, data).then((data) => data[0]);
+export function insertAirpod(data: IAirpod): Promise<IAirpod> {
+    return postRequest<IAirpod[]>(`/api/v1/airpod/create`, data).then((data) => data[0]);
 }
 
 // ORDER
-export function getOpendOrders(params: IDefaultParams): Promise<IOrder[]> {
+export function getOpenedOrders(params: IDefaultParams): Promise<IOrder[]> {
     const {limit, offset} = params;
-    return getRequest<IOrder[]>(`/api/v1/order/opened?limit=${limit}&offset=${offset}`);
-}
-
-export function getOrder(id: string): Promise<IOrder> {
-    return getRequest<IOrder[]>(`/api/v1/order/id/${id}`).then((data) => data[0]);
+    return getRequest<IOrder[]>(`/api/v1/orders/opened?limit=${limit}&offset=${offset}`);
 }
 
 export interface IOrderEnums {
     statuses: string[];
-    good_types: string[];
 }
 
 export function getOrderEnums(): Promise<IOrderEnums> {
@@ -105,22 +100,32 @@ export function updateOrder(id: string, data: IOrder): Promise<IOrder> {
     return postRequest<IOrder[]>(`/api/v1/order/update/${id}`, data).then((data) => data[0]);
 }
 
-export function getOrderItems(orderId: string): Promise<IOrderItem[]> {
-    return getRequest<IOrderItem[]>(`/api/v1/order/${orderId}/items`);
+export function getOrder(id: string): Promise<IOrder> {
+    return getRequest<IOrder[]>(`/api/v1/order/id/${id}`).then((data) => data[0]);
 }
 
-export function insertOrderItem(data: IOrderItem): Promise<IOrderItem> {
-    return postRequest<IOrderItem[]>(`/api/v1/order/item/create`, data).then((data) => data[0]);
+type OrderStatus = 'reject' | 'bought' | 'called';
+export function changeOrderStatus(id: string, status: OrderStatus): Promise<IOrder> {
+    return postRequest<IOrder[]>(`/api/v1/order/update/${id}/status`, {status}).then((data) => data[0]);
 }
 
-export function deleteOrderItem(id: string): Promise<IOrderItem> {
-    return deleteRequest<IOrderItem[]>(`/api/v1/order/item/${id}`, {}).then((data) => data[0]);
+export function getOrderItems(orderId: string): Promise<IOrderItems> {
+    return getRequest<IOrderItems>(`/api/v1/order/${orderId}/items`);
 }
 
-export function updateOrderItem(id: string, data: IOrderItem): Promise<IOrderItem> {
-    return postRequest<IOrderItem[]>(`/api/v1/order/item/update/${id}`, data).then((data) => data[0]);
+// ORDER ITEM
+export function insertIphoneOrder(orderId: string, iphoneId: string): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/add`, {id: iphoneId}).then((data) => data[0]);
 }
 
-export function changeOrderStatus(id: string, status: 'reject' | 'bought' | 'called'): Promise<IOrder> {
-    return postRequest<IOrder[]>(`/api/v1/order/${id}/update/status`, {status}).then((data) => data[0]);
+export function deleteIphoneOrder(orderId: string, iphoneId: string): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/delete`, {id: iphoneId}).then((data) => data[0]);
+}
+
+export function insertAirpodOrder(orderId: string, airpodId: string): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/add`, {id: airpodId}).then((data) => data[0]);
+}
+
+export function deleteAirpodOrder(orderId: string, airpodId: string): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/delete`, {id: airpodId}).then((data) => data[0]);
 }

@@ -1,7 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- TODO create indexes
-
 CREATE TABLE IF NOT EXISTS admin (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     telegram_id TEXT UNIQUE NOT NULL,
@@ -19,20 +17,28 @@ CREATE TABLE IF NOT EXISTS iphone (
 
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,
-    count SMALLINT NOT NULL DEFAULT 0
+
+    serial_number TEXT NOT NULL UNIQUE,
+    imei TEXT NOT NULL UNIQUE,
+
+    is_sold BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TYPE AIRPODS_SERIES_T as enum('1', '2');
-CREATE TABLE IF NOT EXISTS airpods (
+CREATE TYPE AIRPOD_SERIES_T as enum('1', '2');
+CREATE TABLE IF NOT EXISTS airpod (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    series AIRPODS_SERIES_T NOT NULL,
-    is_original BOOLEAN DEFAULT TRUE,
-    is_charging_case BOOLEAN DEFAULT TRUE,
+    series AIRPOD_SERIES_T NOT NULL,
+    is_original BOOLEAN DEFAULT FALSE,
+    is_charging_case BOOLEAN DEFAULT FALSE,
 
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,
-    count SMALLINT NOT NULL DEFAULT 0
+
+    serial_number TEXT NOT NULL UNIQUE,
+
+    is_sold BOOLEAN NOT NULL DEFAULT FALSE
 );
+
 
 CREATE TYPE ORDER_STATUS_T as enum('new', 'called', 'reject', 'bought');
 CREATE TABLE IF NOT EXISTS "order" (
@@ -47,41 +53,21 @@ CREATE TABLE IF NOT EXISTS "order" (
     sold_date TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );
 
-CREATE TYPE ORDER_GOOD_TYPE_T as enum('iphone', 'airpods'); -- database name
 CREATE TABLE IF NOT EXISTS order_item (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    order_id UUID REFERENCES "order"(id) ON DELETE RESTRICT,
-
-    serial_number TEXT,
-    imei TEXT,
-    price INTEGER NOT NULL,
-    discount SMALLINT NOT NULL DEFAULT 0,
-
-    good_type ORDER_GOOD_TYPE_T NOT NULL,
-    good_id UUID NOT NULL
+    order_id UUID REFERENCES "order"(id) ON DELETE RESTRICT NOT NULL,
+    iphone_id UUID REFERENCES iphone(id) ON DELETE RESTRICT UNIQUE,
+    airpod_id UUID REFERENCES airpod(id) ON DELETE RESTRICT UNIQUE
 );
 
-CREATE OR REPLACE FUNCTION beforeOrderItemInsert() RETURNS TRIGGER AS
-$BODY$
-DECLARE
-    item_id UUID;
-BEGIN
-    EXECUTE FORMAT('SELECT id FROM %I WHERE id=$1 LIMIT 1;', NEW.good_type) USING NEW.good_id INTO item_id;
-    IF item_id IS NULL THEN
-        RAISE EXCEPTION '% is not from % table', NEW.good_id, NEW.good_type;
-    END IF;
-    RETURN new;
-END;
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER beforeOrderItemInsert BEFORE INSERT ON order_item FOR EACH ROW EXECUTE PROCEDURE beforeOrderItemInsert();
 
 CREATE OR REPLACE FUNCTION afterOrderUpdate() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW.status='bought' OR NEW.status='reject' THEN
         UPDATE "order" SET sold_date='now()' WHERE id=NEW.id;
+        UPDATE iphone SET is_sold=true FROM order_item WHERE order_id=NEW.id AND iphone_id=iphone.id;
+        UPDATE airpod SET is_sold=true FROM order_item WHERE order_id=NEW.id AND airpod_id=airpod.id;
     END IF;
     RETURN new;
 END;

@@ -23,13 +23,13 @@ export class AdminPanelPage extends React.Component<IProps> {
                 <Bender/>
                 <div className={b('container')}>
                     {this.props.adminPanelPageModel!.pages.map((page, i) =>
-                        <li key={`li-${page}-${i}`}>
-                            <h1 key={`h1-${page}-${i}`}>
+                        <li key={`li-${page.url}-${i}`}>
+                            <h1 key={`h1-${page.url}-${i}`}>
                                 <Link
-                                    key={`link-${page}-${i}`}
-                                    to={`/bender-root/${page}`}
+                                    key={`link-${page.url}-${i}`}
+                                    to={`/bender-root/${page.url}`}
                                 >
-                                    {page}
+                                    {page.title}
                                 </Link>
                             </h1>
                         </li>
