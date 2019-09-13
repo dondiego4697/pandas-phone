@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS admin (
 
 CREATE TYPE IPHONE_MODEL_T as enum('XS', 'XS Max', 'XR', '8', '8 Plus', '7', '7 Plus', '6S', 'SE');
 CREATE TYPE IPHONE_MEMORY_T as enum('16', '32', '64', '128', '256', '512');
-CREATE TYPE IPHONE_COLOR_T as enum('серебристый', 'золотой', 'белый', 'желтый', 'коралловый', 'синий', 'черный', 'розовое золото', 'серый космос', '(PRODUCT)RED');
+CREATE TYPE IPHONE_COLOR_T as enum('silver', 'gold', 'white', 'yellow', 'coral', 'blue', 'black', 'pink gold', 'space gray', '(PRODUCT)RED');
 CREATE TABLE IF NOT EXISTS iphone (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     model IPHONE_MODEL_T NOT NULL,
