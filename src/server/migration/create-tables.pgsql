@@ -8,7 +8,12 @@ CREATE TABLE IF NOT EXISTS admin (
 
 CREATE TYPE IPHONE_MODEL_T as enum('XS', 'XS Max', 'XR', '8', '8 Plus', '7', '7 Plus', '6S', 'SE');
 CREATE TYPE IPHONE_MEMORY_T as enum('16', '32', '64', '128', '256', '512');
-CREATE TYPE IPHONE_COLOR_T as enum('silver', 'gold', 'white', 'yellow', 'coral', 'blue', 'black', 'pink gold', 'space gray', '(PRODUCT)RED');
+CREATE TYPE IPHONE_COLOR_T as enum(
+    'silver', 'gold', 'white', 'yellow',
+    'coral', 'blue', 'black', 'rose gold',
+    'space gray', 'product-red',
+    'black matte', 'black jet'
+);
 CREATE TABLE IF NOT EXISTS iphone (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     model IPHONE_MODEL_T NOT NULL,
@@ -39,6 +44,7 @@ CREATE TABLE IF NOT EXISTS airpod (
     is_sold BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+-- TODO create table iphone_accessory
 
 CREATE TYPE ORDER_STATUS_T as enum('new', 'called', 'reject', 'bought');
 CREATE TABLE IF NOT EXISTS "order" (
@@ -60,14 +66,17 @@ CREATE TABLE IF NOT EXISTS order_item (
     airpod_id UUID REFERENCES airpod(id) ON DELETE RESTRICT UNIQUE
 );
 
-
 CREATE OR REPLACE FUNCTION afterOrderUpdate() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.status='bought' OR NEW.status='reject' THEN
+    IF NEW.status='bought' THEN
         UPDATE "order" SET sold_date='now()' WHERE id=NEW.id;
         UPDATE iphone SET is_sold=true FROM order_item WHERE order_id=NEW.id AND iphone_id=iphone.id;
         UPDATE airpod SET is_sold=true FROM order_item WHERE order_id=NEW.id AND airpod_id=airpod.id;
+    END IF;
+    IF NEW.status='reject' THEN
+        UPDATE "order" SET sold_date='now()' WHERE id=NEW.id;
+        DELETE FROM order_item WHERE order_id=NEW.id;
     END IF;
     RETURN new;
 END;
