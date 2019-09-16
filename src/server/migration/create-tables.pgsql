@@ -44,8 +44,6 @@ CREATE TABLE IF NOT EXISTS airpod (
     is_sold BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- TODO create table iphone_accessory
-
 CREATE TYPE ORDER_STATUS_T as enum('new', 'called', 'reject', 'bought');
 CREATE TABLE IF NOT EXISTS "order" (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

@@ -23,17 +23,17 @@ interface IRenderParams {
 export const clientRouter = express.Router();
 
 clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
-    const name = isMobile(req) ? 'mobile' : 'browser';
-
-    const clientData: IClientData = {};
+    const clientData: IClientData = {
+        isMobile: isMobile(req)
+    };
     const params: IRenderParams = {
         meta: {
-            title: 'IOA'
+            title: 'Panda Phone'
         },
         urls: {
             bundle: {
-                css: '',
-                js: formBundleUrl(`client-${name}`, 'js')
+                css: formBundleUrl('client', 'css'),
+                js: formBundleUrl('client', 'js')
             }
         },
         clientData: JSON.stringify(clientData)

@@ -52,7 +52,8 @@ export const app = express()
     })
     .set('view engine', 'mustache')
     .set('views', path.resolve('./res/views'))
-    .get('/ping', (_req: Request, res: Response) => res.end());
+    .get('/ping', (_req: Request, res: Response) => res.end())
+    .use('/favicon.ico', express.static(path.resolve('./res/imgs/favicon.ico')));
 
 if (config['app.isNodeStatic']) {
     app.use(config['app.publicPath'], express.static(path.resolve('./out/src/front')));
@@ -63,7 +64,7 @@ app
     .use(browserClient())
     .use('/bender-root', adminRouter)
     .use('/api/v1', apiV1Router)
-    .use('/', clientRouter);
+    .use('/*', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

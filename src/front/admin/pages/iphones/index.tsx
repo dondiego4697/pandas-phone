@@ -7,7 +7,7 @@ import {IIphone, IphonesPageModel} from 'admin/models/iphones';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
-import {PageStatus} from 'admin/libs/types';
+import {PageStatus} from 'libs/types';
 
 import bevis from 'libs/bevis';
 

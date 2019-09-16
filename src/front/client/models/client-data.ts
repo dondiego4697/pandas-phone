@@ -1,9 +1,13 @@
-export interface IClientData {
+import {observable} from 'mobx';
 
+export interface IClientData {
+    readonly isMobile: boolean;
 }
 
 export class ClientDataModel {
-    constructor(clientData: IClientData) {
+    @observable public isMobile: boolean;
 
+    constructor(clientData: IClientData) {
+        this.isMobile = clientData.isMobile;
     }
 }

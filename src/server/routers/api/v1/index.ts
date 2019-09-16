@@ -11,6 +11,12 @@ import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
 
+// apiV1Router
+//     .get('/public/enums')
+//     .get('/public/iphones')
+//     .get('/public/airpods')
+//     .post('/public/create-order')
+
 apiV1Router
     .use(telegramAuth)
     .use((req, res, next) => {

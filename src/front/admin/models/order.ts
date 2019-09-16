@@ -1,7 +1,7 @@
 import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
-import {PageStatus} from 'admin/libs/types';
+import {PageStatus} from 'libs/types';
 import {IOrder} from 'admin/models/orders';
 import {IAirpod} from 'admin/models/airpods';
 import {IIphone} from 'admin/models/iphones';

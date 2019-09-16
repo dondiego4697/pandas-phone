@@ -21,26 +21,13 @@ const configs = [
     },
     {
         webpack: {
-            entry: () => path.resolve(frontPath, `./client/mobile/index.tsx`),
+            entry: () => path.resolve(frontPath, `./client/index.tsx`),
             output: {
                 path: path.resolve('./out/src/front'),
-                filename: `client-mobile.bundle.js`
+                filename: `client.bundle.js`
             },
             plugins: [
-                new ExtractTextPlugin('client-mobile.bundle.css')
-            ]
-        },
-        tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')
-    },
-    {
-        webpack: {
-            entry: () => path.resolve(frontPath, `./client/browser/index.tsx`),
-            output: {
-                path: path.resolve('./out/src/front'),
-                filename: `client-browser.bundle.js`
-            },
-            plugins: [
-                new ExtractTextPlugin('client-browser.bundle.css')
+                new ExtractTextPlugin('client.bundle.css')
             ]
         },
         tsConfigFileName: path.resolve(frontPath, './client/tsconfig.json')

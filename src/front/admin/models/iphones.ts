@@ -1,7 +1,7 @@
 import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
-import {PageStatus} from 'admin/libs/types';
+import {PageStatus} from 'libs/types';
 import {makeLookup} from 'admin/libs/table-lookup';
 import {
     getIphoneEnums,

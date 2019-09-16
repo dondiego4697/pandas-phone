@@ -8,10 +8,10 @@ import {OrderPageModel} from 'admin/models/order';
 import {TableTitle} from 'admin/components/table-title';
 import {Table} from 'admin/components/table';
 import {ProgressBar} from 'admin/components/progress-bar';
-import {PageStatus} from 'admin/libs/types';
 import {NotFoundPage} from 'admin/pages/not-found';
 import {IAirpod} from 'admin/models/airpods';
 import {IIphone} from 'admin/models/iphones';
+import {PageStatus} from 'libs/types';
 import bevis from 'libs/bevis';
 
 const b = bevis('order');
