@@ -1,0 +1,69 @@
+.browser-face {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: relative;
+
+    &__bg-container {
+        background: url(/public/imgs/face-background.jpg);
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+    }
+
+    &__bg-blur {
+        // background-color: rgba(0, 0, 0, 0.4);
+        width: 100%;
+        height: 100%;
+    }
+
+    &__main-container {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
+    &__text-container {
+        height: 100%;
+        width: 50%;
+        left: 0;
+        display: flex;
+    }
+
+    &__text-wrapper {
+        margin: auto;
+        margin-left: 60px;
+
+        & h1 {
+            letter-spacing: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            font-weight: 700;
+            margin: 0;
+            font-size: 72px;
+            user-select: none;
+        }
+    }
+
+    &__social-container {
+        height: 32px;
+        margin-top: 8px;
+    }
+
+    &__social {
+
+        & img {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+        }
+    }
+
+    &__another-container {
+        height: 100%;
+        width: 50%;
+        right: 0;
+    }
+}

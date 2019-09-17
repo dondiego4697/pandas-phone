@@ -24,7 +24,11 @@ export const clientRouter = express.Router();
 
 clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
     const clientData: IClientData = {
-        isMobile: isMobile(req)
+        isMobile: isMobile(req),
+        socialLinks: {
+            vk: 'https://vk.com/pandaphone12',
+            instagram: 'https://www.instagram.com/pandaphone12/'
+        }
     };
     const params: IRenderParams = {
         meta: {
