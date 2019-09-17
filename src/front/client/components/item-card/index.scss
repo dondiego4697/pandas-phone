@@ -1,0 +1,26 @@
+.item-card {
+    &__image-container {
+        height: 300px;
+        background-color: #3d3b48;
+        border-radius: 3px 3px 0 0;
+    }
+
+    &__content-container {
+        background-color: white;
+        border-radius: 0 0 3px 3px;
+        padding: 32px;
+    }
+
+    &__title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    &__description-container {
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+}

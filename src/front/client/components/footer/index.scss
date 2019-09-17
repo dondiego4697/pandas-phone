@@ -1,0 +1,22 @@
+.footer {
+    width: 100%;
+    height: 250px;
+    background-color: #e8e8e8;
+    padding-top: 60px;
+
+    &__container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+    }
+
+    &__logo {
+        background-image: url(/public/imgs/panda-black.svg);
+        width: 100px;
+        height: 100px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: auto;
+    }
+}

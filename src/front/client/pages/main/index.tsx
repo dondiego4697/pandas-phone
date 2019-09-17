@@ -2,11 +2,12 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 
 import {MainPageModel} from 'client/models/main';
-import {BrowserHeader} from 'client/components/browser/header';
-import {BrowserFace} from 'client/components/browser/face';
+import {Header} from 'client/components/header';
+import {FacePanel} from 'client/components/face';
 import {ClientDataModel} from 'client/models/client-data';
-import {BrowserItemCard} from 'client/components/browser/item-card';
-import {BrowserFooter} from 'client/components/browser/footer';
+import {ItemCard} from 'client/components/item-card';
+import {Footer} from 'client/components/footer';
+import {ItemCardDescription, IItemCardDescriptionField} from 'client/components/item-card-description';
 
 import bevis from 'libs/bevis';
 
@@ -21,18 +22,18 @@ const b = bevis('main');
 
 function iPhoneColorMapper(color: string): string | undefined {
     const mapper: Record<string, string> = {
-        silver: 'серебряный',
-        gold: 'золотой',
-        white: 'белый',
-        yellow: 'желтый',
-        coral: 'коралловый',
-        blue: 'синий',
-        black: 'черный',
-        'rose gold': 'розовое золото',
-        'space gray': 'space gray',
+        silver: 'Серебряный',
+        gold: 'Золотой',
+        white: 'Белый',
+        yellow: 'Желтый',
+        coral: 'Коралловый',
+        blue: 'Синий',
+        black: 'Черный',
+        'rose gold': 'Розовое золото',
+        'space gray': 'Space gray',
         'product-red': 'PRODUCT(RED)',
-        'black matte': 'черный матовый',
-        'black jet': 'черный оникс'
+        'black matte': 'Черный матовый',
+        'black jet': 'Черный оникс'
     };
 
     return mapper[color];
@@ -40,18 +41,22 @@ function iPhoneColorMapper(color: string): string | undefined {
 
 function airpodOriginalMapper(original: boolean): string {
     if (original) {
-        return 'оригинал';
+        return 'Оригинал';
     }
 
-    return 'копия';
+    return 'Копия';
 }
 
 function airpodChargingMapper(charging: boolean): string {
     if (charging) {
-        return 'кейс с зарядкой';
+        return 'Кейс заряжает';
     }
 
-    return 'кейс не заряжает';
+    return 'Кейс не заряжает';
+}
+
+function getPrice(price: number, discount: number): string {
+    return (price * (1 - discount / 100)).toFixed(2);
 }
 
 @inject('mainPageModel', 'clientDataModel')
@@ -81,8 +86,8 @@ export class MainPage extends React.Component<IProps> {
     private renderBrowser(): React.ReactNode {
         return (
             <div className={b('container')}>
-                <BrowserHeader/>
-                <BrowserFace socialLinks={this.props.clientDataModel!.socialLinks}/>
+                <Header/>
+                <FacePanel socialLinks={this.props.clientDataModel!.socialLinks}/>
                 <h1 className={b('sub-header')}>iPhones</h1>
                 <div className={b('items-container')}>
                     <div className={b('items-wrapper')}>
@@ -90,17 +95,42 @@ export class MainPage extends React.Component<IProps> {
                             this.props.mainPageModel!.barItems &&
                             this.props.mainPageModel!.barItems.iphones.map((iphone, i) => {
                                 const model = iphone.model;
-                                return <BrowserItemCard
+                                const fields: IItemCardDescriptionField[] = [
+                                    {
+                                        icon: 'brush',
+                                        text: iPhoneColorMapper(iphone.color)!
+                                    },
+                                    {
+                                        icon: 'storage',
+                                        text: `${iphone.memory} GB`
+                                    },
+                                    {
+                                        icon: 'ruble',
+                                        text: getPrice(iphone.price, 0),
+                                        textClassName: iphone.discount > 0 ? 'old-price' : 'price'
+                                    }
+                                ];
+
+                                if (iphone.discount > 0) {
+                                    fields.push({
+                                        icon: 'discount',
+                                        text: getPrice(iphone.price, iphone.discount),
+                                        textClassName: 'discount'
+                                    });
+                                }
+
+                                return <ItemCard
                                     key={`key-${model}-${i}`}
                                     type='iphone'
-                                    model={model}
-                                    id={`iphone$${JSON.stringify(iphone)}`}
-                                    price={iphone.price}
-                                    discount={iphone.discount}
+                                    model={`${model} ${iphone.color}`}
+                                    callbackData={`iphone$${JSON.stringify(iphone)}`}
                                     onAddToCart={this.onAddToCart}
-                                    description={`${iphone.memory} GB, ${iPhoneColorMapper(iphone.color)}`}
-                                    header={`iPhone ${model}`}
-                                />;
+                                    title={`iPhone ${model}`}
+                                >
+                                    <ItemCardDescription
+                                        fields={fields}
+                                    />
+                                </ItemCard>;
                             })
                         }
                     </div>
@@ -112,25 +142,46 @@ export class MainPage extends React.Component<IProps> {
                             this.props.mainPageModel!.barItems &&
                             this.props.mainPageModel!.barItems.airpods.map((airpod, i) => {
                                 const s = airpod.series;
-                                return <BrowserItemCard
+                                const fields: IItemCardDescriptionField[] = [
+                                    {
+                                        icon: 'copyright',
+                                        text: airpodOriginalMapper(airpod.original)
+                                    },
+                                    {
+                                        icon: 'charge',
+                                        text: airpodChargingMapper(airpod.original)
+                                    },
+                                    {
+                                        icon: 'ruble',
+                                        text: getPrice(airpod.price, 0),
+                                        textClassName: airpod.discount > 0 ? 'old-price' : 'price'
+                                    }
+                                ];
+
+                                if (airpod.discount > 0) {
+                                    fields.push({
+                                        icon: 'discount',
+                                        text: getPrice(airpod.price, airpod.discount),
+                                        textClassName: 'discount'
+                                    });
+                                }
+                                return <ItemCard
                                     key={`key-${s}-${i}`}
                                     type='airpods'
                                     model={s}
-                                    id={`airpods$${JSON.stringify(airpod)}`}
-                                    price={airpod.price}
-                                    discount={airpod.discount}
-                                    description={
-                                        `${airpodOriginalMapper(airpod.original)}, ` +
-                                        `${airpodChargingMapper(airpod.charging)}`
-                                    }
+                                    callbackData={`airpods$${JSON.stringify(airpod)}`}
                                     onAddToCart={this.onAddToCart}
-                                    header={`AirPods series ${s}`}
-                                />;
+                                    title={`AirPods series ${s}`}
+                                >
+                                    <ItemCardDescription
+                                        fields={fields}
+                                    />
+                                </ItemCard>;
                             })
                         }
                     </div>
                 </div>
-                <BrowserFooter/>
+                <Footer/>
             </div>
         );
     }

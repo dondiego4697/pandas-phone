@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS admin (
     username TEXT UNIQUE NOT NULL
 );
 
-CREATE TYPE IPHONE_MODEL_T as enum('XS', 'XS Max', 'XR', '8', '8 Plus', '7', '7 Plus', '6S', 'SE');
+CREATE TYPE IPHONE_MODEL_T as enum('XS', 'X', 'XS Max', 'XR', '8', '8 Plus', '7', '7 Plus', '6S', 'SE');
 CREATE TYPE IPHONE_MEMORY_T as enum('16', '32', '64', '128', '256', '512');
 CREATE TYPE IPHONE_COLOR_T as enum(
     'silver', 'gold', 'white', 'yellow',
     'coral', 'blue', 'black', 'rose gold',
     'space gray', 'product-red',
-    'black matte', 'black jet'
+    'black matte', 'black jet', 'red'
 );
 CREATE TABLE IF NOT EXISTS iphone (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

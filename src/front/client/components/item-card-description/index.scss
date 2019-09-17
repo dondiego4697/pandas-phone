@@ -1,0 +1,39 @@
+.item-card-description {
+    width: 100%;
+
+    &__line {
+        width: 100%;
+        display: flex;
+        margin-top: 8px;
+    }
+
+    &__text {
+        display: flex;
+        margin-left: 8px;
+
+        & p {
+            margin: 0;
+            margin: auto;
+            letter-spacing: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        & .price {
+            font-weight: 700;
+        }
+
+        & .old-price {
+            text-decoration: line-through;
+        }
+
+        & .discount {
+            color: #f23e59;
+            font-weight: 700;
+        }
+    }
+
+    &__icon {
+        width: 24px;
+        height: 24px;
+    }
+}
