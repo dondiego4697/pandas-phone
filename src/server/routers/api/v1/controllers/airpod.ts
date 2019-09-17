@@ -10,13 +10,23 @@ const schema = Joi.object().keys({
     is_charging_case: Joi.bool().default(false),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).default(0),
-    serial_number: Joi.string().required(),
-    is_sold: Joi.boolean().default(false)
+    serial_number: Joi.string(),
+    is_sold: Joi.boolean().default(false),
+    is_bar: Joi.boolean().default(false)
 });
 
 const TABLE_NAME = 'airpod';
 
 export class Airpod {
+    static async getBarItems() {
+        const airpods = await makeRequest({
+            text: `SELECT * FROM airpod WHERE is_bar=true ORDER BY series DESC;`,
+            values: []
+        });
+
+        return airpods.rows;
+    }
+
     static async getEnums() {
         const data = await Promise.all(['AIRPOD_SERIES_T'].map(async (key) => {
             return makeRequest({

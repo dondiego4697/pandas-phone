@@ -11,11 +11,29 @@ import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
 
-// apiV1Router
-//     .get('/public/enums')
-//     .get('/public/iphones')
-//     .get('/public/airpods')
-//     .post('/public/create-order')
+apiV1Router
+    .get('/public/bar-items', wrap<Request, Response>(async (req, res) => {
+        const iphones = await Iphone.getBarItems();
+        const airpods = await Airpod.getBarItems();
+
+        res.json({
+            iphones: iphones.map((iphone) => ({
+                model: iphone.model,
+                color: iphone.color,
+                memory: iphone.memory_capacity,
+                price: iphone.price,
+                discount: iphone.discount
+            })),
+            airpods: airpods.map((airpod) => ({
+                series: airpod.series,
+                original: airpod.is_original,
+                charging: airpod.is_charging_case,
+                price: airpod.price,
+                discount: airpod.discount
+            }))
+        });
+    }));
+    // .post('/public/create-order')
 
 apiV1Router
     .use(telegramAuth)

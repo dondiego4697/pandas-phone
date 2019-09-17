@@ -10,14 +10,24 @@ const schema = Joi.object().keys({
     memory_capacity: Joi.string().required(),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).default(0),
-    serial_number: Joi.string().required(),
-    imei: Joi.string().required(),
-    is_sold: Joi.boolean().default(false)
+    serial_number: Joi.string(),
+    imei: Joi.string(),
+    is_sold: Joi.boolean().default(false),
+    is_bar: Joi.boolean().default(false)
 });
 
 const TABLE_NAME = 'iphone';
 
 export class Iphone {
+    static async getBarItems() {
+        const iphones = await makeRequest({
+            text: `SELECT * FROM iphone WHERE is_bar=true ORDER BY model;`,
+            values: []
+        });
+
+        return iphones.rows;
+    }
+
     static async getEnums() {
         const data = await Promise.all(['IPHONE_MODEL_T', 'IPHONE_MEMORY_T', 'IPHONE_COLOR_T'].map(async (key) => {
             return makeRequest({

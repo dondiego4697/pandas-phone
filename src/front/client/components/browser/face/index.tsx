@@ -23,7 +23,7 @@ export class BrowserFace extends React.Component<IProps> {
                     <div className={b('text-container')}>
                         <div className={b('text-wrapper')}>
                             <h1>Modern</h1>
-                            <h1>Apple Zone</h1>
+                            <h1 dangerouslySetInnerHTML={{__html: 'Apple&nbsp;Zone'}}/>
                             <div className={b('social-container')}>
                                 <a className={b('social')} href={this.props.socialLinks.vk} target='_blank'>
                                     <img src='/public/imgs/vk-icon.svg'/>

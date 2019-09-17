@@ -1,0 +1,13 @@
+.browser-airpods-mock {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    &__image-wrapper {
+        margin: auto;
+    }
+
+    &__frame {
+        width: 150px;
+    }
+}

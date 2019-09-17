@@ -20,6 +20,7 @@ export interface IAirpod {
     discount: number;
     serial_number: string;
     is_sold: boolean;
+    is_bar: boolean;
 }
 
 interface ISnackbar {
@@ -70,8 +71,15 @@ export class AirpodsPageModel {
                         type: 'numeric'
                     },
                     {
+                        editable: 'onUpdate',
                         field: 'serial_number',
                         title: 'Serial number'
+                    },
+                    {
+                        editable: 'never',
+                        field: 'is_bar',
+                        title: 'Bar',
+                        type: 'boolean'
                     }
                 ];
             });
@@ -128,6 +136,7 @@ export class AirpodsPageModel {
     @action public insertRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
+                airpod.is_bar = true;
                 insertAirpod(airpod).then((inserted: IAirpod) => {
                     this.data = [...this.data, inserted];
                     resolve();

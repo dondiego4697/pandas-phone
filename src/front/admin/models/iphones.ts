@@ -21,6 +21,7 @@ export interface IIphone {
     serial_number: string;
     imei: string;
     is_sold: boolean;
+    is_bar: boolean;
 }
 
 interface ISnackbar {
@@ -71,12 +72,20 @@ export class IphonesPageModel {
                         type: 'numeric'
                     },
                     {
+                        editable: 'onUpdate',
                         field: 'serial_number',
                         title: 'Serial number'
                     },
                     {
+                        editable: 'onUpdate',
                         field: 'imei',
                         title: 'IMEI'
+                    },
+                    {
+                        editable: 'never',
+                        field: 'is_bar',
+                        title: 'Bar',
+                        type: 'boolean'
                     }
                 ];
             });
@@ -133,7 +142,9 @@ export class IphonesPageModel {
     @action public insertRow(iphone: IIphone): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
+                iphone.is_bar = true;
                 insertIphone(iphone).then((inserted: IIphone) => {
+
                     this.data = [...this.data, inserted];
                     resolve();
                 }).catch((err) => reject(err.response.data));
