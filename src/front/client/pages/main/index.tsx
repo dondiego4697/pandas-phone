@@ -8,6 +8,16 @@ import {ClientDataModel} from 'client/models/client-data';
 import {ItemCard} from 'client/components/item-card';
 import {Footer} from 'client/components/footer';
 import {ItemCardDescription, IItemCardDescriptionField} from 'client/components/item-card-description';
+import {AddedToCartPopup} from 'client/components/added-to-cart-popup';
+import {ProgressLock} from 'client/components/progress-lock';
+import {ClientCookie} from 'client/libs/cookie';
+import {PageStatus} from 'libs/types';
+import {
+    iPhoneColorMapper,
+    airpodChargingMapper,
+    airpodOriginalMapper,
+    getPrice
+} from 'client/libs/text-mapper';
 
 import bevis from 'libs/bevis';
 
@@ -19,45 +29,6 @@ interface IProps {
 }
 
 const b = bevis('main');
-
-function iPhoneColorMapper(color: string): string | undefined {
-    const mapper: Record<string, string> = {
-        silver: 'Серебряный',
-        gold: 'Золотой',
-        white: 'Белый',
-        yellow: 'Желтый',
-        coral: 'Коралловый',
-        blue: 'Синий',
-        black: 'Черный',
-        'rose gold': 'Розовое золото',
-        'space gray': 'Space gray',
-        'product-red': 'PRODUCT(RED)',
-        'black matte': 'Черный матовый',
-        'black jet': 'Черный оникс'
-    };
-
-    return mapper[color];
-}
-
-function airpodOriginalMapper(original: boolean): string {
-    if (original) {
-        return 'Оригинал';
-    }
-
-    return 'Копия';
-}
-
-function airpodChargingMapper(charging: boolean): string {
-    if (charging) {
-        return 'Кейс заряжает';
-    }
-
-    return 'Кейс не заряжает';
-}
-
-function getPrice(price: number, discount: number): string {
-    return (price * (1 - discount / 100)).toFixed(2);
-}
 
 @inject('mainPageModel', 'clientDataModel')
 @observer
@@ -76,17 +47,27 @@ export class MainPage extends React.Component<IProps> {
         );
     }
 
-    private onAddToCart(id: string): void {
-        const [type, dataRaw] = id.split('$');
-        const data = JSON.parse(dataRaw);
+    private onAddToCart = (callbackData: any): void => {
+        this.props.mainPageModel!.showAddedToCartPopup = true;
 
-        // TODO show alert что добавилось в корзину
+        const {type, item} = callbackData;
+        ClientCookie.addIdInCart(type === 'airpod' ? 'airpod' : 'iphone', item.id);
+        this.props.mainPageModel!.calcCartCount();
+    }
+
+    private onCloseAddedToCartPopup = (): void => {
+        this.props.mainPageModel!.showAddedToCartPopup = false;
     }
 
     private renderBrowser(): React.ReactNode {
         return (
             <div className={b('container')}>
-                <Header/>
+                <ProgressLock show={this.props.mainPageModel!.status === PageStatus.LOADING}/>
+                <AddedToCartPopup
+                    show={this.props.mainPageModel!.showAddedToCartPopup}
+                    onClose={this.onCloseAddedToCartPopup}
+                />
+                <Header budgeCount={this.props.mainPageModel!.cartCount}/>
                 <FacePanel socialLinks={this.props.clientDataModel!.socialLinks}/>
                 <h1 className={b('sub-header')}>iPhones</h1>
                 <div className={b('items-container')}>
@@ -123,7 +104,7 @@ export class MainPage extends React.Component<IProps> {
                                     key={`key-${model}-${i}`}
                                     type='iphone'
                                     model={`${model} ${iphone.color}`}
-                                    callbackData={`iphone$${JSON.stringify(iphone)}`}
+                                    callbackData={{type: 'iphone', item: iphone}}
                                     onAddToCart={this.onAddToCart}
                                     title={`iPhone ${model}`}
                                 >
@@ -169,7 +150,7 @@ export class MainPage extends React.Component<IProps> {
                                     key={`key-${s}-${i}`}
                                     type='airpods'
                                     model={s}
-                                    callbackData={`airpods$${JSON.stringify(airpod)}`}
+                                    callbackData={{type: 'airpods', item: airpod}}
                                     onAddToCart={this.onAddToCart}
                                     title={`AirPods series ${s}`}
                                 >

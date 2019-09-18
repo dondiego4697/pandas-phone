@@ -10,11 +10,11 @@ import {Button} from 'client/components/button';
 const b = bevis('item-card');
 
 interface IProps {
-    callbackData: string;
+    callbackData: any;
     model: string;
     title: string;
     type: 'iphone' | 'airpods';
-    onAddToCart: (id: string) => void;
+    onAddToCart?: (data: any) => void;
 }
 
 export class ItemCard extends React.Component<IProps> {
@@ -31,14 +31,14 @@ export class ItemCard extends React.Component<IProps> {
                         <div className={b('description-container')}>
                             {this.props.children}
                         </div>
-                        <div className={b('order-button')}>
-                            <Button
-                                text='Добавить в корзину'
-                                onClick={() => {
-                                    this.props.onAddToCart(this.props.callbackData)
-                                }}
-                            />
-                        </div>
+                        {
+                            this.props.onAddToCart && <div className={b('order-button')}>
+                                <Button
+                                    text='Добавить в корзину'
+                                    onClick={() => this.props.onAddToCart!(this.props.callbackData)}
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

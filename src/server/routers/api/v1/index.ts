@@ -18,6 +18,7 @@ apiV1Router
 
         res.json({
             iphones: iphones.map((iphone) => ({
+                id: iphone.id,
                 model: iphone.model,
                 color: iphone.color,
                 memory: iphone.memory_capacity,
@@ -25,6 +26,7 @@ apiV1Router
                 discount: iphone.discount
             })),
             airpods: airpods.map((airpod) => ({
+                id: airpod.id,
                 series: airpod.series,
                 original: airpod.is_original,
                 charging: airpod.is_charging_case,
