@@ -16,7 +16,8 @@ import {
     iPhoneColorMapper,
     airpodChargingMapper,
     airpodOriginalMapper,
-    getPrice
+    getPrice,
+    iPhoneModelrMapper
 } from 'client/libs/text-mapper';
 
 import bevis from 'libs/bevis';
@@ -106,7 +107,7 @@ export class MainPage extends React.Component<IProps> {
                                     model={`${model} ${iphone.color}`}
                                     callbackData={{type: 'iphone', item: iphone}}
                                     onAddToCart={this.onAddToCart}
-                                    title={`iPhone ${model}`}
+                                    title={`iPhone ${iPhoneModelrMapper(model)}`}
                                 >
                                     <ItemCardDescription
                                         fields={fields}

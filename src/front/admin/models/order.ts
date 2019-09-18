@@ -3,8 +3,9 @@ import {Column} from 'material-table';
 
 import {PageStatus} from 'libs/types';
 import {IOrder} from 'admin/models/orders';
-import {IAirpod} from 'admin/models/airpods';
-import {IIphone} from 'admin/models/iphones';
+import {IAirpodFull} from 'admin/models/airpods';
+import {IIphoneFull} from 'admin/models/iphones';
+import {makeLookup} from 'admin/libs/table-lookup';
 
 import {
     getOrder,
@@ -13,12 +14,16 @@ import {
     insertAirpodOrder,
     insertIphoneOrder,
     deleteAirpodOrder,
-    deleteIphoneOrder
+    deleteIphoneOrder,
+    updateAirpodOrder,
+    updateIphoneOrder,
+    getIphoneEnums,
+    getAirpodsEnums
 } from 'admin/libs/db-request';
 
 export interface IOrderItems {
-    iphones: IIphone[];
-    airpods: IAirpod[];
+    iphones: IIphoneFull[];
+    airpods: IAirpodFull[];
 }
 
 interface ISnackbar {
@@ -30,11 +35,11 @@ export class OrderPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public totalPrice = Number(0).toFixed(2);
 
-    @observable public airpodsData: IAirpod[] = [];
-    @observable public iphonesData: IIphone[] = [];
+    @observable public airpodsData: IAirpodFull[] = [];
+    @observable public iphonesData: IIphoneFull[] = [];
 
-    @observable public tableAipodColumns: Column<IAirpod>[] = [];
-    @observable public tableIphoneColumns: Column<IIphone>[] = [];
+    @observable public tableAipodColumns: Column<IAirpodFull>[] = [];
+    @observable public tableIphoneColumns: Column<IIphoneFull>[] = [];
 
     @observable public orderData: IOrder | undefined;
 
@@ -91,63 +96,68 @@ export class OrderPageModel {
         });
     }
 
-    @action public deleteAirpodRow(orderId: string, airpod: IAirpod): Promise<void> {
+    @action public deleteAirpodRow(orderId: string, airpod: IAirpodFull): Promise<void> {
         return this.handleActionResponse(orderId, deleteAirpodOrder(orderId, airpod.id));
     }
 
-    @action public deleteIphoneRow(orderId: string, iphone: IIphone): Promise<void> {
+    @action public deleteIphoneRow(orderId: string, iphone: IIphoneFull): Promise<void> {
         return this.handleActionResponse(orderId, deleteIphoneOrder(orderId, iphone.id));
     }
 
-    @action public insertAirpodRow(orderId: string, airpod: IAirpod): Promise<void> {
-        return this.handleActionResponse(orderId, insertAirpodOrder(orderId, airpod.id));
+    @action public insertAirpodRow(orderId: string, airpod: IAirpodFull): Promise<void> {
+        return this.handleActionResponse(orderId, insertAirpodOrder(orderId, airpod));
     }
 
-    @action public insertIphoneRow(orderId: string, iphone: IIphone): Promise<void> {
-        return this.handleActionResponse(orderId, insertIphoneOrder(orderId, iphone.id));
+    @action public insertIphoneRow(orderId: string, iphone: IIphoneFull): Promise<void> {
+        return this.handleActionResponse(orderId, insertIphoneOrder(orderId, iphone));
+    }
+
+    @action public updateAirpodRow(orderId: string, airpod: IAirpodFull): Promise<void> {
+        return this.handleActionResponse(orderId, updateAirpodOrder(orderId, airpod));
+    }
+
+    @action public updateIphoneRow(orderId: string, iphone: IIphoneFull): Promise<void> {
+        return this.handleActionResponse(orderId, updateIphoneOrder(orderId, iphone));
     }
 
     @action private setMainData(orderId: string): Promise<void> {
         return getOrder(orderId).then((order) => {
             this.orderData = order;
         }).then(() => {
+            return Promise.all([getIphoneEnums(), getAirpodsEnums()]);
+        }).then(([iphoneEnums, airpodsEnums]) => {
             this.tableAipodColumns = [
                 {
-                    editable: 'onAdd',
+                    editable: 'never',
                     field: 'id',
                     title: 'ID'
                 },
                 {
-                    editable: 'never',
                     field: 'series',
+                    lookup: makeLookup(airpodsEnums.series),
                     title: 'Series'
                 },
                 {
-                    editable: 'never',
-                    field: 'is_original',
+                    field: 'original',
                     title: 'Original',
                     type: 'boolean'
                 },
                 {
-                    editable: 'never',
-                    field: 'is_charging_case',
+                    field: 'charging_case',
                     title: 'Charging case',
                     type: 'boolean'
                 },
                 {
-                    editable: 'never',
                     field: 'price',
                     title: 'Price',
                     type: 'numeric'
                 },
                 {
-                    editable: 'never',
                     field: 'discount',
                     title: 'Discount',
                     type: 'numeric'
                 },
                 {
-                    editable: 'never',
                     field: 'serial_number',
                     title: 'Serial number'
                 }
@@ -155,44 +165,40 @@ export class OrderPageModel {
 
             this.tableIphoneColumns = [
                 {
-                    editable: 'onAdd',
+                    editable: 'never',
                     field: 'id',
                     title: 'ID'
                 },
                 {
-                    editable: 'never',
                     field: 'model',
+                    lookup: makeLookup(iphoneEnums.models),
                     title: 'Model'
                 },
                 {
-                    editable: 'never',
                     field: 'color',
+                    lookup: makeLookup(iphoneEnums.colors),
                     title: 'Color'
                 },
                 {
-                    editable: 'never',
                     field: 'memory_capacity',
+                    lookup: makeLookup(iphoneEnums.memories),
                     title: 'Memory capacity [GB]'
                 },
                 {
-                    editable: 'never',
                     field: 'price',
                     title: 'Price',
                     type: 'numeric'
                 },
                 {
-                    editable: 'never',
                     field: 'discount',
                     title: 'Discount',
                     type: 'numeric'
                 },
                 {
-                    editable: 'never',
                     field: 'serial_number',
                     title: 'Serial number'
                 },
                 {
-                    editable: 'never',
                     field: 'imei',
                     title: 'IMEI'
                 }

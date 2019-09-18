@@ -9,8 +9,8 @@ import {TableTitle} from 'admin/components/table-title';
 import {Table} from 'admin/components/table';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {NotFoundPage} from 'admin/pages/not-found';
-import {IAirpod} from 'admin/models/airpods';
-import {IIphone} from 'admin/models/iphones';
+import {IAirpodFull} from 'admin/models/airpods';
+import {IIphoneFull} from 'admin/models/iphones';
 import {PageStatus} from 'libs/types';
 import bevis from 'libs/bevis';
 
@@ -57,6 +57,7 @@ export class OrderPage extends React.Component<IProps> {
                             rows={this.getRows().iphones}
                             handleDeleteRow={this.handleDeleteIphoneRow}
                             handleAddRow={this.handleAddIphoneRow}
+                            handleUpdateRow={this.handleUpdateIphoneRow}
                             options={{actionsColumnIndex: -1}}
                         />
                         <Table
@@ -66,6 +67,7 @@ export class OrderPage extends React.Component<IProps> {
                             rows={this.getRows().airpods}
                             handleDeleteRow={this.handleDeleteAirpodRow}
                             handleAddRow={this.handleAddAirpodRow}
+                            handleUpdateRow={this.handleUpdateAirpodRow}
                             options={{actionsColumnIndex: -1}}
                         />
                     </div>
@@ -134,8 +136,8 @@ export class OrderPage extends React.Component<IProps> {
     }
 
     private getColumns(): {
-        airpods: Column<IAirpod>[];
-        iphones: Column<IIphone>[];
+        airpods: Column<IAirpodFull>[];
+        iphones: Column<IIphoneFull>[];
     } {
         return {
             airpods: this.props.orderPageModel!.tableAipodColumns,
@@ -144,8 +146,8 @@ export class OrderPage extends React.Component<IProps> {
     }
 
     private getRows(): {
-        airpods: IAirpod[];
-        iphones: IIphone[];
+        airpods: IAirpodFull[];
+        iphones: IIphoneFull[];
     } {
         return {
             airpods: this.props.orderPageModel!.airpodsData,
@@ -158,22 +160,32 @@ export class OrderPage extends React.Component<IProps> {
         this.props.orderPageModel!.snackbar.open = true;
     }
 
-    private handleAddAirpodRow = (airpod: IAirpod): Promise<void> => {
+    private handleAddAirpodRow = (airpod: IAirpodFull): Promise<void> => {
         return this.props.orderPageModel!.insertAirpodRow(this.props.match.params.orderId, airpod)
             .catch(this.showSnackbar);
     }
 
-    private handleAddIphoneRow = (iphone: IIphone): Promise<void> => {
+    private handleUpdateAirpodRow = (airpod: IAirpodFull): Promise<void> => {
+        return this.props.orderPageModel!.updateAirpodRow(this.props.match.params.orderId, airpod)
+            .catch(this.showSnackbar);
+    }
+
+    private handleAddIphoneRow = (iphone: IIphoneFull): Promise<void> => {
         return this.props.orderPageModel!.insertIphoneRow(this.props.match.params.orderId, iphone)
             .catch(this.showSnackbar);
     }
 
-    private handleDeleteAirpodRow = (airpod: IAirpod): Promise<void> => {
+    private handleUpdateIphoneRow = (iphone: IIphoneFull): Promise<void> => {
+        return this.props.orderPageModel!.updateIphoneRow(this.props.match.params.orderId, iphone)
+            .catch(this.showSnackbar);
+    }
+
+    private handleDeleteAirpodRow = (airpod: IAirpodFull): Promise<void> => {
         return this.props.orderPageModel!.deleteAirpodRow(this.props.match.params.orderId, airpod)
             .catch(this.showSnackbar);
     }
 
-    private handleDeleteIphoneRow = (iphone: IIphone): Promise<void> => {
+    private handleDeleteIphoneRow = (iphone: IIphoneFull): Promise<void> => {
         return this.props.orderPageModel!.deleteIphoneRow(this.props.match.params.orderId, iphone)
             .catch(this.showSnackbar);
     }

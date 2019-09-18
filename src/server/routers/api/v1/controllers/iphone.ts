@@ -2,7 +2,7 @@ import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
 import {makeRequest} from 'server/db/client';
-import {seizePaginationParams, makeInsert} from 'server/lib/db';
+import {makeInsert} from 'server/lib/db';
 
 const schema = Joi.object().keys({
     model: Joi.string().required(),
@@ -10,24 +10,13 @@ const schema = Joi.object().keys({
     memory_capacity: Joi.string().required(),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).default(0),
-    serial_number: Joi.string(),
-    imei: Joi.string(),
-    is_sold: Joi.boolean().default(false),
-    is_bar: Joi.boolean().default(false)
+    serial_number: Joi.string().allow('', null),
+    imei: Joi.string().allow('', null)
 });
 
 const TABLE_NAME = 'iphone';
 
 export class Iphone {
-    static async getBarItems() {
-        const iphones = await makeRequest({
-            text: `SELECT * FROM iphone WHERE is_bar=true ORDER BY model;`,
-            values: []
-        });
-
-        return iphones.rows;
-    }
-
     static async getEnums() {
         const data = await Promise.all(['IPHONE_MODEL_T', 'IPHONE_MEMORY_T', 'IPHONE_COLOR_T'].map(async (key) => {
             return makeRequest({
@@ -41,21 +30,6 @@ export class Iphone {
             memories: data[1]!.rows.map((x) => x.unnest),
             colors: data[2]!.rows.map((x) => x.unnest)
         };
-    }
-
-    static async getItems(query: Record<string, any>) {
-        const pagination = seizePaginationParams(query);
-
-        const data = await makeRequest({
-            text: `
-                SELECT * FROM ${TABLE_NAME}
-                WHERE is_sold=false
-                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
-            `,
-            values: []
-        });
-
-        return data.rows;
     }
 
     static async insertItem(body: Record<string, any>) {

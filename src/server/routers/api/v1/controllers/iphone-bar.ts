@@ -2,31 +2,40 @@ import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
 import {makeRequest} from 'server/db/client';
-import {makeInsert} from 'server/lib/db';
+import {seizePaginationParams, makeInsert} from 'server/lib/db';
 
 const schema = Joi.object().keys({
-    series: Joi.string().required(),
-    original: Joi.bool().default(false),
-    charging_case: Joi.bool().default(false),
+    model: Joi.string().required(),
+    color: Joi.string().required(),
+    memory_capacity: Joi.string().required(),
     price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).default(0),
-    serial_number: Joi.string().allow('', null)
+    discount: Joi.number().min(0).max(100).default(0)
 });
 
-const TABLE_NAME = 'airpod';
+const TABLE_NAME = 'iphone_bar';
 
-export class Airpod {
-    static async getEnums() {
-        const data = await Promise.all(['AIRPOD_SERIES_T'].map(async (key) => {
-            return makeRequest({
-                text: `SELECT unnest(enum_range(NULL::${key}))::text;`,
-                values: []
-            });
-        }));
+export class IphoneBar {
+    static async getAllItems() {
+        const airpods = await makeRequest({
+            text: `SELECT * FROM ${TABLE_NAME} ORDER BY model;`,
+            values: []
+        });
 
-        return {
-            series: data[0]!.rows.map((x) => x.unnest)
-        };
+        return airpods.rows;
+    }
+
+    static async getItems(query: Record<string, any>) {
+        const pagination = seizePaginationParams(query);
+
+        const data = await makeRequest({
+            text: `
+                SELECT * FROM ${TABLE_NAME}
+                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
+            `,
+            values: []
+        });
+
+        return data.rows;
     }
 
     static async insertItem(body: Record<string, any>) {

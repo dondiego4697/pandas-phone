@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import {IIphone} from 'admin/models/iphones';
-import {IAirpod} from 'admin/models/airpods';
+import {IIphone, IIphoneFull} from 'admin/models/iphones';
+import {IAirpod, IAirpodFull} from 'admin/models/airpods';
 import {IOrder} from 'admin/models/orders';
 import {IOrderItems} from 'admin/models/order';
 
@@ -29,9 +29,9 @@ function deleteRequest<T>(url: string, data: any): Promise<T> {
 }
 
 // IPHONE
-export function getIphones(params: IDefaultParams): Promise<IIphone[]> {
+export function getIphonesBar(params: IDefaultParams): Promise<IIphone[]> {
     const {limit, offset} = params;
-    return getRequest<IIphone[]>(`/api/v1/iphones?limit=${limit}&offset=${offset}`);
+    return getRequest<IIphone[]>(`/api/v1/bar/iphones?limit=${limit}&offset=${offset}`);
 }
 
 interface IIphoneEnums {
@@ -44,22 +44,22 @@ export function getIphoneEnums(): Promise<IIphoneEnums> {
     return getRequest<IIphoneEnums>(`/api/v1/iphone/enums`);
 }
 
-export function deleteIphone(id: string): Promise<IIphone> {
-    return deleteRequest<IIphone[]>(`/api/v1/iphone/${id}`, {}).then((data) => data[0]);
+export function deleteIphoneBar(id: string): Promise<IIphone> {
+    return deleteRequest<IIphone[]>(`/api/v1/bar/iphone/${id}`, {}).then((data) => data[0]);
 }
 
-export function updateIphone(id: string, data: IIphone): Promise<IIphone> {
-    return postRequest<IIphone[]>(`/api/v1/iphone/update/${id}`, data).then((data) => data[0]);
+export function updateIphoneBar(id: string, data: IIphone): Promise<IIphone> {
+    return postRequest<IIphone[]>(`/api/v1/bar/iphone/update/${id}`, data).then((data) => data[0]);
 }
 
-export function insertIphone(data: IIphone): Promise<IIphone> {
-    return postRequest<IIphone[]>(`/api/v1/iphone/create`, data).then((data) => data[0]);
+export function insertIphoneBar(data: IIphone): Promise<IIphone> {
+    return postRequest<IIphone[]>(`/api/v1/bar/iphone/create`, data).then((data) => data[0]);
 }
 
 // AIRPOD
-export function getAirpods(params: IDefaultParams): Promise<IAirpod[]> {
+export function getAirpodsBar(params: IDefaultParams): Promise<IAirpod[]> {
     const {limit, offset} = params;
-    return getRequest<IAirpod[]>(`/api/v1/airpods?limit=${limit}&offset=${offset}`);
+    return getRequest<IAirpod[]>(`/api/v1/bar/airpods?limit=${limit}&offset=${offset}`);
 }
 
 interface IAirpodEnums {
@@ -70,16 +70,16 @@ export function getAirpodsEnums(): Promise<IAirpodEnums> {
     return getRequest<IAirpodEnums>(`/api/v1/airpod/enums`);
 }
 
-export function deleteAirpod(id: string): Promise<IAirpod> {
-    return deleteRequest<IAirpod[]>(`/api/v1/airpod/${id}`, {}).then((data) => data[0]);
+export function deleteAirpodBar(id: string): Promise<IAirpod> {
+    return deleteRequest<IAirpod[]>(`/api/v1/bar/airpod/${id}`, {}).then((data) => data[0]);
 }
 
-export function updateAirpod(id: string, data: IAirpod): Promise<IAirpod> {
-    return postRequest<IAirpod[]>(`/api/v1/airpod/update/${id}`, data).then((data) => data[0]);
+export function updateAirpodBar(id: string, data: IAirpod): Promise<IAirpod> {
+    return postRequest<IAirpod[]>(`/api/v1/bar/airpod/update/${id}`, data).then((data) => data[0]);
 }
 
-export function insertAirpod(data: IAirpod): Promise<IAirpod> {
-    return postRequest<IAirpod[]>(`/api/v1/airpod/create`, data).then((data) => data[0]);
+export function insertAirpodBar(data: IAirpod): Promise<IAirpod> {
+    return postRequest<IAirpod[]>(`/api/v1/bar/airpod/create`, data).then((data) => data[0]);
 }
 
 // ORDER
@@ -114,18 +114,26 @@ export function getOrderItems(orderId: string): Promise<IOrderItems> {
 }
 
 // ORDER ITEM
-export function insertIphoneOrder(orderId: string, iphoneId: string): Promise<any> {
-    return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/add`, {id: iphoneId}).then((data) => data[0]);
+export function insertIphoneOrder(orderId: string, item: IIphoneFull): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/add`, item).then((data) => data[0]);
+}
+
+export function updateIphoneOrder(orderId: string, item: IIphoneFull): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/update`, item).then((data) => data[0]);
 }
 
 export function deleteIphoneOrder(orderId: string, iphoneId: string): Promise<any> {
     return postRequest<any[]>(`/api/v1/order/${orderId}/iphone/delete`, {id: iphoneId}).then((data) => data[0]);
 }
 
-export function insertAirpodOrder(orderId: string, airpodId: string): Promise<any> {
-    return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/add`, {id: airpodId}).then((data) => data[0]);
+export function insertAirpodOrder(orderId: string, item: IAirpodFull): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/add`, item).then((data) => data[0]);
 }
 
 export function deleteAirpodOrder(orderId: string, airpodId: string): Promise<any> {
     return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/delete`, {id: airpodId}).then((data) => data[0]);
+}
+
+export function updateAirpodOrder(orderId: string, item: IAirpodFull): Promise<any> {
+    return postRequest<any[]>(`/api/v1/order/${orderId}/airpod/update`, item).then((data) => data[0]);
 }

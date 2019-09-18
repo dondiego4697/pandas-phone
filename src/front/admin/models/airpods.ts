@@ -5,22 +5,23 @@ import {PageStatus} from 'libs/types';
 import {makeLookup} from 'admin/libs/table-lookup';
 import {
     getAirpodsEnums,
-    getAirpods,
-    deleteAirpod,
-    updateAirpod,
-    insertAirpod
+    getAirpodsBar,
+    deleteAirpodBar,
+    updateAirpodBar,
+    insertAirpodBar
 } from 'admin/libs/db-request';
 
 export interface IAirpod {
     id: string;
     series: string;
-    is_original: boolean;
-    is_charging_case: boolean;
+    original: boolean;
+    charging_case: boolean;
     price: number;
     discount: number;
+}
+
+export interface IAirpodFull extends IAirpod {
     serial_number: string;
-    is_sold: boolean;
-    is_bar: boolean;
 }
 
 interface ISnackbar {
@@ -41,22 +42,17 @@ export class AirpodsPageModel {
             return getAirpodsEnums().then((enums) => {
                 this.tableColumns = [
                     {
-                        editable: 'never',
-                        field: 'id',
-                        title: 'ID'
-                    },
-                    {
                         field: 'series',
                         lookup: makeLookup(enums.series),
                         title: 'Series'
                     },
                     {
-                        field: 'is_original',
+                        field: 'original',
                         title: 'Original',
                         type: 'boolean'
                     },
                     {
-                        field: 'is_charging_case',
+                        field: 'charging_case',
                         title: 'Charging case',
                         type: 'boolean'
                     },
@@ -69,17 +65,6 @@ export class AirpodsPageModel {
                         field: 'discount',
                         title: 'Discount',
                         type: 'numeric'
-                    },
-                    {
-                        editable: 'onUpdate',
-                        field: 'serial_number',
-                        title: 'Serial number'
-                    },
-                    {
-                        editable: 'never',
-                        field: 'is_bar',
-                        title: 'Bar',
-                        type: 'boolean'
                     }
                 ];
             });
@@ -93,7 +78,7 @@ export class AirpodsPageModel {
             this.status = PageStatus.LOADING;
 
             this.setTableColumns().then(() => {
-                getAirpods({limit: this.limit, offset: this.offset})
+                getAirpodsBar({limit: this.limit, offset: this.offset})
                     .then((data) => {
                         this.data = data;
                         this.status = PageStatus.DONE;
@@ -105,7 +90,7 @@ export class AirpodsPageModel {
     @action public deleteRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                deleteAirpod(airpod.id).then((deleted: IAirpod) => {
+                deleteAirpodBar(airpod.id).then((deleted: IAirpod) => {
                     const index = this.data.findIndex((item) => item.id === deleted.id);
                     const buff = [...this.data];
                     buff.splice(index, 1);
@@ -122,7 +107,7 @@ export class AirpodsPageModel {
                 const id = airpod.id;
                 delete airpod.id;
 
-                updateAirpod(id, airpod).then((updated: IAirpod) => {
+                updateAirpodBar(id, airpod).then((updated: IAirpod) => {
                     const index = this.data.findIndex((item) => item.id === updated.id);
                     const buff = [...this.data];
                     buff.splice(index, 1, updated);
@@ -136,8 +121,7 @@ export class AirpodsPageModel {
     @action public insertRow(airpod: IAirpod): Promise<void> {
         return new Promise((resolve, reject) => {
             runInAction(() => {
-                airpod.is_bar = true;
-                insertAirpod(airpod).then((inserted: IAirpod) => {
+                insertAirpodBar(airpod).then((inserted: IAirpod) => {
                     this.data = [...this.data, inserted];
                     resolve();
                 }).catch((err) => reject(err.response.data));
