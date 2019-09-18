@@ -6,6 +6,7 @@ import {ClientDataModel} from 'client/models/client-data';
 import App from 'client/pages/app';
 import {MainPage} from 'client/pages/main';
 import {NotFoundPage} from 'client/pages/not-fount';
+import {CartPage} from 'client/pages/cart';
 
 interface IProps {
     clientDataModel?: ClientDataModel;
@@ -25,6 +26,7 @@ export default class Router extends React.Component<IProps> {
         return (
             <Switch>
                 <Route exact path='/' component={MainPage} />
+                <Route exact path='/cart' component={CartPage} />
                 <Route component={NotFoundPage} />
             </Switch>
         );

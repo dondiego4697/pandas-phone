@@ -17,7 +17,7 @@ export function iPhoneColorMapper(color: string): string | undefined {
     return mapper[color];
 }
 
-export function iPhoneModelrMapper(model: string): string | undefined {
+export function iPhoneModelMapper(model: string): string | undefined {
     const mapper: Record<string, string> = {
         '6s': '6S',
         7: '7',

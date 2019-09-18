@@ -35,18 +35,32 @@ export class MainPageModel {
 
     @action public fetchData(): void {
         runInAction(() => {
-            this.calcCartCount();
-
+            this.status = PageStatus.LOADING;
             getBarItems().then((barItems) => {
                 this.barItems = barItems;
                 this.status = PageStatus.DONE;
+
+                this.calcCart();
             });
         });
     }
 
-    @action public calcCartCount(): void {
-        const iphones = ClientCookie.getCartIds('iphone');
-        const airpods = ClientCookie.getCartIds('airpod');
-        this.cartCount = iphones.length + airpods.length;
+    @action public calcCart(): void {
+        const iphonesIds = ClientCookie.getCartIds('iphone');
+        const airpodsIds = ClientCookie.getCartIds('airpod');
+
+        const useAirpodsIds: string[] = airpodsIds.filter(
+            (id) => this.barItems!.airpods.find((airpod) => airpod.id === id)
+        ) as string[];
+
+        const useIphonesIds: string[] = iphonesIds.filter(
+            (id) => this.barItems!.iphones.find((iphone) => iphone.id === id)
+        ) as string[];
+
+        ClientCookie.clearCart();
+        useAirpodsIds.forEach((id) => ClientCookie.addIdInCart('airpod', id));
+        useIphonesIds.forEach((id) => ClientCookie.addIdInCart('iphone', id));
+
+        this.cartCount = useAirpodsIds.length + useIphonesIds.length;
     }
 }

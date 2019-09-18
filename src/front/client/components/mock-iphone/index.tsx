@@ -4,7 +4,7 @@ import bevis from 'libs/bevis';
 
 import './index.scss';
 
-const b = bevis('iphone-mock');
+const b = bevis('mock-iphone');
 
 interface IProps {
     model: string;
@@ -63,12 +63,11 @@ const imageSet = new Set([
 ]);
 
 function createImageName(model: string): string {
-    const name = model.toLowerCase().split(' ').join('_');
-    if (imageSet.has(name)) {
-        return name;
+    if (imageSet.has(model)) {
+        return model;
     }
 
-    const prefix = name.split('_')[0];
+    const prefix = model.split('_')[0];
     if (imageDefaults.has(prefix)) {
         return imageDefaults.get(prefix)!;
     }
@@ -76,7 +75,7 @@ function createImageName(model: string): string {
     return imageDefault;
 }
 
-export class IphoneMock extends React.Component<IProps> {
+export class MockIphone extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>

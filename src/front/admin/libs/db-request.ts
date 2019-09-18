@@ -28,10 +28,13 @@ function deleteRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
-// IPHONE
-export function getIphonesBar(params: IDefaultParams): Promise<IIphone[]> {
-    const {limit, offset} = params;
-    return getRequest<IIphone[]>(`/api/v1/bar/iphones?limit=${limit}&offset=${offset}`);
+// ENUMS
+export interface IOrderEnums {
+    statuses: string[];
+}
+
+export function getOrderEnums(): Promise<IOrderEnums> {
+    return getRequest<IOrderEnums>(`/api/v1/order/enums`);
 }
 
 interface IIphoneEnums {
@@ -42,6 +45,20 @@ interface IIphoneEnums {
 
 export function getIphoneEnums(): Promise<IIphoneEnums> {
     return getRequest<IIphoneEnums>(`/api/v1/iphone/enums`);
+}
+
+interface IAirpodEnums {
+    series: string[];
+}
+
+export function getAirpodsEnums(): Promise<IAirpodEnums> {
+    return getRequest<IAirpodEnums>(`/api/v1/airpod/enums`);
+}
+
+// IPHONE
+export function getIphonesBar(params: IDefaultParams): Promise<IIphone[]> {
+    const {limit, offset} = params;
+    return getRequest<IIphone[]>(`/api/v1/bar/iphones?limit=${limit}&offset=${offset}`);
 }
 
 export function deleteIphoneBar(id: string): Promise<IIphone> {
@@ -62,14 +79,6 @@ export function getAirpodsBar(params: IDefaultParams): Promise<IAirpod[]> {
     return getRequest<IAirpod[]>(`/api/v1/bar/airpods?limit=${limit}&offset=${offset}`);
 }
 
-interface IAirpodEnums {
-    series: string[];
-}
-
-export function getAirpodsEnums(): Promise<IAirpodEnums> {
-    return getRequest<IAirpodEnums>(`/api/v1/airpod/enums`);
-}
-
 export function deleteAirpodBar(id: string): Promise<IAirpod> {
     return deleteRequest<IAirpod[]>(`/api/v1/bar/airpod/${id}`, {}).then((data) => data[0]);
 }
@@ -86,14 +95,6 @@ export function insertAirpodBar(data: IAirpod): Promise<IAirpod> {
 export function getOpenedOrders(params: IDefaultParams): Promise<IOrder[]> {
     const {limit, offset} = params;
     return getRequest<IOrder[]>(`/api/v1/orders/opened?limit=${limit}&offset=${offset}`);
-}
-
-export interface IOrderEnums {
-    statuses: string[];
-}
-
-export function getOrderEnums(): Promise<IOrderEnums> {
-    return getRequest<IOrderEnums>(`/api/v1/order/enums`);
 }
 
 export function updateOrder(id: string, data: IOrder): Promise<IOrder> {

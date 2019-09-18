@@ -8,7 +8,7 @@ import './index.scss';
 const b = bevis('header');
 
 interface IProps {
-    budgeCount: number;
+    budgeCount?: number;
 }
 
 export class Header extends React.Component<IProps> {
@@ -29,7 +29,10 @@ export class Header extends React.Component<IProps> {
                         >
                             <div className={b('cart-button-icon')}/>
                         </Link>
-                        <div className={b('cart-budge')}>{this.props.budgeCount}</div>
+                        {
+                            (this.props.budgeCount || this.props.budgeCount === 0) &&
+                            <div className={b('cart-budge')}>{this.props.budgeCount}</div>
+                        }
                     </div>
                 </div>
             </div>
