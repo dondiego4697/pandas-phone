@@ -1,4 +1,5 @@
 import {observable, action, runInAction} from 'mobx';
+import {PhoneNumberFormat as PNF, PhoneNumberUtil} from 'google-libphonenumber';
 
 import {PageStatus} from 'libs/types';
 import {getBarItems} from 'client/libs/request';
@@ -6,9 +7,16 @@ import {ClientCookie} from 'client/libs/cookie';
 import {IAirpod, IIphone, IBarItems} from 'client/models/main';
 import {getPriceWithDiscount, priceToString} from 'libs/get-price';
 
+const phoneUtil = PhoneNumberUtil.getInstance();
+
 interface IData {
     airpods: IAirpod[];
     iphones: IIphone[];
+}
+
+interface ICustomerData {
+    name: string;
+    phone: string;
 }
 
 export class CartPageModel {
@@ -17,6 +25,10 @@ export class CartPageModel {
     @observable public totalPrice = '0';
     @observable public cartCount = 0;
     @observable public data: IData = {airpods: [], iphones: []};
+    @observable public customerData: ICustomerData = {
+        name: '',
+        phone: ''
+    };
     @observable private barItems: IBarItems | undefined;
 
     @action public fetchData(): void {
@@ -38,6 +50,41 @@ export class CartPageModel {
     @action public removeAirpod(airpod: IAirpod): void {
         ClientCookie.removeIdFromCart('airpod', airpod.id);
         this.recalcData();
+    }
+
+    @action public setCustomerName(name: string): void {
+        this.customerData = {
+            ...this.customerData,
+            name
+        };
+    }
+
+    @action public setCustomerPhone(rawValue: string): void {
+        let value = rawValue.replace(/[^\+0-9]/gim, '');
+        if (value.length <= 1) {
+            this.customerData = {
+                ...this.customerData,
+                phone: '+'
+            };
+            return;
+        }
+        try {
+            const number = phoneUtil.parse(value, 'RU');
+            value = phoneUtil.format(number, PNF.INTERNATIONAL);
+        } finally {
+            this.customerData = {
+                ...this.customerData,
+                phone: value
+            };
+        }
+    }
+
+    @action public validateCustomerData(): boolean {
+        return true;
+        // phoneUtil.isValidNumber(number)
+        // TODO
+        // 1. Проверить что имя не пустое
+        // 2. Проверить что номер валидный
     }
 
     @action private recalcData(): void {

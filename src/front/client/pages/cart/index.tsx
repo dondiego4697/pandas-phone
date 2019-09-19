@@ -66,14 +66,18 @@ export class CartPage extends React.Component<IProps> {
                         <div className={b('info-form')}>
                             <div className={b('edit-text-wrap')}>
                                 <EditText
-                                    id='name'
+                                    id='customer-name'
+                                    value={this.props.cartPageModel!.customerData.name}
+                                    onChange={this.editTextChangeHandler}
                                     placeholder='Как к вам обращаться'
                                     label='Как к вам обращаться'
                                 />
                             </div>
                             <div className={b('edit-text-wrap')}>
                                 <EditText
-                                    id='phone'
+                                    id='customer-phone'
+                                    value={this.props.cartPageModel!.customerData.phone}
+                                    onChange={this.editTextChangeHandler}
                                     placeholder='Ваш телефон'
                                     label='Ваш телефон'
                                 />
@@ -91,8 +95,25 @@ export class CartPage extends React.Component<IProps> {
         );
     }
 
-    private onSendRequestHandler = (): void => {
+    private editTextChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const {id, value} = event.target;
+        if (id === 'customer-name') {
+            this.props.cartPageModel!.setCustomerName(value);
+        } else if (id === 'customer-phone') {
+            this.props.cartPageModel!.setCustomerPhone(value);
+        }
+    }
 
+    private onSendRequestHandler = (): void => {
+        if (this.props.cartPageModel!.validateCustomerData()) {
+            // TODO
+            // 1. send-request
+            // 2. if ok -> clear cookie
+            // 3. open popup that everything is okay -> на любую кнопку открываем main-page
+        } else {
+            // TODO
+            // по хорошему возвращать ошибку и какое поле багнуло
+        }
     }
 
     private onDeleteIphoneHandler = (iphone: IIphone): void => {
