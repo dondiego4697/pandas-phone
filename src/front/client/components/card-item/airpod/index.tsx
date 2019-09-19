@@ -7,8 +7,9 @@ import './index.scss';
 import {Button} from 'client/components/button';
 import {IAirpod} from 'client/models/main';
 import {CardDescription} from 'client/components/card-description';
-import {MockAirpod} from 'client/components/mock-airpod';
+import {MockAirpod} from 'client/components/mock/airpod';
 import {getAirpodDescriptionFields} from 'client/libs/description-fields';
+import {CardItem} from 'client/components/card-item';
 
 const b = bevis('airpod-card');
 
@@ -23,12 +24,14 @@ export class AirpodCard extends React.Component<IProps> {
         const model = this.props.airpod.series;
         const title = `AirPods series ${this.props.airpod.series}`;
         return (
-            <div className={b()}>
-                <div className={b('container')}>
-                    <div className={b('image-container')}>
+            <CardItem
+                imageElement={
+                    <div className={b('image-wrapper')}>
                         <MockAirpod model={model}/>
                     </div>
-                    <div className={b('content-container')}>
+                }
+                contentElement={
+                    <div>
                         <h1 className={b('title')}>{title}</h1>
                         <div className={b('description-container')}>
                             <CardDescription
@@ -44,8 +47,8 @@ export class AirpodCard extends React.Component<IProps> {
                             </div>
                         }
                     </div>
-                </div>
-            </div>
+                }
+            />
         );
     }
 }

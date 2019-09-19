@@ -1,24 +1,7 @@
 .iphone-card {
-    &__container {
-        &:hover {
-            box-shadow: 0 0 2.1rem #c3c3c3;
-        }
-    }
-
-    &__image-container {
-        background-color: #3d3b48;
-        border-radius: 3px 3px 0 0;
-    }
-
     &__image-wrapper {
         height: 300px;
         padding: 16px;
-    }
-
-    &__content-container {
-        background-color: white;
-        border-radius: 0 0 3px 3px;
-        padding: 32px;
     }
 
     &__title {

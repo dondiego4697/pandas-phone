@@ -5,7 +5,7 @@ import bevis from 'libs/bevis';
 import {IAirpod} from 'client/models/main';
 import {CardDescription} from 'client/components/card-description';
 import {getAirpodDescriptionFields} from 'client/libs/description-fields';
-import {MockAirpod} from 'client/components/mock-airpod';
+import {MockAirpod} from 'client/components/mock/airpod';
 import {CartItem} from 'client/components/cart-item';
 
 import './index.scss';

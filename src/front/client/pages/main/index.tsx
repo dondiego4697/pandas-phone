@@ -1,25 +1,25 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
-import {Link} from 'react-router-dom';
+import {RouteComponentProps} from 'react-router';
 
 import {MainPageModel, IIphone, IAirpod} from 'client/models/main';
 import {Header} from 'client/components/header';
 import {FacePanel} from 'client/components/face';
 import {ClientDataModel} from 'client/models/client-data';
-import {IphoneCard} from 'client/components/iphone-card';
+import {IphoneCard} from 'client/components/card-item/iphone';
 import {Footer} from 'client/components/footer';
 import {Popup} from 'client/components/popup';
 import {ProgressLock} from 'client/components/progress-lock';
 import {ClientCookie} from 'client/libs/cookie';
 import {PageStatus} from 'libs/types';
-import {AirpodCard} from 'client/components/airpod-card';
+import {AirpodCard} from 'client/components/card-item/airpod';
 import {Button} from 'client/components/button';
 
 import bevis from 'libs/bevis';
 
 import './index.scss';
 
-interface IProps {
+interface IProps extends RouteComponentProps<{}> {
     clientDataModel?: ClientDataModel;
     mainPageModel?: MainPageModel;
 }
@@ -70,8 +70,16 @@ export class MainPage extends React.Component<IProps> {
                             onClick={this.onClosePopup}
                         />
                     </div>
-                    <div className={b('popup-button-container')} onClick={this.onClosePopup}>
-                        <Link className={b('popup-to-cart')} to={`/cart`}><p>{'Перейти в корзину'}</p></Link>
+                    <div
+                        className={b('popup-button-container')}
+                        onClick={this.onClosePopup}
+                        style={{marginLeft: 16}}
+                    >
+                        <Button
+                            text='Перейти в корзину'
+                            type='light'
+                            onClick={() => this.props.history.push('/cart')}
+                        />
                     </div>
                 </div>
             </div>

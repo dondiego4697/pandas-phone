@@ -6,7 +6,7 @@ import {IIphone} from 'client/models/main';
 import {iPhoneModelMapper} from 'client/libs/text-mapper';
 import {CardDescription} from 'client/components/card-description';
 import {getIphoneDescriptionFields} from 'client/libs/description-fields';
-import {MockIphone} from 'client/components/mock-iphone';
+import {MockIphone} from 'client/components/mock/iphone';
 import {CartItem} from 'client/components/cart-item';
 
 import './index.scss';

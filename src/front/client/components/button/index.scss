@@ -17,4 +17,13 @@
             box-shadow: 0.2rem 0.2rem 0.6rem #e8e8e8;
         }
     }
+
+    &__light {
+        background-color: #f0eded !important;
+        color: black !important;
+
+        &:hover {
+            background-color: #e5e2e2 !important;
+        }
+    }
 }

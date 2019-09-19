@@ -1,0 +1,19 @@
+.airpod-card {
+    &__title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    &__description-container {
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    &__image-wrapper {
+        height: 300px;
+        padding: 32px;
+    }
+}
