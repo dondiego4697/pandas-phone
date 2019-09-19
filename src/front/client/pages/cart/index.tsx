@@ -10,6 +10,8 @@ import {Header} from 'client/components/header';
 import {IphoneCart} from 'client/components/iphone-cart';
 import {AirpodCart} from 'client/components/airpod-cart';
 import {IIphone, IAirpod} from 'client/models/main';
+import {EditText} from 'client/components/edit-text';
+import {Button} from 'client/components/button';
 
 import './index.scss';
 
@@ -57,10 +59,40 @@ export class CartPage extends React.Component<IProps> {
                     </div>
                     <div className={b('info')}>
                         <h1>{`Всего на сумму: ${this.props.cartPageModel!.totalPrice}`}</h1>
+                        <div className={b('info-details')}>
+                            <p>Оставьте ваш номер телефона и мы вам перезвоним, чтобы подтвердить заказ.</p>
+                            <p>Сейчас вы ни за что не платите.</p>
+                        </div>
+                        <div className={b('info-form')}>
+                            <div className={b('edit-text-wrap')}>
+                                <EditText
+                                    id='name'
+                                    placeholder='Как к вам обращаться'
+                                    label='Как к вам обращаться'
+                                />
+                            </div>
+                            <div className={b('edit-text-wrap')}>
+                                <EditText
+                                    id='phone'
+                                    placeholder='Ваш телефон'
+                                    label='Ваш телефон'
+                                />
+                            </div>
+                            <div className={b('edit-text-wrap')}>
+                                <Button
+                                    text='Оставить заказ'
+                                    onClick={this.onSendRequestHandler}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         );
+    }
+
+    private onSendRequestHandler = (): void => {
+
     }
 
     private onDeleteIphoneHandler = (iphone: IIphone): void => {

@@ -17,6 +17,27 @@
         }
     }
 
+    &__info-details {
+        margin-top: 8px;
+
+        & p {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            text-align: right;
+        }
+    }
+
+    &__info-form {
+        width: 350px;
+        margin-left: auto;
+        margin-top: 32px;
+    }
+
+    &__edit-text-wrap {
+        margin-top: 16px;
+    }
+
     &__wrapper {
         max-width: 100%;
         height: 100%;

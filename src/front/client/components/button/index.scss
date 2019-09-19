@@ -10,10 +10,11 @@
         background-color: #f23e59;
         color: white;
         text-align: center;
-        padding: 8px;
+        padding: 0.8rem 1.6rem;
 
         &:hover {
             background-color: #ca3248;
+            box-shadow: 0.2rem 0.2rem 0.6rem #e8e8e8;
         }
     }
 }
