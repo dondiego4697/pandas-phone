@@ -1,32 +1,37 @@
 .mock-iphone {
     display: flex;
-    width: 100%;
     height: 100%;
+    justify-content: center;
 
     &__image-wrapper {
-        margin: auto;
+        display: flex;
+        width: 100%;
     }
 
     &__phone {
         position: relative;
         display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    &__phone-container {
+        display: inline-flex;
+        justify-content: center;
+        position: relative;
     }
 
     &__phone-frame {
-        z-index: 1;
-        height: 250px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        overflow: hidden;
+        height: 100%;
+        z-index: 2;
     }
 
     &__phone-bg {
-        border-radius: 25px;
+        border-radius: 20%;
         position: absolute;
-        left: 1px;
         height: 100%;
-        width: 98%;
+        width: 99%;
+        margin: auto;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

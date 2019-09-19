@@ -17,15 +17,15 @@ export class ClientCookie {
         browserCookie.set(key, JSON.stringify(ids));
     }
 
-    /* public static removeItemFromCart(type: Type, item: IAirpod | IIphone): void {
+    public static removeIdFromCart(type: Type, id: string): void {
         const key = type === 'airpod' ? AIRPODS_CART : IPHONES_CART;
-        const items: any[] = JSON.parse(browserCookie.get(key) || '[]');
+        const ids: any[] = JSON.parse(browserCookie.get(key) || '[]');
 
-        const index = items.findIndex((x) => x.localId === item.localId);
-        items.splice(index, 1);
+        const index = ids.findIndex((x) => x === id);
+        ids.splice(index, 1);
 
-        browserCookie.set(key, JSON.stringify(items));
-    } */
+        browserCookie.set(key, JSON.stringify(ids));
+    }
 
     public static clearCart(): void {
         [AIRPODS_CART, IPHONES_CART].forEach((key) => {

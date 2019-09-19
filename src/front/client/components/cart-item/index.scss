@@ -1,0 +1,37 @@
+.cart-item {
+    max-width: 100%;
+    margin: 16px;
+
+    &__container {
+        max-width: 100%;
+        padding: 16px;
+        background: #fafafa;
+        border-radius: 10px;
+        position: relative;
+        padding-right: 50px;
+    }
+
+    &__cross-container {
+        cursor: pointer;
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        width: 30px;
+        height: 30px;
+        background-color: #f0eded;
+        border-radius: 5px;
+        display: flex;
+
+        &:hover {
+            background-color: #e5e2e2;
+        }
+    }
+
+    &__cross {
+        background-image: url(/public/imgs/cross.svg);
+        background-size: cover;
+        margin: auto;
+        width: 10px;
+        height: 10px;
+    }
+}

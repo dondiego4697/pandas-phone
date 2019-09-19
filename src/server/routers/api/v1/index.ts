@@ -43,7 +43,7 @@ apiV1Router
     .use(telegramAuth)
     .use((req, res, next) => {
         if (req.adminForbidden) {
-            // TODO throw Boom.forbidden();
+            throw Boom.forbidden();
         }
 
         next();

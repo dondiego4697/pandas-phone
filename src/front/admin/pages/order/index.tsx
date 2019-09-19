@@ -96,11 +96,7 @@ export class OrderPage extends React.Component<IProps> {
                             </Button>
                         </div>
                         <div className={b('result-price')}>
-                            <h1
-                                dangerouslySetInnerHTML={{
-                                    __html: `Result: ${this.props.orderPageModel!.totalPrice} \u20BD`
-                                }}
-                            />
+                            <h1>{`Result: ${this.props.orderPageModel!.totalPrice}`}</h1>
                         </div>
                     </div>
                     <Snackbar

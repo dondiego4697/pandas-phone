@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
+import {Link} from 'react-router-dom';
 
 import {MainPageModel, IIphone, IAirpod} from 'client/models/main';
 import {Header} from 'client/components/header';
@@ -7,11 +8,12 @@ import {FacePanel} from 'client/components/face';
 import {ClientDataModel} from 'client/models/client-data';
 import {IphoneCard} from 'client/components/iphone-card';
 import {Footer} from 'client/components/footer';
-import {AddedToCartPopup} from 'client/components/added-to-cart-popup';
+import {Popup} from 'client/components/popup';
 import {ProgressLock} from 'client/components/progress-lock';
 import {ClientCookie} from 'client/libs/cookie';
 import {PageStatus} from 'libs/types';
 import {AirpodCard} from 'client/components/airpod-card';
+import {Button} from 'client/components/button';
 
 import bevis from 'libs/bevis';
 
@@ -53,18 +55,39 @@ export class MainPage extends React.Component<IProps> {
         this.props.mainPageModel!.calcCart();
     }
 
-    private onCloseAddedToCartPopup = (): void => {
+    private onClosePopup = (): void => {
         this.props.mainPageModel!.showAddedToCartPopup = false;
+    }
+
+    private renderPopupContent(): React.ReactNode {
+        return (
+            <div>
+                <h1 className={b('popup-title')}>Добавлено в корзину</h1>
+                <div className={b('popup-controls-container')}>
+                    <div className={b('popup-button-container')}>
+                        <Button
+                            text='Продолжить покупки'
+                            onClick={this.onClosePopup}
+                        />
+                    </div>
+                    <div className={b('popup-button-container')} onClick={this.onClosePopup}>
+                        <Link className={b('popup-to-cart')} to={`/cart`}><p>{'Перейти в корзину'}</p></Link>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     private renderBrowser(): React.ReactNode {
         return (
             <div className={b('container')}>
                 <ProgressLock show={this.props.mainPageModel!.status === PageStatus.LOADING}/>
-                <AddedToCartPopup
+                <Popup
                     show={this.props.mainPageModel!.showAddedToCartPopup}
-                    onClose={this.onCloseAddedToCartPopup}
-                />
+                    onClose={this.onClosePopup}
+                >
+                    {this.renderPopupContent()}
+                </Popup>
                 <Header budgeCount={this.props.mainPageModel!.cartCount}/>
                 <FacePanel socialLinks={this.props.clientDataModel!.socialLinks}/>
                 <h1 className={b('sub-header')}>iPhones</h1>

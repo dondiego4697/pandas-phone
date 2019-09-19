@@ -49,7 +49,3 @@ export function airpodChargingMapper(charging: boolean): string {
 
     return 'Кейс не заряжает';
 }
-
-export function getPrice(price: number, discount: number): string {
-    return (price * (1 - discount / 100)).toFixed(2);
-}

@@ -1,8 +1,12 @@
 .iphone-card {
     &__image-container {
-        height: 300px;
         background-color: #3d3b48;
         border-radius: 3px 3px 0 0;
+    }
+
+    &__image-wrapper {
+        height: 300px;
+        padding: 16px;
     }
 
     &__content-container {

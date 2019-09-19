@@ -6,9 +6,9 @@ import './index.scss';
 
 import {Button} from 'client/components/button';
 import {IAirpod} from 'client/models/main';
-import {getPrice, airpodOriginalMapper, airpodChargingMapper} from 'client/libs/text-mapper';
-import {CardDescription, ICardDescriptionField} from 'client/components/card-description';
+import {CardDescription} from 'client/components/card-description';
 import {MockAirpod} from 'client/components/mock-airpod';
+import {getAirpodDescriptionFields} from 'client/libs/description-fields';
 
 const b = bevis('airpod-card');
 
@@ -16,34 +16,6 @@ interface IProps {
     airpod: IAirpod;
     buttonText: string;
     onClick?: (data: IAirpod) => void;
-}
-
-function getFields(airpod: IAirpod): ICardDescriptionField[] {
-    const fields: ICardDescriptionField[] = [
-        {
-            icon: 'copyright',
-            text: airpodOriginalMapper(airpod.original)
-        },
-        {
-            icon: 'charge',
-            text: airpodChargingMapper(airpod.original)
-        },
-        {
-            icon: 'ruble',
-            text: getPrice(airpod.price, 0),
-            textClassName: airpod.discount > 0 ? 'old-price' : 'price'
-        }
-    ];
-
-    if (airpod.discount > 0) {
-        fields.push({
-            icon: 'discount',
-            text: getPrice(airpod.price, airpod.discount),
-            textClassName: 'discount'
-        });
-    }
-
-    return fields;
 }
 
 export class AirpodCard extends React.Component<IProps> {
@@ -60,7 +32,7 @@ export class AirpodCard extends React.Component<IProps> {
                         <h1 className={b('title')}>{title}</h1>
                         <div className={b('description-container')}>
                             <CardDescription
-                                fields={getFields(this.props.airpod)}
+                                fields={getAirpodDescriptionFields(this.props.airpod)}
                             />
                         </div>
                         {

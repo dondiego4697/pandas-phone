@@ -76,16 +76,29 @@ function createImageName(model: string): string {
 }
 
 export class MockIphone extends React.Component<IProps> {
+    private bgRef = React.createRef<HTMLDivElement>();
+    public componentDidMount(): void {
+        setTimeout(
+            () => {
+                this.bgRef.current!.classList.add(b('phone-bg'));
+                this.bgRef.current!.classList.add(Math.random() > 0.5 ? 'bg-1' : 'bg-2');
+            },
+            100
+        );
+    }
+
     public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('image-wrapper')}>
                     <div className={b('phone')}>
-                        <img
-                            className={b('phone-frame')}
-                            src={`/public/imgs/iphone-mock/${createImageName(this.props.model)}.png`}
-                        />
-                        <div className={`${b('phone-bg')} ${Math.random() > 0.5 ? 'bg-1' : 'bg-2'}`} />
+                        <div className={b('phone-container')}>
+                            <img
+                                className={b('phone-frame')}
+                                src={`/public/imgs/iphone-mock/${createImageName(this.props.model)}.png`}
+                            />
+                            <div ref={this.bgRef}/>
+                        </div>
                     </div>
                 </div>
             </div>

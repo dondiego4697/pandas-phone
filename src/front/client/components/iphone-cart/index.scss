@@ -1,0 +1,26 @@
+.iphone-cart {
+    &__wrapper {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-columns: 150px 1fr;
+        row-gap: 1vw;
+        column-gap: 1vw;
+    }
+
+    &__image-container {
+        height: 150px;
+    }
+
+    &__title {
+        display: flex;
+        justify-content: center;
+        grid-row: 2;
+
+        & h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin: auto;
+            font-size: 16px;
+        }
+    }
+}

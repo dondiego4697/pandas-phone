@@ -6,6 +6,7 @@ import {IOrder} from 'admin/models/orders';
 import {IAirpodFull} from 'admin/models/airpods';
 import {IIphoneFull} from 'admin/models/iphones';
 import {makeLookup} from 'admin/libs/table-lookup';
+import {getPriceWithDiscount, priceToString} from 'libs/get-price';
 
 import {
     getOrder,
@@ -212,14 +213,10 @@ export class OrderPageModel {
     }
 
     @action private calcPrice(): void {
-        const calcWithDiscount = (price: number, discount: number) => {
-            return price * ((100 - discount) / 100);
-        };
-
         let totalPrice = 0;
-        this.airpodsData.forEach((airpod) => totalPrice += calcWithDiscount(airpod.price, airpod.discount));
-        this.iphonesData.forEach((iphone) => totalPrice += calcWithDiscount(iphone.price, iphone.discount));
+        this.airpodsData.forEach((airpod) => totalPrice += getPriceWithDiscount(airpod.price, airpod.discount));
+        this.iphonesData.forEach((iphone) => totalPrice += getPriceWithDiscount(iphone.price, iphone.discount));
 
-        this.totalPrice = totalPrice.toFixed(2);
+        this.totalPrice = priceToString(totalPrice);
     }
 }
