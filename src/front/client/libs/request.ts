@@ -39,6 +39,6 @@ export function addOrder(
             name: customerName,
             phone: customerPhone
         },
-        iphoneIds,
+        iphoneIds
     });
 }
