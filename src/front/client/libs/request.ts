@@ -2,10 +2,6 @@ import axios from 'axios';
 
 import {IBarItems} from 'client/models/main';
 
-interface IDefaultParams {
-    limit: number;
-    offset: number;
-}
 const config = {
     timeout: 3000,
     withCredentials: true
@@ -24,7 +20,7 @@ function postRequest<T>(url: string, data: any): Promise<T> {
 }
 
 export function getBarItems(): Promise<IBarItems> {
-    return getRequest<IBarItems>('/api/v1/public/bar-items');
+    return getRequest<IBarItems>('/api/v2/public/bar_items');
 }
 
 export function addOrder(
@@ -33,7 +29,7 @@ export function addOrder(
     airpodIds: string[],
     iphoneIds: string[]
 ): Promise<any> {
-    return postRequest<any>('/api/v1/public/add-order', {
+    return postRequest<any>('/api/v2/public/add_customer_order', {
         airpodIds,
         customer: {
             name: customerName,

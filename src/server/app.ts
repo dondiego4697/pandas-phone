@@ -13,7 +13,7 @@ import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
 import {adminRouter} from 'server/routers/admin';
-import {apiV1Router} from 'server/routers/api/v1';
+import {apiRouter} from 'server/routers/api/v2';
 import {clientRouter} from 'server/routers/client';
 
 declare global {
@@ -63,7 +63,7 @@ if (config['app.isNodeStatic']) {
 app
     .use(browserClient())
     .use('/bender-root', adminRouter)
-    .use('/api/v1', apiV1Router)
+    .use('/api/v2', apiRouter)
     .use('/*', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));

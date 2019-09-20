@@ -134,7 +134,7 @@ export class MainPage extends React.Component<IProps> {
         );
     }
 
-    private renderMobile() {
-
+    private renderMobile(): React.ReactNode {
+        return <div/>;
     }
 }

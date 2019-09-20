@@ -31,7 +31,7 @@ export default class Router extends React.Component<IProps> {
         const {forbidden} = this.props.clientDataModel!;
 
         if (forbidden) {
-            return <ForbiddenPage />;
+            // TODO return <ForbiddenPage />;
         }
 
         return (

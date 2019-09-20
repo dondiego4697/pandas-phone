@@ -23,6 +23,7 @@
         "array-type": [true, "array"],
         "ter-arrow-parens": [true, "always"],
         "typedef": [true, "call-signature"],
-        "no-shadowed-variable": false
+        "no-shadowed-variable": false,
+        "object-shorthand-properties-first": false
     }
 }

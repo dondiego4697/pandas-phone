@@ -14,7 +14,7 @@ interface IState {
 }
 
 export class CookieInfo extends React.Component<{}, IState> {
-    state = {visible: true};
+    public state = {visible: true};
 
     public componentDidMount(): void {
         const isCookieAccept = ClientCookie.isCookieAccept();

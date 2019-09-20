@@ -3,7 +3,7 @@ import * as got from 'got';
 
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
-import {OrderStatus} from 'server/routers/api/v1/controllers/order';
+import {OrderStatus} from 'server/routers/api/v2/validators/order';
 
 const telegramApiHost = `https://api.telegram.org`;
 
