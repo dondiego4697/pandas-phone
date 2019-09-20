@@ -114,6 +114,10 @@ apiV1Router.get('/order/id/:id', wrap<Request, Response>(async (req, res) => {
     res.json(await Order.getOrder(req.params.id));
 }));
 
+apiV1Router.post('/order/create', wrap<Request, Response>(async (req, res) => {
+    res.json(await Order.insertOrder(req.body));
+}));
+
 apiV1Router.post('/order/update/:id/status', wrap<Request, Response>(async (req, res) => {
     res.json(await Order.changeOrderStatus(req.params.id, req.body.status));
 }));

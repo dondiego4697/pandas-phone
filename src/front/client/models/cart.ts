@@ -78,6 +78,10 @@ export class CartPageModel {
         this.customerData = {name: '', phone: ''};
     }
 
+    @action public resetCusomerError(): void {
+        this.customerError = {name: '', phone: ''};
+    }
+
     @action public setCustomerName(name: string): void {
         this.customerData = {
             ...this.customerData,

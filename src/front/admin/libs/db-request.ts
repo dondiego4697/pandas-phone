@@ -97,6 +97,10 @@ export function getOpenedOrders(params: IDefaultParams): Promise<IOrder[]> {
     return getRequest<IOrder[]>(`/api/v1/orders/opened?limit=${limit}&offset=${offset}`);
 }
 
+export function insertOrder(data: IOrder): Promise<IOrder> {
+    return postRequest<IOrder[]>('/api/v1/order/create', data).then((data) => data[0]);
+}
+
 export function updateOrder(id: string, data: IOrder): Promise<IOrder> {
     return postRequest<IOrder[]>(`/api/v1/order/update/${id}`, data).then((data) => data[0]);
 }

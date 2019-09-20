@@ -4,6 +4,8 @@ import {withRouter, RouteComponentProps} from 'react-router';
 
 import bevis from 'libs/bevis';
 import {ClientDataModel} from 'client/models/client-data';
+import {CookieInfo} from 'client/components/cookie-info';
+import {ClientCookie} from 'client/libs/cookie';
 
 import './index.scss';
 
@@ -18,8 +20,10 @@ const b = bevis('app');
 @observer
 class App extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
+        const isCookieAccept = ClientCookie.isCookieAccept();
         return (
             <div className={b()}>
+                {!isCookieAccept && <CookieInfo/>}
                 {this.props.children}
             </div>
         );

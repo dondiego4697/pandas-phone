@@ -1,16 +1,18 @@
 import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
-import {makeRequest, getPgClient} from 'server/db/client';
+import {makeRequest, getPgClient, makeTransactionRequest} from 'server/db/client';
 import {seizePaginationParams, makeInsert} from 'server/lib/db';
-import {logger} from 'server/lib/logger';
+import {TelegramBot} from 'server/lib/telegram-bot';
+
+export type OrderStatus = 'new' | 'reject' | 'bought' | 'called';
 
 const orderSchema = Joi.object().keys({
     customer_name: Joi.string().required(),
     customer_phone: Joi.string().required(),
-    status: Joi.string().required(),
-    order_date: Joi.string().required(),
-    sold_date: Joi.string().allow(null, '').default('')
+    status: Joi.string(),
+    order_date: Joi.string(),
+    sold_date: Joi.string().allow(null, '')
 });
 
 const customerOrderSchema = Joi.object().keys({
@@ -55,9 +57,30 @@ export class Order {
             text: `
                 SELECT * FROM ${ORDER_TABLE_NAME}
                 WHERE status='new' OR status='called'
+                ORDER BY order_date DESC
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,
             values: []
+        });
+
+        return data.rows;
+    }
+
+    static async insertOrder(body: Record<string, any>) {
+        const result = Joi.validate(body, orderSchema);
+        if (result.error) {
+            throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
+        }
+
+        const {names, values} = makeInsert(result.value);
+        const data = await makeRequest({
+            text: `
+                INSERT INTO ${ORDER_TABLE_NAME}
+                (${names.join(', ')})
+                VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
+                RETURNING *;
+            `,
+            values: [...values]
         });
 
         return data.rows;
@@ -95,7 +118,7 @@ export class Order {
         return data.rows;
     }
 
-    static async changeOrderStatus(orderId: string, status: string) {
+    static async changeOrderStatus(orderId: string, status: OrderStatus) {
         const data = await makeRequest({
             text: `
                 UPDATE ${ORDER_TABLE_NAME}
@@ -105,6 +128,10 @@ export class Order {
             values: [orderId, status]
         });
 
+        TelegramBot.sendMessageToChat(TelegramBot.messageUpdateOrderStatus(
+            orderId,
+            status
+        ));
         return data.rows;
     }
 
@@ -196,58 +223,85 @@ export class Order {
         const {airpodIds, iphoneIds, customer: {name, phone}} = result.value;
 
         try {
-            await client.query('BEGIN');
-            const {rows: [order]} = await client.query(
-                `INSERT INTO "order" (customer_name, customer_phone) VALUES ($1, $2) RETURNING id;`,
-                [name, phone]
-            );
+            await makeTransactionRequest(client, {text: 'BEGIN'});
+
+            const {rows: [order]} = await makeTransactionRequest(client, {
+                text: `INSERT INTO "order" (customer_name, customer_phone) VALUES ($1, $2) RETURNING id;`,
+                values: [name, phone]
+            });
 
             if (airpodIds.length > 0) {
                 const queryResults = await Promise.all(airpodIds.map((id) => {
-                    return client.query(
-                        `INSERT INTO airpod (series, original, charging_case, price, discount)
-                            SELECT series, original, charging_case, price, discount
-                            FROM airpod_bar
-                            WHERE id=$1
-                        RETURNING id;`,
-                        [id]
-                    );
+                    return makeTransactionRequest(client, {
+                        text: `
+                            INSERT INTO airpod (series, original, charging_case, price, discount)
+                                SELECT series, original, charging_case, price, discount
+                                FROM airpod_bar
+                                WHERE id=$1
+                            RETURNING id;
+                        `,
+                        values: [id]
+                    });
                 }));
 
                 await Promise.all(queryResults.map(({rows: [row]}) => {
-                    return client.query(
-                        `INSERT INTO order_item (order_id, airpod_id) VALUES ($1, $2);`,
-                        [order.id, row.id]
-                    );
+                    return makeTransactionRequest(client, {
+                        text: `INSERT INTO order_item (order_id, airpod_id) VALUES ($1, $2);`,
+                        values: [order.id, row.id]
+                    });
                 }));
             }
 
             if (iphoneIds.length > 0) {
                 const queryResults = await Promise.all(iphoneIds.map((id) => {
-                    return client.query(
-                        `INSERT INTO iphone (model, color, memory_capacity, price, discount)
-                            SELECT model, color, memory_capacity, price, discount
-                            FROM iphone_bar
-                            WHERE id=$1
-                        RETURNING id;`,
-                        [id]
-                    );
+                    return makeTransactionRequest(client, {
+                        text: `
+                            INSERT INTO iphone (model, color, memory_capacity, price, discount)
+                                SELECT model, color, memory_capacity, price, discount
+                                FROM iphone_bar
+                                WHERE id=$1
+                            RETURNING id;
+                        `,
+                        values: [id]
+                    });
                 }));
 
                 await Promise.all(queryResults.map(({rows: [row]}) => {
-                    return client.query(
-                        `INSERT INTO order_item (order_id, iphone_id) VALUES ($1, $2);`,
-                        [order.id, row.id]
-                    );
+                    return makeTransactionRequest(client, {
+                        text: `INSERT INTO order_item (order_id, iphone_id) VALUES ($1, $2);`,
+                        values: [order.id, row.id]
+                    });
                 }));
             }
 
-            await client.query('COMMIT');
-            // TODO отправить сообщение в телеграм чат
+            await makeTransactionRequest(client, {text: 'COMMIT'});
+
+            const {rows: [sum]} = await makeRequest({
+                text: `
+                    SELECT
+                           SUM((airpod.price / 100) * (100 - airpod.discount)) as airpodSum,
+                           SUM((iphone.price / 100) * (100 - iphone.discount)) as iphoneSum
+                    FROM order_item
+                        LEFT JOIN airpod ON order_item.airpod_id = airpod.id
+                        LEFT JOIN iphone ON order_item.iphone_id = iphone.id
+                    WHERE order_item.order_id=$1;
+                `,
+                values: [order.id]
+            });
+
+            TelegramBot.sendMessageToChat(TelegramBot.messageNewOrder(
+                order.id,
+                String(Number(sum.airpodsum) + Number(sum.iphonesum))
+            ));
         } catch (err) {
-            await client.query('ROLLBACK');
-            logger.error(`Database query error in "addCustomerOrder": ${err.message}`);
-            throw Boom.badRequest(err.message);
+            await makeTransactionRequest(client, {text: 'ROLLBACK'});
+            TelegramBot.sendMessageToChat(TelegramBot.messageNewOrderError(
+                JSON.stringify({
+                    error: err.message,
+                    body
+                })
+            ));
+            throw err;
         } finally {
             client.release();
         }

@@ -4,7 +4,8 @@ import {Column} from 'material-table';
 import {PageStatus} from 'libs/types';
 import {
     getOpenedOrders,
-    updateOrder
+    updateOrder,
+    insertOrder
 } from 'admin/libs/db-request';
 
 export interface IOrder {
@@ -33,11 +34,15 @@ export class OrdersPageModel {
         if (this.tableColumns.length === 0) {
             this.tableColumns = [
                 {
+                    editable: 'never',
+                    field: 'id',
+                    title: 'ID'
+                },
+                {
                     field: 'customer_name',
                     title: 'Имя заказчика'
                 },
                 {
-                    editable: 'never',
                     field: 'customer_phone',
                     title: 'Телефон заказчика'
                 },
@@ -81,6 +86,17 @@ export class OrdersPageModel {
                     buff.splice(index, 1, updated);
                     this.data = buff;
 
+                    resolve();
+                }).catch((err) => reject(err.response.data));
+            });
+        });
+    }
+
+    @action public insertRow(order: IOrder): Promise<void> {
+        return new Promise((resolve, reject) => {
+            runInAction(() => {
+                insertOrder(order).then((inserted: IOrder) => {
+                    this.data = [...this.data, inserted];
                     resolve();
                 }).catch((err) => reject(err.response.data));
             });

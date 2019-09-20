@@ -1,5 +1,4 @@
 import * as pg from 'pg';
-import * as Boom from '@hapi/boom';
 
 import {logger} from 'server/lib/logger';
 
@@ -29,7 +28,7 @@ export async function makeRequest(query: pg.QueryConfig) {
         result = await client.query(query);
     } catch (err) {
         logger.error(`Database query error: ${err.message}, ${JSON.stringify(query)}`);
-        throw Boom.badRequest(err.message);
+        throw err;
     } finally {
         if (client) {
             client.release();
@@ -39,12 +38,21 @@ export async function makeRequest(query: pg.QueryConfig) {
     return result;
 }
 
+export async function makeTransactionRequest(client: pg.PoolClient, query: pg.QueryConfig) {
+    try {
+        return await client.query(query);
+    } catch (err) {
+        logger.error(`Database query error: ${err.message}, ${JSON.stringify(query)}`);
+        throw err;
+    }
+}
+
 export async function getPgClient(): Promise<pg.PoolClient> {
     try {
         return await pool.connect();
     } catch (err) {
         logger.error(`Database get client error: ${err.message}`);
-        throw Boom.badRequest(err.message);
+        throw err;
     }
 }
 

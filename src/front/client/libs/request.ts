@@ -7,8 +7,8 @@ interface IDefaultParams {
     offset: number;
 }
 const config = {
-    withCredentials: true,
-    timeout: 3000
+    timeout: 3000,
+    withCredentials: true
 };
 
 function getRequest<T>(url: string): Promise<T> {
@@ -35,10 +35,10 @@ export function addOrder(
 ): Promise<any> {
     return postRequest<any>('/api/v1/public/add-order', {
         airpodIds,
-        iphoneIds,
         customer: {
             name: customerName,
             phone: customerPhone
-        }
+        },
+        iphoneIds,
     });
 }

@@ -36,7 +36,6 @@ export class MainPage extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
-                {/* TODO плашка о куках */}
                 {!this.props.clientDataModel!.isMobile && this.renderBrowser()}
                 {this.props.clientDataModel!.isMobile && this.renderMobile()}
             </div>

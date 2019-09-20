@@ -31,6 +31,10 @@ export class CartPage extends React.Component<IProps> {
         this.props.cartPageModel!.fetchData();
     }
 
+    public componentWillUnmount(): void {
+        this.props.cartPageModel!.resetCusomerError();
+    }
+
     public render(): React.ReactNode {
         const cartItemsCount = this.props.cartPageModel!.data.airpods.length +
             this.props.cartPageModel!.data.iphones.length;

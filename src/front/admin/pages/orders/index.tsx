@@ -2,6 +2,7 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import {RouteComponentProps} from 'react-router';
+import {Snackbar} from '@material-ui/core';
 
 import {IOrder, OrdersPageModel} from 'admin/models/orders';
 import {ProgressBar} from 'admin/components/progress-bar';
@@ -47,6 +48,7 @@ export class OrdersPage extends React.Component<IProps> {
                                 rowsPerPage: this.props.ordersPageModel!.limit
                             }}
                             handleUpdateRow={this.handleUpdateRow}
+                            handleAddRow={this.handleAddRow}
                             actions={[
                                 {
                                     icon: 'info',
@@ -57,6 +59,15 @@ export class OrdersPage extends React.Component<IProps> {
                             options={{actionsColumnIndex: -1}}
                         />
                     </div>
+                    <Snackbar
+                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                        key='top_center'
+                        autoHideDuration={6000}
+                        onClose={this.handleCloseSnackbar}
+                        open={this.props.ordersPageModel!.snackbar.open}
+                        ContentProps={{'aria-describedby': 'message-id'}}
+                        message={<span id='message-id'>{this.props.ordersPageModel!.snackbar.message}</span>}
+                    />
                 </div>
             </div>
         );
@@ -90,9 +101,17 @@ export class OrdersPage extends React.Component<IProps> {
         return this.props.ordersPageModel!.updateRow(order).catch(this.showSnackbar);
     }
 
+    private handleAddRow = (order: IOrder): Promise<void> => {
+        return this.props.ordersPageModel!.insertRow(order).catch(this.showSnackbar);
+    }
+
     private handleDetailsClick = (_: any, order: any): void => {
         delete order.tableData;
 
         this.props.history.push(`/bender-root/order/${order.id}`);
+    }
+
+    private handleCloseSnackbar = (): void => {
+        this.props.ordersPageModel!.snackbar.open = false;
     }
 }

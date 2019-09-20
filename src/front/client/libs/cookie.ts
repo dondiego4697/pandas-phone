@@ -32,4 +32,12 @@ export class ClientCookie {
             browserCookie.erase(key);
         });
     }
+
+    public static setCookieAccept(): void {
+        browserCookie.set('cookie_accept', 'true');
+    }
+
+    public static isCookieAccept(): boolean {
+        return browserCookie.get('cookie_accept') === 'true';
+    }
 }

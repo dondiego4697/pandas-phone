@@ -42,9 +42,8 @@ export class OrderPage extends React.Component<IProps> {
             return <NotFoundPage />;
         }
 
-        const tableName = `[${this.props.orderPageModel!.orderData!.status}] ` +
-            `${this.props.orderPageModel!.orderData!.customer_name}, ` +
-            `${this.props.orderPageModel!.orderData!.customer_phone}`;
+        const {status, customer_name, customer_phone} = this.props.orderPageModel!.orderData!;
+        const tableName = `[${status}] ${customer_name}, ${customer_phone}`;
 
         return (
             <div className={b()}>

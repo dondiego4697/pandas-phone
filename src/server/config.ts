@@ -9,6 +9,8 @@ interface IConfig {
     'app.needPort': boolean;
     'app.publicPath': string;
     'telegram.botName': string;
+    'telegram.timeout': number;
+    'telegram.workChatId': number;
     'cors.origin': string;
 }
 
@@ -19,7 +21,9 @@ const production: IConfig = {
     'app.needPort': false,
     'app.publicPath': '/public',
     'telegram.botName': 'PandaPhoneShopBot',
-    'cors.origin': 'https://super-afx'
+    'telegram.timeout': 3000,
+    'telegram.workChatId': -363392954,
+    'cors.origin': 'https://TODO'
 };
 
 const testing: IConfig = {
@@ -42,5 +46,18 @@ const stress: IConfig = {
 const configs: {[key: string]: IConfig} = {production, testing, stress, development};
 const config = configs[env];
 assert(config, `There is no configuration for environment "${env}"`);
+
+function getEnv(key: string): string | undefined {
+    return process.env[key];
+}
+
+[
+    'PANDA_PHONE_DB_HOST',
+    'PANDA_PHONE_DB_USER',
+    'PANDA_PHONE_DB_PASSWORD',
+    'PANDA_PHONE_DB_NAME',
+    'PANDA_PHONE_DB_PORT',
+    'PANDA_PHONE_TELEGRAM_BOT_API_TOKEN'
+].forEach((key) => assert(getEnv(key), `Environment variable "${key}" wasn't set`));
 
 export {config};
