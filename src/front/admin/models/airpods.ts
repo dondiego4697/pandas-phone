@@ -44,26 +44,26 @@ export class AirpodsPageModel {
                     {
                         field: 'series',
                         lookup: makeLookup(enums.series),
-                        title: 'Series'
+                        title: 'Серия'
                     },
                     {
                         field: 'original',
-                        title: 'Original',
+                        title: 'Оригинал',
                         type: 'boolean'
                     },
                     {
                         field: 'charging_case',
-                        title: 'Charging case',
+                        title: 'Заряжающий кейс',
                         type: 'boolean'
                     },
                     {
                         field: 'price',
-                        title: 'Price',
+                        title: 'Цена',
                         type: 'numeric'
                     },
                     {
                         field: 'discount',
-                        title: 'Discount',
+                        title: 'Скидка',
                         type: 'numeric'
                     }
                 ];

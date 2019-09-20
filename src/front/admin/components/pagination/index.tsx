@@ -24,7 +24,7 @@ export class Pagination extends React.Component<IProps> {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <p>Rows per page:</p>
+                    <p>Строк на странице:</p>
                     <FormControl>
                         <Select
                             value={this.props.rowsPerPage}

@@ -7,15 +7,15 @@ interface IPage {
 export class AdminPanelPageModel {
     @observable public pages: IPage[] = [
         {
-            title: 'iPhones',
+            title: '[Витрина] iPhone',
             url: 'iphones'
         },
         {
-            title: 'AirPods',
+            title: '[Витрина] AirPods',
             url: 'airpods'
         },
         {
-            title: 'Orders',
+            title: 'Заказы',
             url: 'orders'
         }
     ];

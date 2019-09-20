@@ -1,8 +1,9 @@
 import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
-import {makeRequest} from 'server/db/client';
+import {makeRequest, getPgClient} from 'server/db/client';
 import {seizePaginationParams, makeInsert} from 'server/lib/db';
+import {logger} from 'server/lib/logger';
 
 const orderSchema = Joi.object().keys({
     customer_name: Joi.string().required(),
@@ -12,8 +13,26 @@ const orderSchema = Joi.object().keys({
     sold_date: Joi.string().allow(null, '').default('')
 });
 
+const customerOrderSchema = Joi.object().keys({
+    airpodIds: Joi.array().items(Joi.string()).required(),
+    iphoneIds: Joi.array().items(Joi.string()).required(),
+    customer: Joi.object().keys({
+        name: Joi.string().required(),
+        phone: Joi.string().required()
+    })
+});
+
 const ORDER_TABLE_NAME = '"order"';
 const ORDER_ITEM_TABLE_NAME = 'order_item';
+
+interface IAddOrderCustomerData {
+    customer: {
+        name: string;
+        phone: string;
+    };
+    airpodIds: string[];
+    iphoneIds: string[];
+}
 
 export class Order {
     static async getEnums() {
@@ -68,6 +87,10 @@ export class Order {
             text: `SELECT * FROM ${ORDER_TABLE_NAME} WHERE id=$1;`,
             values: [id]
         });
+
+        if (data.rows.length === 0) {
+            throw Boom.notFound();
+        }
 
         return data.rows;
     }
@@ -161,5 +184,74 @@ export class Order {
         });
 
         return data.rows;
+    }
+
+    static async addCustomerOrder(body: IAddOrderCustomerData) {
+        const result = Joi.validate(body, customerOrderSchema);
+        if (result.error) {
+            throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
+        }
+
+        const client = await getPgClient();
+        const {airpodIds, iphoneIds, customer: {name, phone}} = result.value;
+
+        try {
+            await client.query('BEGIN');
+            const {rows: [order]} = await client.query(
+                `INSERT INTO "order" (customer_name, customer_phone) VALUES ($1, $2) RETURNING id;`,
+                [name, phone]
+            );
+
+            if (airpodIds.length > 0) {
+                const queryResults = await Promise.all(airpodIds.map((id) => {
+                    return client.query(
+                        `INSERT INTO airpod (series, original, charging_case, price, discount)
+                            SELECT series, original, charging_case, price, discount
+                            FROM airpod_bar
+                            WHERE id=$1
+                        RETURNING id;`,
+                        [id]
+                    );
+                }));
+
+                await Promise.all(queryResults.map(({rows: [row]}) => {
+                    return client.query(
+                        `INSERT INTO order_item (order_id, airpod_id) VALUES ($1, $2);`,
+                        [order.id, row.id]
+                    );
+                }));
+            }
+
+            if (iphoneIds.length > 0) {
+                const queryResults = await Promise.all(iphoneIds.map((id) => {
+                    return client.query(
+                        `INSERT INTO iphone (model, color, memory_capacity, price, discount)
+                            SELECT model, color, memory_capacity, price, discount
+                            FROM iphone_bar
+                            WHERE id=$1
+                        RETURNING id;`,
+                        [id]
+                    );
+                }));
+
+                await Promise.all(queryResults.map(({rows: [row]}) => {
+                    return client.query(
+                        `INSERT INTO order_item (order_id, iphone_id) VALUES ($1, $2);`,
+                        [order.id, row.id]
+                    );
+                }));
+            }
+
+            await client.query('COMMIT');
+            // TODO отправить сообщение в телеграм чат
+        } catch (err) {
+            await client.query('ROLLBACK');
+            logger.error(`Database query error in "addCustomerOrder": ${err.message}`);
+            throw Boom.badRequest(err.message);
+        } finally {
+            client.release();
+        }
+
+        return [];
     }
 }

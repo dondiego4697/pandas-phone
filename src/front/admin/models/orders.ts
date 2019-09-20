@@ -34,22 +34,22 @@ export class OrdersPageModel {
             this.tableColumns = [
                 {
                     field: 'customer_name',
-                    title: 'Customer name'
+                    title: 'Имя заказчика'
                 },
                 {
                     editable: 'never',
                     field: 'customer_phone',
-                    title: 'Customer phone'
+                    title: 'Телефон заказчика'
                 },
                 {
                     editable: 'never',
                     field: 'status',
-                    title: 'Status'
+                    title: 'Статус'
                 },
                 {
                     editable: 'never',
                     field: 'order_date',
-                    title: 'Order date'
+                    title: 'Дата заказа'
                 }
             ];
         }

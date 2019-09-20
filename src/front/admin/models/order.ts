@@ -52,15 +52,14 @@ export class OrderPageModel {
             this.status = PageStatus.LOADING;
 
             this.setMainData(orderId).then(() => {
-                getOrderItems(orderId)
+                return getOrderItems(orderId)
                     .then((data) => {
                         this.fillData(data);
                         this.calcPrice();
-
-                        this.status = PageStatus.DONE;
                     });
             }).catch(() => {
                 this.notFound = true;
+            }).finally(() => {
                 this.status = PageStatus.DONE;
             });
         });
@@ -136,31 +135,31 @@ export class OrderPageModel {
                 {
                     field: 'series',
                     lookup: makeLookup(airpodsEnums.series),
-                    title: 'Series'
+                    title: 'Серия'
                 },
                 {
                     field: 'original',
-                    title: 'Original',
+                    title: 'Оригинал',
                     type: 'boolean'
                 },
                 {
                     field: 'charging_case',
-                    title: 'Charging case',
+                    title: 'Заряжающий кейс',
                     type: 'boolean'
                 },
                 {
                     field: 'price',
-                    title: 'Price',
+                    title: 'Цена',
                     type: 'numeric'
                 },
                 {
                     field: 'discount',
-                    title: 'Discount',
+                    title: 'Скидка',
                     type: 'numeric'
                 },
                 {
                     field: 'serial_number',
-                    title: 'Serial number'
+                    title: 'Серийный номер'
                 }
             ];
 
@@ -173,31 +172,31 @@ export class OrderPageModel {
                 {
                     field: 'model',
                     lookup: makeLookup(iphoneEnums.models),
-                    title: 'Model'
+                    title: 'Модель'
                 },
                 {
                     field: 'color',
                     lookup: makeLookup(iphoneEnums.colors),
-                    title: 'Color'
+                    title: 'Цвет'
                 },
                 {
                     field: 'memory_capacity',
                     lookup: makeLookup(iphoneEnums.memories),
-                    title: 'Memory capacity [GB]'
+                    title: 'Объем памяти [GB]'
                 },
                 {
                     field: 'price',
-                    title: 'Price',
+                    title: 'Цена',
                     type: 'numeric'
                 },
                 {
                     field: 'discount',
-                    title: 'Discount',
+                    title: 'Скидка',
                     type: 'numeric'
                 },
                 {
                     field: 'serial_number',
-                    title: 'Serial number'
+                    title: 'Серийный номер'
                 },
                 {
                     field: 'imei',

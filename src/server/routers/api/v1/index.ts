@@ -2,18 +2,21 @@ import * as express from 'express';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import * as Boom from '@hapi/boom';
+import * as cors from 'cors';
 
 import {Iphone} from 'server/routers/api/v1/controllers/iphone';
 import {Airpod} from 'server/routers/api/v1/controllers/airpod';
 import {Order} from 'server/routers/api/v1/controllers/order';
 import {IphoneBar} from 'server/routers/api/v1/controllers/iphone-bar';
 import {AirpodBar} from 'server/routers/api/v1/controllers/airpod-bar';
+import {config} from 'server/config';
 
 import {telegramAuth} from 'server/middlewares/telegram-auth';
 
 export const apiV1Router = express.Router();
 
 apiV1Router
+    .use(cors({origin: config['cors.origin']}))
     .get('/public/bar-items', wrap<Request, Response>(async (req, res) => {
         const iphones = await IphoneBar.getAllItems();
         const airpods = await AirpodBar.getAllItems();
@@ -36,8 +39,10 @@ apiV1Router
                 discount: airpod.discount
             }))
         });
+    }))
+    .post('/public/add-order', wrap<Request, Response>(async (req, res) => {
+        res.json(await Order.addCustomerOrder(req.body));
     }));
-    // .post('/public/create-order')
 
 apiV1Router
     .use(telegramAuth)

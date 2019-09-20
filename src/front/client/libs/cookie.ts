@@ -5,7 +5,7 @@ const AIRPODS_CART = 'airpods-cart';
 
 type Type = 'airpod' | 'iphone';
 export class ClientCookie {
-    public static getCartIds<T>(type: Type): T[] {
+    public static getCartIds(type: Type): string[] {
         const key = type === 'airpod' ? AIRPODS_CART : IPHONES_CART;
         return JSON.parse(browserCookie.get(key) || '[]');
     }

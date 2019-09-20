@@ -39,4 +39,13 @@ export async function makeRequest(query: pg.QueryConfig) {
     return result;
 }
 
+export async function getPgClient(): Promise<pg.PoolClient> {
+    try {
+        return await pool.connect();
+    } catch (err) {
+        logger.error(`Database get client error: ${err.message}`);
+        throw Boom.badRequest(err.message);
+    }
+}
+
 export const forceCloseConnection = () => pool.end();

@@ -36,6 +36,12 @@ export class EditText extends React.Component<IProps> {
                             >
                                 {this.props.label}
                             </label>
+                            <label
+                                htmlFor={this.props.id}
+                                className={`${b('input-label')} ${b('input-label-error')}`}
+                            >
+                                {this.props.errorMessage}
+                            </label>
                         </div>
                     </div>
                 </div>

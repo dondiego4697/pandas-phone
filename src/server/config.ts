@@ -9,6 +9,7 @@ interface IConfig {
     'app.needPort': boolean;
     'app.publicPath': string;
     'telegram.botName': string;
+    'cors.origin': string;
 }
 
 const production: IConfig = {
@@ -17,7 +18,8 @@ const production: IConfig = {
     'app.isNodeStatic': false,
     'app.needPort': false,
     'app.publicPath': '/public',
-    'telegram.botName': 'PandaPhoneShopBot'
+    'telegram.botName': 'PandaPhoneShopBot',
+    'cors.origin': 'https://super-afx'
 };
 
 const testing: IConfig = {

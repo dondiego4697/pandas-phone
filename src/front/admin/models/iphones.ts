@@ -45,26 +45,26 @@ export class IphonesPageModel {
                     {
                         field: 'model',
                         lookup: makeLookup(enums.models),
-                        title: 'Model'
+                        title: 'Модель'
                     },
                     {
                         field: 'color',
                         lookup: makeLookup(enums.colors),
-                        title: 'Color'
+                        title: 'Цвет'
                     },
                     {
                         field: 'memory_capacity',
                         lookup: makeLookup(enums.memories),
-                        title: 'Memory capacity [GB]'
+                        title: 'Объем памяти [GB]'
                     },
                     {
                         field: 'price',
-                        title: 'Price',
+                        title: 'Цена',
                         type: 'numeric'
                     },
                     {
                         field: 'discount',
-                        title: 'Discount',
+                        title: 'Скидка',
                         type: 'numeric'
                     }
                 ];

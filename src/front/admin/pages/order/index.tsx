@@ -78,21 +78,21 @@ export class OrderPage extends React.Component<IProps> {
                                 className={b('button-called')}
                                 onClick={this.handleCalled}
                             >
-                                Called
+                                Прозвонен
                             </Button>
                             <Button
                                 variant='contained'
                                 className={b('button-sell')}
                                 onClick={this.handleSell}
                             >
-                                Sell
+                                Продано
                             </Button>
                             <Button
                                 variant='contained'
                                 className={b('button-reject')}
                                 onClick={this.handleReject}
                             >
-                                Reject
+                                Отказ
                             </Button>
                         </div>
                         <div className={b('result-price')}>
