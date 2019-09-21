@@ -5,8 +5,6 @@ export function isMobile(req: Request): boolean {
     if (
         browserClient.iphone ||
         browserClient.ipod ||
-        browserClient.ipad ||
-        browserClient.ipad ||
         browserClient.operaMini ||
         browserClient.operaMobile ||
         browserClient.mobileSafari ||

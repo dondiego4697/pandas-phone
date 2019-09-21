@@ -14,6 +14,8 @@ import {ClientCookie} from 'client/libs/cookie';
 import {PageStatus} from 'libs/types';
 import {AirpodCard} from 'client/components/card-item/airpod';
 import {Button} from 'client/components/button';
+import {MobileHeader} from 'client/components/mobile-header';
+import {Social} from 'client/components/social';
 
 import bevis from 'libs/bevis';
 
@@ -36,6 +38,12 @@ export class MainPage extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
+                <Popup
+                    show={this.props.mainPageModel!.showAddedToCartPopup}
+                    onClose={this.onClosePopup}
+                >
+                    {this.renderPopupContent()}
+                </Popup>
                 {!this.props.clientDataModel!.isMobile && this.renderBrowser()}
                 {this.props.clientDataModel!.isMobile && this.renderMobile()}
             </div>
@@ -89,52 +97,70 @@ export class MainPage extends React.Component<IProps> {
         return (
             <div className={b('container')}>
                 <ProgressLock show={this.props.mainPageModel!.status === PageStatus.LOADING}/>
-                <Popup
-                    show={this.props.mainPageModel!.showAddedToCartPopup}
-                    onClose={this.onClosePopup}
-                >
-                    {this.renderPopupContent()}
-                </Popup>
                 <Header budgeCount={this.props.mainPageModel!.cartCount}/>
                 <FacePanel socialLinks={this.props.clientDataModel!.socialLinks}/>
                 <h1 className={b('sub-header')}>iPhones</h1>
-                <div className={b('items-container')}>
-                    <div className={b('items-wrapper')}>
-                        {
-                            this.props.mainPageModel!.barItems &&
-                            this.props.mainPageModel!.barItems.iphones.map((iphone, i) => {
-                                return <IphoneCard
-                                    key={`key-iphone-card-${i}`}
-                                    iphone={iphone}
-                                    buttonText='Добавить в корзину'
-                                    onClick={this.onAddIphoneToCartHandler}
-                                />;
-                            })
-                        }
-                    </div>
-                </div>
+                {this.renderIphoneItems()}
                 <h1 className={b('sub-header')}>AirPods</h1>
-                <div className={b('items-container')}>
-                    <div className={b('items-wrapper')}>
-                        {
-                            this.props.mainPageModel!.barItems &&
-                            this.props.mainPageModel!.barItems.airpods.map((airpod, i) => {
-                                return <AirpodCard
-                                    key={`key-airpod-card-${i}`}
-                                    airpod={airpod}
-                                    buttonText='Добавить в корзину'
-                                    onClick={this.onAddAirpodToCartHandler}
-                                />;
-                            })
-                        }
-                    </div>
-                </div>
+                {this.renderAirpodItems()}
                 <Footer/>
             </div>
         );
     }
 
     private renderMobile(): React.ReactNode {
-        return <div/>;
+        return (
+            <div className={b('container')}>
+                <MobileHeader budgeCount={this.props.mainPageModel!.cartCount}/>
+                <div className={b('mobile-social-container')}>
+                    <Social socialLinks={this.props.clientDataModel!.socialLinks}/>
+                </div>
+                <h1 className={b('sub-header')}>iPhones</h1>
+                {this.renderIphoneItems(true)}
+                <h1 className={b('sub-header')}>AirPods</h1>
+                {this.renderAirpodItems(true)}
+                <Footer/>
+            </div>
+        );
+    }
+
+    private renderAirpodItems(isMobile = false): React.ReactNode {
+        return (
+            <div className={b('items-container')}>
+                <div className={`${b('items-wrapper')} ${isMobile ? 'mobile' : ''}`}>
+                    {
+                        this.props.mainPageModel!.barItems &&
+                        this.props.mainPageModel!.barItems.airpods.map((airpod, i) => {
+                            return <AirpodCard
+                                key={`key-airpod-card-${i}`}
+                                airpod={airpod}
+                                buttonText='Добавить в корзину'
+                                onClick={this.onAddAirpodToCartHandler}
+                            />;
+                        })
+                    }
+                </div>
+            </div>
+        );
+    }
+
+    private renderIphoneItems(isMobile = false): React.ReactNode {
+        return (
+            <div className={b('items-container')}>
+                <div className={`${b('items-wrapper')} ${isMobile ? 'mobile' : ''}`}>
+                    {
+                        this.props.mainPageModel!.barItems &&
+                        this.props.mainPageModel!.barItems.iphones.map((iphone, i) => {
+                            return <IphoneCard
+                                key={`key-iphone-card-${i}`}
+                                iphone={iphone}
+                                buttonText='Добавить в корзину'
+                                onClick={this.onAddIphoneToCartHandler}
+                            />;
+                        })
+                    }
+                </div>
+            </div>
+        );
     }
 }

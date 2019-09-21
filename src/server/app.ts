@@ -31,6 +31,7 @@ declare global {
                 blackberry: boolean;
                 mobile: boolean;
                 tablet: boolean;
+                platform: string;
             };
             adminForbidden?: boolean;
         }

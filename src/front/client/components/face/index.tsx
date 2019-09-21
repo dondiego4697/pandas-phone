@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import {ISocialLinks} from 'client/models/client-data';
 import bevis from 'libs/bevis';
+import {Social} from 'client/components/social';
 
 import './index.scss';
 
@@ -24,14 +25,7 @@ export class FacePanel extends React.Component<IProps> {
                         <div className={b('text-wrapper')}>
                             <h1>Modern</h1>
                             <h1 dangerouslySetInnerHTML={{__html: 'Apple&nbsp;Zone'}}/>
-                            <div className={b('social-container')}>
-                                <a className={b('social')} href={this.props.socialLinks.vk} target='_blank'>
-                                    <img src='/public/imgs/vk-icon.svg'/>
-                                </a>
-                                <a className={b('social')} href={this.props.socialLinks.instagram} target='_blank'>
-                                    <img src='/public/imgs/instagram-icon.svg'/>
-                                </a>
-                            </div>
+                            <Social socialLinks={this.props.socialLinks}/>
                         </div>
                     </div>
                     <div className={b('another-container')}/>

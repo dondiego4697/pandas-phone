@@ -11,6 +11,14 @@
         display: none;
     }
 
+    &__container.mobile {
+        flex-direction: column;
+
+        & .button {
+            margin-top: 16px;
+        }
+    }
+
     &__container {
         padding: 16px;
         margin-right: 16px;

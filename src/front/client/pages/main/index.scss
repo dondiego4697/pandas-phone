@@ -12,8 +12,8 @@
         color: black;
         user-select: none;
         margin: 0;
+        padding-left: 5%;
         padding-top: 32px;
-        padding-left: 60px;
         padding-bottom: 30px;
         background-color: #e8e8e8;
     }
@@ -22,14 +22,18 @@
         width: 100%;
     }
 
+    &__items-wrapper.mobile {
+        grid-template-columns: 1fr;
+    }
+
     &__items-wrapper {
         display: grid;
         max-width: 100%;
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 4vw;
         background-color: #e8e8e8;
-        padding-left: 60px;
-        padding-right: 60px;
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     &__popup-controls-container {
@@ -67,5 +71,11 @@
     &__popup-title {
         font-family: 'Montserrat', sans-serif;
         text-align: center;
+    }
+
+    &__mobile-social-container {
+        padding-top: 80px;
+        background-color: #e8e8e8;
+        padding-left: 5%;
     }
 }

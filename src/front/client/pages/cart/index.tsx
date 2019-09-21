@@ -14,6 +14,7 @@ import {IIphone, IAirpod} from 'client/models/main';
 import {EditText} from 'client/components/edit-text';
 import {Button} from 'client/components/button';
 import {Popup} from 'client/components/popup';
+import {MobileHeader} from 'client/components/mobile-header';
 
 import './index.scss';
 
@@ -36,86 +37,115 @@ export class CartPage extends React.Component<IProps> {
     }
 
     public render(): React.ReactNode {
-        const cartItemsCount = this.props.cartPageModel!.data.airpods.length +
-            this.props.cartPageModel!.data.iphones.length;
-
         return (
             <div className={b()}>
-                <div className={b('container')}>
-                    <Popup
-                        show={
-                            this.props.cartPageModel!.showAddOrderErrorPopup ||
-                            this.props.cartPageModel!.showAddOrderSuccessPopup
-                        }
-                        onClose={this.onClosePopup}
-                    >
-                        {this.renderPopupContent()}
-                    </Popup>
-                    <ProgressLock
-                        transparent={this.props.cartPageModel!.transparentProgressLock}
-                        show={this.props.cartPageModel!.status === PageStatus.LOADING}
-                    />
-                    <Header budgeCount={this.props.cartPageModel!.cartCount}/>
-                    {cartItemsCount === 0 && this.renderEmptyCart()}
-                    {cartItemsCount !== 0 && <div>
-                        <div className={b('wrapper')}>
-                            <div className={b('cart-items-container')}>
-                                {
-                                    this.props.cartPageModel!.data.iphones.map((iphone, i) => {
-                                        return <IphoneCart
-                                            key={`iphone-cart-key-${i}`}
-                                            iphone={iphone}
-                                            onDelete={this.onDeleteIphoneHandler}
-                                        />;
-                                    })
-                                }
-                                {
-                                    this.props.cartPageModel!.data.airpods.map((airpod, i) => {
-                                        return <AirpodCart
-                                            key={`airpod-cart-key-${i}`}
-                                            airpod={airpod}
-                                            onDelete={this.onDeleteAirpodHandler}
-                                        />;
-                                    })
-                                }
-                            </div>
-                        </div>
-                        <div className={b('info')}>
-                            <h1>{`Всего на сумму: ${this.props.cartPageModel!.totalPrice}`}</h1>
-                            <div className={b('info-details')}>
-                                <p>Оставьте ваш номер телефона и мы вам перезвоним, чтобы подтвердить заказ.</p>
-                                <p>Сейчас вы ни за что не платите.</p>
-                            </div>
-                            <div className={b('info-form')}>
-                                <div className={b('field-wrap')}>
-                                    <EditText
-                                        id='customer-name'
-                                        value={this.props.cartPageModel!.customerData.name}
-                                        onChange={this.editTextChangeHandler}
-                                        placeholder='Как к вам обращаться'
-                                        label='Как к вам обращаться'
-                                        errorMessage={this.props.cartPageModel!.customerError.name}
-                                    />
-                                </div>
-                                <div className={b('field-wrap')}>
-                                    <EditText
-                                        id='customer-phone'
-                                        value={this.props.cartPageModel!.customerData.phone}
-                                        onChange={this.editTextChangeHandler}
-                                        placeholder='Ваш телефон'
-                                        label='Ваш телефон'
-                                        errorMessage={this.props.cartPageModel!.customerError.phone}
-                                    />
-                                </div>
-                                <div className={b('field-wrap')}>
-                                    <Button
-                                        text='Оставить заказ'
-                                        onClick={this.onSendRequestHandler}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>}
+                <Popup
+                    show={
+                        this.props.cartPageModel!.showAddOrderErrorPopup ||
+                        this.props.cartPageModel!.showAddOrderSuccessPopup
+                    }
+                    onClose={this.onClosePopup}
+                >
+                    {this.renderPopupContent()}
+                </Popup>
+                <ProgressLock
+                    transparent={this.props.cartPageModel!.transparentProgressLock}
+                    show={this.props.cartPageModel!.status === PageStatus.LOADING}
+                />
+                {!this.props.clientDataModel!.isMobile && this.renderBrowser()}
+                {this.props.clientDataModel!.isMobile && this.renderMobile()}
+            </div>
+        );
+    }
+
+    private renderMobile(): React.ReactNode {
+        return (
+            <div className={b('container')}>
+                <MobileHeader budgeCount={this.props.cartPageModel!.cartCount}/>
+                {this.props.cartPageModel!.cartCount === 0 && this.renderEmptyCart()}
+                {this.props.cartPageModel!.cartCount !== 0 && <div>
+                    {this.renderCartItems(true)}
+                    {this.renderInfoForm(true)}
+                </div>}
+            </div>
+        );
+    }
+
+    private renderBrowser(): React.ReactNode {
+        return (
+            <div className={b('container')}>
+                <Header budgeCount={this.props.cartPageModel!.cartCount} />
+                {this.props.cartPageModel!.cartCount === 0 && this.renderEmptyCart()}
+                {this.props.cartPageModel!.cartCount !== 0 && <div>
+                    {this.renderCartItems()}
+                    {this.renderInfoForm()}
+                </div>}
+            </div>
+        );
+    }
+
+    private renderInfoForm(isMobile = false): React.ReactNode {
+        return (
+            <div className={b('info')}>
+                <h1>{`Всего на сумму: ${this.props.cartPageModel!.totalPrice}`}</h1>
+                <div className={b('info-details')}>
+                    <p>Оставьте ваш номер телефона и мы вам перезвоним, чтобы подтвердить заказ.</p>
+                    <p className='bold'>Сейчас вы ни за что не платите.</p>
+                </div>
+                <div className={`${b('info-form')} ${isMobile ? 'mobile' : ''}`}>
+                    <div className={b('field-wrap')}>
+                        <EditText
+                            id='customer-name'
+                            value={this.props.cartPageModel!.customerData.name}
+                            onChange={this.editTextChangeHandler}
+                            placeholder='Как к вам обращаться'
+                            label='Как к вам обращаться'
+                            errorMessage={this.props.cartPageModel!.customerError.name}
+                        />
+                    </div>
+                    <div className={b('field-wrap')}>
+                        <EditText
+                            id='customer-phone'
+                            value={this.props.cartPageModel!.customerData.phone}
+                            onChange={this.editTextChangeHandler}
+                            placeholder='Ваш телефон'
+                            label='Ваш телефон'
+                            errorMessage={this.props.cartPageModel!.customerError.phone}
+                        />
+                    </div>
+                    <div className={b('field-wrap')}>
+                        <Button
+                            text='Оставить заказ'
+                            onClick={this.onSendRequestHandler}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    private renderCartItems(isMobile = false): React.ReactNode {
+        return (
+            <div className={b('wrapper')}>
+                <div className={`${b('cart-items-container')} ${isMobile ? 'mobile' : ''}`}>
+                    {
+                        this.props.cartPageModel!.data.iphones.map((iphone, i) => {
+                            return <IphoneCart
+                                key={`iphone-cart-key-${i}`}
+                                iphone={iphone}
+                                onDelete={this.onDeleteIphoneHandler}
+                            />;
+                        })
+                    }
+                    {
+                        this.props.cartPageModel!.data.airpods.map((airpod, i) => {
+                            return <AirpodCart
+                                key={`airpod-cart-key-${i}`}
+                                airpod={airpod}
+                                onDelete={this.onDeleteAirpodHandler}
+                            />;
+                        })
+                    }
                 </div>
             </div>
         );

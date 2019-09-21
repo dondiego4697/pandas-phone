@@ -78,13 +78,10 @@ function createImageName(model: string): string {
 export class MockIphone extends React.Component<IProps> {
     private bgRef = React.createRef<HTMLDivElement>();
     public componentDidMount(): void {
-        setTimeout(
-            () => {
-                this.bgRef.current!.classList.add(b('phone-bg'));
-                this.bgRef.current!.classList.add(Math.random() > 0.5 ? 'bg-1' : 'bg-2');
-            },
-            100
-        );
+        const {height} = this.bgRef.current!.parentElement!.getBoundingClientRect();
+        (this.bgRef.current!.parentElement!.firstChild! as any).style.height = `${height}px`;
+        this.bgRef.current!.classList.add(b('phone-bg'));
+        this.bgRef.current!.classList.add(Math.random() > 0.5 ? 'bg-1' : 'bg-2');
     }
 
     public render(): React.ReactNode {

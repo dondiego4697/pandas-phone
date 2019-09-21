@@ -23,7 +23,7 @@ class App extends React.Component<IProps, {}> {
         const isCookieAccept = ClientCookie.isCookieAccept();
         return (
             <div className={b()}>
-                {!isCookieAccept && <CookieInfo/>}
+                {!isCookieAccept && <CookieInfo isMobile={this.props.clientDataModel!.isMobile}/>}
                 {this.props.children}
             </div>
         );

@@ -13,6 +13,7 @@ interface IProps {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     errorMessage?: string;
+    type?: string;
 }
 
 export class EditText extends React.Component<IProps> {
@@ -23,7 +24,7 @@ export class EditText extends React.Component<IProps> {
                     <div className={b('wrapper')}>
                         <div className={`${b('input')} ${this.props.errorMessage ? b('input-error') : ''}`}>
                             <input
-                                type='text'
+                                type={this.props.type || 'text'}
                                 value={this.props.value}
                                 id={this.props.id}
                                 onChange={this.props.onChange}
