@@ -52,7 +52,7 @@ publicRouter.post('/add_customer_order', wrap<Request, Response>(async (req, res
             const queryResults = await Promise.all(airpodIds.map((id) => {
                 return makeTransactionRequest(client, {
                     text: `
-                        INSERT INTO airpod (series, original, charging_case, price, discount)
+                        INSERT INTO airpod_order (series, original, charging_case, price, discount)
                             SELECT series, original, charging_case, price, discount
                             FROM airpod_bar
                             WHERE id=$1
@@ -71,7 +71,7 @@ publicRouter.post('/add_customer_order', wrap<Request, Response>(async (req, res
             const queryResults = await Promise.all(iphoneIds.map((id) => {
                 return makeTransactionRequest(client, {
                     text: `
-                        INSERT INTO iphone (model, color, memory_capacity, price, discount)
+                        INSERT INTO iphone_order (model, color, memory_capacity, price, discount)
                             SELECT model, color, memory_capacity, price, discount
                             FROM iphone_bar
                             WHERE id=$1
@@ -91,11 +91,11 @@ publicRouter.post('/add_customer_order', wrap<Request, Response>(async (req, res
         const {rows: [sum]} = await makeRequest({
             text: `
                 SELECT
-                       SUM((airpod.price / 100) * (100 - airpod.discount)) as airpodSum,
-                       SUM((iphone.price / 100) * (100 - iphone.discount)) as iphoneSum
+                       SUM((airpod_order.price / 100) * (100 - airpod_order.discount)) as airpodSum,
+                       SUM((iphone_order.price / 100) * (100 - iphone_order.discount)) as iphoneSum
                 FROM order_item
-                    LEFT JOIN airpod ON order_item.airpod_id = airpod.id
-                    LEFT JOIN iphone ON order_item.iphone_id = iphone.id
+                    LEFT JOIN airpod_order ON order_item.airpod_id = airpod_order.id
+                    LEFT JOIN iphone_order ON order_item.iphone_id = iphone_order.id
                 WHERE order_item.order_id=$1;
             `,
             values: [order.id]

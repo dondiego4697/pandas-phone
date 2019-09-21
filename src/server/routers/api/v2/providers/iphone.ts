@@ -6,7 +6,7 @@ import {makeTransactionRequest} from 'server/db/client';
 
 const TABLE_NAMES = {
     iphoneBar: 'iphone_bar',
-    iphone: 'iphone'
+    iphoneOrder: 'iphone_order'
 };
 
 export class IphoneProvider {
@@ -94,7 +94,7 @@ export class IphoneProvider {
         const {names, values} = makeInsert(body);
         const {rows} = await makeTransactionRequest(client, {
             text: `
-                INSERT INTO ${TABLE_NAMES.iphone}
+                INSERT INTO ${TABLE_NAMES.iphoneOrder}
                 (${names.join(', ')}) VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
                 RETURNING *;
             `,
@@ -108,7 +108,7 @@ export class IphoneProvider {
         const {names, values} = makeInsert(body);
         const {rows} = await makeTransactionRequest(client, {
             text: `
-                UPDATE ${TABLE_NAMES.iphone}
+                UPDATE ${TABLE_NAMES.iphoneOrder}
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
@@ -120,7 +120,7 @@ export class IphoneProvider {
 
     static async deleteIphoneItem(client: PoolClient, id: string) {
         const {rows} = await makeTransactionRequest(client, {
-            text: `DELETE FROM ${TABLE_NAMES.iphone} WHERE id=$1 RETURNING *;`,
+            text: `DELETE FROM ${TABLE_NAMES.iphoneOrder} WHERE id=$1 RETURNING *;`,
             values: [id]
         });
 

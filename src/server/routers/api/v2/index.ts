@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as cors from 'cors';
+import * as Boom from '@hapi/boom';
 
 import {telegramAuth} from 'server/middlewares/telegram-auth';
 import {orderRouter} from 'server/routers/api/v2/routers/order';
@@ -20,7 +21,7 @@ apiRouter
     .use(telegramAuth)
     .use((req, _, next) => {
         if (req.adminForbidden) {
-            // TODO throw Boom.forbidden();
+            throw Boom.forbidden();
         }
 
         next();

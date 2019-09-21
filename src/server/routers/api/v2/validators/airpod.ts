@@ -9,7 +9,7 @@ const airpodBarSchema = Joi.object().keys({
     discount: Joi.number().min(0).max(100).default(0)
 });
 
-const airpodSchema = Joi.object().keys({
+const airpodOrderSchema = Joi.object().keys({
     series: Joi.string().required(),
     original: Joi.bool().default(false),
     charging_case: Joi.bool().default(false),
@@ -28,8 +28,8 @@ export class AirpodValidatorRequest {
         return result.value;
     }
 
-    static validateAirpodCreate(body: Record<string, any>) {
-        const result = Joi.validate(body, airpodSchema);
+    static validateAirpodOrderCreate(body: Record<string, any>) {
+        const result = Joi.validate(body, airpodOrderSchema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }

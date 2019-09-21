@@ -67,7 +67,7 @@ orderRouter.post('/:id/action_airpod/:method', wrap<Request, Response>(async (re
     OrderValidatorRequest.validateOrderActionMethod(method);
 
     if (method === 'create') {
-        const body = AirpodValidatorRequest.validateAirpodCreate(bodyRaw);
+        const body = AirpodValidatorRequest.validateAirpodOrderCreate(bodyRaw);
         const client = await getPgClient();
         try {
             await makeTransactionRequest(client, {text: 'BEGIN'});
@@ -100,7 +100,7 @@ orderRouter.post('/:id/action_airpod/:method', wrap<Request, Response>(async (re
         const {id} = bodyRaw;
         delete bodyRaw.id;
 
-        const body = AirpodValidatorRequest.validateAirpodCreate(bodyRaw);
+        const body = AirpodValidatorRequest.validateAirpodOrderCreate(bodyRaw);
 
         const client = await getPgClient();
         try {
@@ -119,7 +119,7 @@ orderRouter.post('/:id/action_iphone/:method', wrap<Request, Response>(async (re
     OrderValidatorRequest.validateOrderActionMethod(method);
 
     if (method === 'create') {
-        const body = IphoneValidatorRequest.validateIphoneCreate(bodyRaw);
+        const body = IphoneValidatorRequest.validateIphoneOrderCreate(bodyRaw);
         const client = await getPgClient();
         try {
             await makeTransactionRequest(client, {text: 'BEGIN'});
@@ -151,7 +151,7 @@ orderRouter.post('/:id/action_iphone/:method', wrap<Request, Response>(async (re
     } else if (method === 'update') {
         const {id} = bodyRaw;
         delete bodyRaw.id;
-        const body = IphoneValidatorRequest.validateIphoneCreate(bodyRaw);
+        const body = IphoneValidatorRequest.validateIphoneOrderCreate(bodyRaw);
 
         const client = await getPgClient();
         try {

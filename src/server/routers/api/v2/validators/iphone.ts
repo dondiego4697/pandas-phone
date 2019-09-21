@@ -9,7 +9,7 @@ const iphoneBarSchema = Joi.object().keys({
     discount: Joi.number().min(0).max(100).default(0)
 });
 
-const iphoneSchema = Joi.object().keys({
+const iphoneOrderSchema = Joi.object().keys({
     model: Joi.string().required(),
     color: Joi.string().required(),
     memory_capacity: Joi.string().required(),
@@ -29,8 +29,8 @@ export class IphoneValidatorRequest {
         return result.value;
     }
 
-    static validateIphoneCreate(body: Record<string, any>) {
-        const result = Joi.validate(body, iphoneSchema);
+    static validateIphoneOrderCreate(body: Record<string, any>) {
+        const result = Joi.validate(body, iphoneOrderSchema);
         if (result.error) {
             throw Boom.badRequest(result.error.details.map(({message}) => message).join(', '));
         }

@@ -12,6 +12,7 @@ interface IConfig {
     'telegram.timeout': number;
     'telegram.workChatId': number;
     'cors.origin': string;
+    'telegram.disableAuth': boolean;
 }
 
 const production: IConfig = {
@@ -23,7 +24,8 @@ const production: IConfig = {
     'telegram.botName': 'PandaPhoneShopBot',
     'telegram.timeout': 3000,
     'telegram.workChatId': -363392954,
-    'cors.origin': 'https://TODO'
+    'cors.origin': 'https://TODO',
+    'telegram.disableAuth': false
 };
 
 const testing: IConfig = {
@@ -36,7 +38,8 @@ const development: IConfig = {
     'logger.level': 'silly',
     'app.isNodeStatic': true,
     'app.needPort': true,
-    'telegram.botName': 'PandaPhoneShopDevBot'
+    'telegram.botName': 'PandaPhoneShopDevBot',
+    'telegram.disableAuth': true
 };
 
 const stress: IConfig = {

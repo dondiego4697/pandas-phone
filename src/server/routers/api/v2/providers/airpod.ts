@@ -6,7 +6,7 @@ import {makeTransactionRequest} from 'server/db/client';
 
 const TABLE_NAMES = {
     airpodBar: 'airpod_bar',
-    airpod: 'airpod'
+    airpodOrder: 'airpod_order'
 };
 
 export class AirpodProvider {
@@ -90,7 +90,7 @@ export class AirpodProvider {
         const {names, values} = makeInsert(body);
         const {rows} = await makeTransactionRequest(client, {
             text: `
-                INSERT INTO ${TABLE_NAMES.airpod}
+                INSERT INTO ${TABLE_NAMES.airpodOrder}
                 (${names.join(', ')}) VALUES (${names.map((_, i) => `$${i + 1}`).join(', ')})
                 RETURNING *;
             `,
@@ -104,7 +104,7 @@ export class AirpodProvider {
         const {names, values} = makeInsert(body);
         const {rows} = await makeTransactionRequest(client, {
             text: `
-                UPDATE ${TABLE_NAMES.airpod}
+                UPDATE ${TABLE_NAMES.airpodOrder}
                 SET (${names.join(', ')})=(${names.map((_, i) => `$${i + 2}`).join(', ')})
                 WHERE id=$1 RETURNING *;
             `,
@@ -116,7 +116,7 @@ export class AirpodProvider {
 
     static async deleteAirpodItem(client: PoolClient, id: string) {
         const {rows} = await makeTransactionRequest(client, {
-            text: `DELETE FROM ${TABLE_NAMES.airpod} WHERE id=$1 RETURNING *;`,
+            text: `DELETE FROM ${TABLE_NAMES.airpodOrder} WHERE id=$1 RETURNING *;`,
             values: [id]
         });
 

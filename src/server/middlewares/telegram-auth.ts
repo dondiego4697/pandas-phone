@@ -6,6 +6,7 @@ import * as jwt from 'jsonwebtoken';
 
 import {logger} from 'server/lib/logger';
 import {makeRequest} from 'server/db/client';
+import {config} from 'server/config';
 
 const PRIVATE_TOKEN = process.env.PANDA_PHONE_TELEGRAM_BOT_API_TOKEN!;
 assert(PRIVATE_TOKEN, 'There is empty api token');
@@ -55,6 +56,12 @@ async function log(req: Request): Promise<void> {
 }
 
 export const telegramAuth = wrap<Request, Response>(async (req, res, next) => {
+    if (config['telegram.disableAuth']) {
+        req.adminForbidden = false;
+        next();
+        return;
+    }
+
     const token = req.cookies['admin_session'];
 
     if (!token) {

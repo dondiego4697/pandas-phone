@@ -46,16 +46,16 @@ export class OrderProvider {
         const [airpods, iphones] = await Promise.all([
             makeRequest({
                 text: `
-                    SELECT airpod.* FROM ${TABLE_NAMES.orderItem}
-                    INNER JOIN airpod ON order_item.airpod_id = airpod.id
+                    SELECT airpod_order.* FROM ${TABLE_NAMES.orderItem}
+                    INNER JOIN airpod_order ON order_item.airpod_id = airpod_order.id
                     WHERE order_id=$1 AND airpod_id IS NOT NULL;
                 `,
                 values: [id]
             }),
             makeRequest({
                 text: `
-                    SELECT iphone.* FROM ${TABLE_NAMES.orderItem}
-                    INNER JOIN iphone ON order_item.iphone_id = iphone.id
+                    SELECT iphone_order.* FROM ${TABLE_NAMES.orderItem}
+                    INNER JOIN iphone_order ON order_item.iphone_id = iphone_order.id
                     WHERE order_id=$1 AND iphone_id IS NOT NULL;
                 `,
                 values: [id]
