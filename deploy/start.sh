@@ -2,7 +2,6 @@
 
 export NGINX_PORT=80
 export NODEJS_PORT=8080
-export NODEJS_APP=/usr/local/app/build/src/app.js
 export NODEJS_ENV=${NODEJS_ENV:-"development"}
 
 envsubst \
@@ -15,7 +14,7 @@ rm -rf /etc/nginx/sites-enabled/default
 rm -rf /etc/nginx/sites-available/default
 
 envsubst \
-    '\$NODEJS_APP \$NODEJS_OPTIONS \$NODEJS_ENV \$NODE_PATH' \
+    '\$NODEJS_APP \$NODEJS_OPTIONS \$NODEJS_ENV' \
     < /config-templates/supervisord.template.conf \
     > /etc/supervisor/conf.d/supervisord.conf
 

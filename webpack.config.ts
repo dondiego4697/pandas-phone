@@ -91,9 +91,9 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
                     test: /\.ts(x?)$/,
                     exclude: /node_modules/,
                     use: [
-                        {
+                        /* {
                             loader: 'cache-loader'
-                        },
+                        }, */
                         {
                             loader: 'babel-loader',
                             options: babelOptions

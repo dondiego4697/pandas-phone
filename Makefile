@@ -10,6 +10,10 @@ $(OUT_DIR)/node_modules:
 deps:
 	npm install
 
+.PHONY: prune
+prune:
+	npm prune --production
+
 .PHONY: validate
 validate: lint
 
@@ -79,6 +83,18 @@ migration:
 		--project ./src/server/tsconfig.json \
 		./tools/make-migration.ts
 
-.PHONY: patch minor major
-patch minor major:
-	echo 1
+DOCKER_HUB = cr.yandex/crpn0q4tiksugq5qds8d/ubuntu
+get-version = node -p "require('./package.json').version"
+DOCKER_IMAGE_VERSION = $(call get-version)
+
+.PHONY: docker-login
+docker-login:
+	docker login --username oauth --password ${YANDEX_CLOUD_OAUTH_TOKEN} cr.yandex
+
+.PHONY: docker-build
+docker-build:
+	docker build -t ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION)) .
+
+.PHONY: docker-push
+docker-push:
+	docker push ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
