@@ -3,7 +3,7 @@ import axios from 'axios';
 import {IBarItems} from 'client/models/main';
 
 const config = {
-    timeout: 3000,
+    timeout: 5000,
     withCredentials: true
 };
 

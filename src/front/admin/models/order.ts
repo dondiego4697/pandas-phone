@@ -65,11 +65,41 @@ export class OrderPageModel {
         });
     }
 
+    @action public checkSerialNumbersFill(status: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (status === 'bought') {
+                const airpodsWitoutSerial = this.airpodsData.some((airpod) => {
+                    return !airpod.serial_number || airpod.serial_number.trim() === '';
+                });
+                const iphonesWitoutSerial = this.iphonesData.some((iphone) => {
+                    return !iphone.serial_number || iphone.serial_number.trim() === '' ||
+                        !iphone.imei || iphone.imei === '';
+                });
+                if (!airpodsWitoutSerial && !iphonesWitoutSerial) {
+                    return resolve();
+                }
+
+                return reject({
+                    response: {
+                        data: {
+                            error: 'Bad request',
+                            message: 'fill all "SERIAL NUMBERS"',
+                            statusCode: 400
+                        }
+                    }
+                });
+            }
+
+            resolve();
+        });
+    }
+
     @action public updateStatus(orderId: string, status: 'bought' | 'reject' | 'called'): Promise<void> {
         return new Promise((resolve, reject) => {
             this.status = PageStatus.LOADING;
             runInAction(() => {
-                changeOrderStatus(orderId, status)
+                this.checkSerialNumbersFill(status)
+                    .then(() => changeOrderStatus(orderId, status))
                     .then(() => resolve())
                     .catch((err) => {
                         reject(err.response.data);

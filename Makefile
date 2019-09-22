@@ -71,7 +71,7 @@ build-client-watch:
 
 .PHONY: build-client-production
 build-client-production:
-	node_modules/.bin/parallel-webpack --mode=production
+	node_modules/.bin/parallel-webpack -- --mode=production
 
 .PHONY: migration
 migration:

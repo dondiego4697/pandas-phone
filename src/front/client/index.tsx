@@ -4,7 +4,7 @@ import {Router} from 'react-router-dom';
 import {Provider} from 'mobx-react';
 
 import * as models from 'client/models';
-import RoutesApp from 'client/routes';
+import {RoutesApp} from 'client/routes';
 
 import {history} from 'libs/history';
 

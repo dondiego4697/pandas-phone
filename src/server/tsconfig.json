@@ -15,14 +15,15 @@
         "pretty": true,
 
         "resolveJsonModule": true,
+        "experimentalDecorators": true,
 
         "baseUrl": ".",
         "paths": {
             "server/*": [
-                "./*",
+                "./*"
             ],
             "front/*": [
-                "../front/*",
+                "../front/*"
             ]
         },
         "types": [

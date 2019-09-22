@@ -18,7 +18,7 @@ interface IProps {
 }
 
 @inject('clientDataModel')
-export default class Router extends React.Component<IProps> {
+export class RoutesApp extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
             <App>

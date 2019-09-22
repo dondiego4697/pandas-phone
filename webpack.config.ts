@@ -35,6 +35,7 @@ const configs = [
 ];
 
 const babelPlugins = [
+    '@babel/plugin-transform-modules-commonjs',
     '@babel/plugin-transform-react-display-name',
     '@babel/plugin-syntax-dynamic-import',
     ['@babel/plugin-proposal-decorators', {
@@ -54,11 +55,11 @@ const babelOptions = {
     presets: [
         '@babel/preset-react',
         ['@babel/preset-env', {
-            modules: false,
+            modules: 'commonjs',
             loose: true
         }]
     ],
-    plugins: [] //babelPlugins
+    plugins: babelPlugins
 };
 
 function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack.Configuration {
@@ -117,12 +118,12 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
     }
 }
 
-export default (argv) => configs.map((config) => {
-    const isProduction = argv.mode === 'production';
+export default () => configs.map((config) => {
+    const isProduction = process.argv.find((x) => x === '--mode=production');
 
     return {
         ...config.webpack,
-        ...getBaseConfig(isProduction, config.tsConfigFileName)
+        ...getBaseConfig(Boolean(isProduction), config.tsConfigFileName)
     }
 });
 

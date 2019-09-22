@@ -34,7 +34,7 @@ export class ClientCookie {
     }
 
     public static setCookieAccept(): void {
-        browserCookie.set('cookie_accept', 'true');
+        browserCookie.set('cookie_accept', 'true', {expires: 365});
     }
 
     public static isCookieAccept(): boolean {
