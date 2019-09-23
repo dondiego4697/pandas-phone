@@ -71,7 +71,8 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
             alias: {
                 client: path.resolve(frontPath, './client'),
                 admin: path.resolve(frontPath, './admin'),
-                libs: path.resolve(frontPath, './libs')
+                libs: path.resolve(frontPath, './libs'),
+                '@denstep/core': path.resolve(frontPath, './@denstep/core')
             },
             modules: [
                 frontPath,

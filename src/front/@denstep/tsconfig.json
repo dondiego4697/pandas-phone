@@ -15,19 +15,16 @@
         "jsx": "react",
         "baseUrl": "./",
         "paths": {
-            "client/*": [
-                "./*"
+            "core/*": [
+                "./core/*"
             ],
             "libs/*": [
                 "../libs/*"
-            ],
-            "@denstep/core/*": [
-                "../@denstep/core/*"
             ]
         }
     },
     "include": [
-        "../client",
+        "./core",
         "../lib"
     ]
 }
