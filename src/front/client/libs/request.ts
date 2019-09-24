@@ -23,6 +23,16 @@ export function getBarItems(): Promise<IBarItems> {
     return getRequest<IBarItems>('/api/v2/public/bar_items');
 }
 
+interface IIphoneEnums {
+    models: string[];
+    colors: string[];
+    memories: string[];
+}
+
+export function getIphoneEnums(): Promise<IIphoneEnums> {
+    return getRequest<IIphoneEnums>('/api/v2/public/iphone_enums');
+}
+
 export function addOrder(
     customerName: string,
     customerPhone: string,

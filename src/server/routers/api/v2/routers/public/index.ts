@@ -11,6 +11,10 @@ import {TelegramBot as TB} from 'server/lib/telegram-bot';
 
 export const publicRouter = express.Router();
 
+publicRouter.get('/iphone_enums', wrap<Request, Response>(async (req, res) => {
+    res.json(await IphoneProvider.getIphoneEnums());
+}));
+
 publicRouter.get('/bar_items', wrap<Request, Response>(async (req, res) => {
     const iphones = await IphoneProvider.getIphoneBarItemsAll();
     const airpods = await AirpodProvider.getAirpodBarItemsAll();

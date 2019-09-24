@@ -2,6 +2,8 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 
+import {SelectBox} from '@denstep/core/select-box';
+
 import {MainPageModel, IIphone, IAirpod} from 'client/models/main';
 import {Header} from 'client/components/header';
 import {FacePanel} from 'client/components/face';
@@ -66,6 +68,10 @@ export class MainPage extends React.Component<IProps> {
         this.props.mainPageModel!.showAddedToCartPopup = false;
     }
 
+    private onIphoneSelectChangeHandler = (key: string): void => {
+        this.props.mainPageModel!.iphoneSelectItem = key;
+    }
+
     private renderPopupContent(): React.ReactNode {
         return (
             <div>
@@ -93,6 +99,20 @@ export class MainPage extends React.Component<IProps> {
         );
     }
 
+    private renderSelectBox(isMobile = false): React.ReactNode {
+        return (
+            <div className={`${b('select-box-container')} ${isMobile ? 'mobile' : ''}`}>
+                <div className={b('select-box-wrapper')}>
+                    <SelectBox
+                        items={this.props.mainPageModel!.iphoneSelectData}
+                        selected={this.props.mainPageModel!.iphoneSelectItem}
+                        onChange={this.onIphoneSelectChangeHandler}
+                    />
+                </div>
+            </div>
+        );
+    }
+
     private renderBrowser(): React.ReactNode {
         return (
             <div className={b('container')}>
@@ -100,6 +120,7 @@ export class MainPage extends React.Component<IProps> {
                 <Header budgeCount={this.props.mainPageModel!.cartCount}/>
                 <FacePanel socialLinks={this.props.clientDataModel!.socialLinks}/>
                 <h1 className={b('sub-header')}>iPhones</h1>
+                {this.renderSelectBox()}
                 {this.renderIphoneItems()}
                 <h1 className={b('sub-header')}>AirPods</h1>
                 {this.renderAirpodItems()}
@@ -116,6 +137,7 @@ export class MainPage extends React.Component<IProps> {
                     <Social socialLinks={this.props.clientDataModel!.socialLinks}/>
                 </div>
                 <h1 className={b('sub-header')}>iPhones</h1>
+                {this.renderSelectBox(true)}
                 {this.renderIphoneItems(true)}
                 <h1 className={b('sub-header')}>AirPods</h1>
                 {this.renderAirpodItems(true)}
@@ -150,14 +172,22 @@ export class MainPage extends React.Component<IProps> {
                 <div className={`${b('items-wrapper')} ${isMobile ? 'mobile' : ''}`}>
                     {
                         this.props.mainPageModel!.barItems &&
-                        this.props.mainPageModel!.barItems.iphones.map((iphone, i) => {
-                            return <IphoneCard
-                                key={`key-iphone-card-${i}`}
-                                iphone={iphone}
-                                buttonText='Добавить в корзину'
-                                onClick={this.onAddIphoneToCartHandler}
-                            />;
-                        })
+                        this.props.mainPageModel!.barItems.iphones
+                            .filter((iphone) => {
+                                if (this.props.mainPageModel!.iphoneSelectItem !== 'all') {
+                                    return iphone.model === this.props.mainPageModel!.iphoneSelectItem;
+                                }
+
+                                return true;
+                            })
+                            .map((iphone, i) => {
+                                return <IphoneCard
+                                    key={`key-iphone-card-${i}`}
+                                    iphone={iphone}
+                                    buttonText='Добавить в корзину'
+                                    onClick={this.onAddIphoneToCartHandler}
+                                />;
+                            })
                     }
                 </div>
             </div>

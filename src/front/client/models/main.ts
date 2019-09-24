@@ -1,8 +1,10 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from 'libs/types';
-import {getBarItems} from 'client/libs/request';
+import {getBarItems, getIphoneEnums} from 'client/libs/request';
 import {ClientCookie} from 'client/libs/cookie';
+import {SelectBoxItem} from '@denstep/core/select-box';
+import {iPhoneModelMapper} from 'client/libs/text-mapper';
 
 export interface IAirpod {
     id: string;
@@ -33,15 +35,29 @@ export class MainPageModel {
     @observable public cartCount = 0;
     @observable public showAddedToCartPopup = false;
 
+    @observable public iphoneSelectData: SelectBoxItem[] = [{
+        key: 'all',
+        value: 'Все'
+    }];
+    @observable public iphoneSelectItem = 'all';
+
     @action public fetchData(): void {
         runInAction(() => {
             this.status = PageStatus.LOADING;
-            getBarItems().then((barItems) => {
-                this.barItems = barItems;
-                this.status = PageStatus.DONE;
+            getIphoneEnums()
+                .then((enums) => {
+                    this.iphoneSelectData = ['all', ...enums.models].map((model) => ({
+                        key: model,
+                        value: iPhoneModelMapper(model) || 'Все'
+                    }));
+                    return getBarItems();
+                })
+                .then((barItems: IBarItems) => {
+                    this.barItems = barItems;
+                    this.status = PageStatus.DONE;
 
-                this.calcCart();
-            });
+                    this.calcCart();
+                });
         });
     }
 
