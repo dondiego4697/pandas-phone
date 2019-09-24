@@ -174,11 +174,11 @@ export class MainPage extends React.Component<IProps> {
                         this.props.mainPageModel!.barItems &&
                         this.props.mainPageModel!.barItems.iphones
                             .filter((iphone) => {
-                                if (this.props.mainPageModel!.iphoneSelectItem !== 'all') {
-                                    return iphone.model === this.props.mainPageModel!.iphoneSelectItem;
+                                if (!this.props.mainPageModel!.iphoneSelectItem) {
+                                    return true;
                                 }
 
-                                return true;
+                                return iphone.model === this.props.mainPageModel!.iphoneSelectItem;
                             })
                             .map((iphone, i) => {
                                 return <IphoneCard

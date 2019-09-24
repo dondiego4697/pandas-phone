@@ -13,8 +13,9 @@ export interface SelectBoxItem {
 }
 interface IProps {
     items: SelectBoxItem[];
-    selected: string;
+    selected?: string;
     onChange: (key: string) => void;
+    placeholder?: string;
 }
 
 interface IState {
@@ -54,7 +55,7 @@ export class SelectBox extends React.Component<IProps, IState> {
                         })}
                         <img
                             className={b('icon')}
-                            src='http://cdn.onlinewebfonts.com/svg/img_295694.svg'
+                            src='/public/imgs/angle-down.svg'
                             alt='Arrow Icon'
                             aria-hidden='true'
                         />

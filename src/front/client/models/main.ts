@@ -35,20 +35,17 @@ export class MainPageModel {
     @observable public cartCount = 0;
     @observable public showAddedToCartPopup = false;
 
-    @observable public iphoneSelectData: SelectBoxItem[] = [{
-        key: 'all',
-        value: 'Все'
-    }];
-    @observable public iphoneSelectItem = 'all';
+    @observable public iphoneSelectData: SelectBoxItem[] = [];
+    @observable public iphoneSelectItem: string | undefined;
 
     @action public fetchData(): void {
         runInAction(() => {
             this.status = PageStatus.LOADING;
             getIphoneEnums()
                 .then((enums) => {
-                    this.iphoneSelectData = ['all', ...enums.models].map((model) => ({
+                    this.iphoneSelectData = enums.models.map((model) => ({
                         key: model,
-                        value: iPhoneModelMapper(model) || 'Все'
+                        value: iPhoneModelMapper(model)!
                     }));
                     return getBarItems();
                 })
