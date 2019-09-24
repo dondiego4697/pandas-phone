@@ -6,7 +6,7 @@ import {Provider} from 'mobx-react';
 import * as models from 'client/models';
 import {RoutesApp} from 'client/routes';
 
-import {history} from 'libs/history';
+import {history} from '@denstep/libs/history';
 
 render(
     (

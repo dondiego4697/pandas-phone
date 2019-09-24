@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import BackIcon from '@material-ui/icons/ChevronLeft';
 import NextIcon from '@material-ui/icons/ChevronRight';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import './index.scss';
 

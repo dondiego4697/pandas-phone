@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import {AdminPanelPageModel} from 'admin/models/admin-panel';
 import {Bender} from 'admin/components/bender';
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import './index.scss';
 

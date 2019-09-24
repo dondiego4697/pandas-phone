@@ -2,10 +2,10 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 import {CartPageModel} from 'client/models/cart';
 import {ClientDataModel} from 'client/models/client-data';
-import {PageStatus} from 'libs/types';
+import {PageStatus} from '@denstep/libs/types';
 import {ProgressLock} from 'client/components/progress-lock';
 import {Header} from 'client/components/header';
 import {IphoneCart} from 'client/components/cart-item/iphone';

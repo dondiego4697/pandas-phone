@@ -2,7 +2,7 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 
-import {SelectBox} from '@denstep/core/select-box';
+import {SelectBox} from '@denstep/components/select-box';
 
 import {MainPageModel, IIphone, IAirpod} from 'client/models/main';
 import {Header} from 'client/components/header';
@@ -13,13 +13,13 @@ import {Footer} from 'client/components/footer';
 import {Popup} from 'client/components/popup';
 import {ProgressLock} from 'client/components/progress-lock';
 import {ClientCookie} from 'client/libs/cookie';
-import {PageStatus} from 'libs/types';
+import {PageStatus} from '@denstep/libs/types';
 import {AirpodCard} from 'client/components/card-item/airpod';
 import {Button} from 'client/components/button';
 import {MobileHeader} from 'client/components/mobile-header';
 import {Social} from 'client/components/social';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import './index.scss';
 

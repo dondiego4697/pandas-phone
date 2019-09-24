@@ -11,8 +11,8 @@ import {ProgressBar} from 'admin/components/progress-bar';
 import {NotFoundPage} from 'admin/pages/not-found';
 import {IAirpodFull} from 'admin/models/airpods';
 import {IIphoneFull} from 'admin/models/iphones';
-import {PageStatus} from 'libs/types';
-import bevis from 'libs/bevis';
+import {PageStatus} from '@denstep/libs/types';
+import bevis from '@denstep/libs/bevis';
 
 const b = bevis('order');
 

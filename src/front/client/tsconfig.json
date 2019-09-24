@@ -18,16 +18,13 @@
             "client/*": [
                 "./*"
             ],
-            "libs/*": [
-                "../libs/*"
-            ],
-            "@denstep/core/*": [
-                "../@denstep/core/*"
+            "@denstep/*": [
+                "../@denstep/*"
             ]
         }
     },
     "include": [
         "../client",
-        "../lib"
+        "../@denstep"
     ]
 }

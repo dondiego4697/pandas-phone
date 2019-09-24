@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import {IAirpod} from 'client/models/main';
 import {CardDescription} from 'client/components/card-description';

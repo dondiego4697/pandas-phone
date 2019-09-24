@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {ISocialLinks} from 'client/models/client-data';
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import './index.scss';
 

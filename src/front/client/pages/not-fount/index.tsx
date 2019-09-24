@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 const b = bevis('not-found');
 

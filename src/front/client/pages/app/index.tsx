@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer, inject} from 'mobx-react';
 import {withRouter, RouteComponentProps} from 'react-router';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 import {ClientDataModel} from 'client/models/client-data';
 import {CookieInfo} from 'client/components/cookie-info';
 import {ClientCookie} from 'client/libs/cookie';

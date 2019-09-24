@@ -8,8 +8,8 @@ import {IOrder, OrdersPageModel} from 'admin/models/orders';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
-import bevis from 'libs/bevis';
-import {PageStatus} from 'libs/types';
+import bevis from '@denstep/libs/bevis';
+import {PageStatus} from '@denstep/libs/types';
 
 import './index.scss';
 

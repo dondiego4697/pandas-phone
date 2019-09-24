@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {inject} from 'mobx-react';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 import {ClientDataModel} from 'admin/models/client-data';
 import {Bender} from 'admin/components/bender';
 

@@ -18,13 +18,13 @@
             "admin/*": [
                 "./*"
             ],
-            "libs/*": [
-                "../libs/*"
+            "@denstep/*": [
+                "../@denstep/*"
             ]
         }
     },
     "include": [
         "../admin",
-        "../libs"
+        "../@denstep"
     ]
 }

@@ -1,7 +1,7 @@
 import {IIphone, IAirpod} from 'client/models/main';
 import {iPhoneColorMapper, airpodOriginalMapper, airpodChargingMapper} from 'client/libs/text-mapper';
 import {ICardDescriptionField} from 'client/components/card-description';
-import {getPriceWithDiscountString} from 'libs/get-price';
+import {getPriceWithDiscountString} from '@denstep/libs/get-price';
 
 export function getIphoneDescriptionFields(iphone: IIphone): ICardDescriptionField[] {
     const fields: ICardDescriptionField[] = [

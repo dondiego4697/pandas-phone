@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 
-import bevis from 'libs/bevis';
+import bevis from '@denstep/libs/bevis';
 
 import './index.scss';
 
@@ -30,6 +30,7 @@ export class SelectBox extends React.Component<IProps, IState> {
                 <div className={b('container')} >
                     <div
                         tabIndex={1}
+                        onBlur={this.onBlurHandler}
                         onClick={this.onClickHandler}
                         className={classnames(b('wrapper'), {
                             'opened': this.state.opened
@@ -78,6 +79,10 @@ export class SelectBox extends React.Component<IProps, IState> {
         );
     }
 
+    private onBlurHandler = () => {
+        this.setState({opened: false});
+    }
+
     private onClickHandler = () => {
         this.setState({opened: !this.state.opened});
     }
@@ -85,6 +90,6 @@ export class SelectBox extends React.Component<IProps, IState> {
     private onItemClickHandler = (event: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
         const key = (event.target as HTMLElement).getAttribute('for');
         this.props.onChange(key!);
-        this.onClickHandler();
+        this.onBlurHandler();
     }
 }

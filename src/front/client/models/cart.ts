@@ -1,11 +1,11 @@
 import {observable, action, runInAction} from 'mobx';
 import {PhoneNumberFormat as PNF, PhoneNumberUtil} from 'google-libphonenumber';
 
-import {PageStatus} from 'libs/types';
+import {PageStatus} from '@denstep/libs/types';
 import {getBarItems, addOrder} from 'client/libs/request';
 import {ClientCookie} from 'client/libs/cookie';
 import {IAirpod, IIphone, IBarItems} from 'client/models/main';
-import {getPriceWithDiscount, priceToString} from 'libs/get-price';
+import {getPriceWithDiscount, priceToString} from '@denstep/libs/get-price';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 
