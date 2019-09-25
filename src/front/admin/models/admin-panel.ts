@@ -1,22 +1,18 @@
 import {observable} from 'mobx';
 
 interface IPage {
-    url: string;
+    path: string;
     title: string;
 }
 export class AdminPanelPageModel {
     @observable public pages: IPage[] = [
         {
-            title: '[Витрина] iPhone',
-            url: 'iphones'
+            path: '/good-items',
+            title: 'Товары'
         },
         {
-            title: '[Витрина] AirPods',
-            url: 'airpods'
-        },
-        {
-            title: 'Заказы',
-            url: 'orders'
+            path: '/orders',
+            title: 'Заказы'
         }
     ];
 }

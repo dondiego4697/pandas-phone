@@ -3,13 +3,13 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import {IIphone, IphonesPageModel} from 'admin/models/iphones';
+import {IIphone, IphonesPageModel} from 'admin/models/ARCHIVE/iphones';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
-import {PageStatus} from '@denstep/libs/types';
+import {PageStatus} from '@denstep-core/libs/types';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 import './index.scss';
 

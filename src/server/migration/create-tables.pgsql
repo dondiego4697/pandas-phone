@@ -6,17 +6,6 @@ CREATE TABLE IF NOT EXISTS admin (
     username TEXT UNIQUE NOT NULL
 );
 
--- CREATE TYPE ORDER_STATUS_T as enum('new', 'called', 'reject', 'bought');
--- CREATE TYPE AIRPOD_SERIES_T as enum('1', '2');
--- CREATE TYPE IPHONE_MODEL_T as enum('xs', 'x', 'xs_max', 'xr', '8', '8_plus', '7', '7_plus', '6s', 'se');
--- CREATE TYPE IPHONE_MEMORY_T as enum('16', '32', '64', '128', '256', '512');
--- CREATE TYPE IPHONE_COLOR_T as enum(
---     'silver', 'gold', 'white', 'yellow',
---     'coral', 'blue', 'black', 'rose-gold',
---     'space-gray', 'product-red',
---     'black-matte', 'black-jet', 'red'
--- );
-
 CREATE TABLE IF NOT EXISTS orders (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 
@@ -40,7 +29,7 @@ CREATE TABLE IF NOT EXISTS good_item (
     series INTEGER DEFAULT NULL,
     original BOOLEAN DEFAULT TRUE NOT NULL,
 
-    search_tags TEXT DEFAULT NULL,
+    search_tags TEXT[] DEFAULT NULL,
 
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,
@@ -54,7 +43,7 @@ CREATE INDEX good_item__color ON good_item (LOWER(color));
 CREATE INDEX good_item__memory_capacity ON good_item (memory_capacity);
 CREATE INDEX good_item__series ON good_item (series);
 CREATE INDEX good_item__original ON good_item (original);
-CREATE INDEX good_item__search_tags ON good_item (LOWER(search_tags));
+CREATE INDEX good_item__search_tags ON good_item (search_tags);
 CREATE INDEX good_item__price_discount ON good_item (price, discount);
 CREATE INDEX good_item__public ON good_item (public);
 

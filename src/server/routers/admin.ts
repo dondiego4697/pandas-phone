@@ -3,12 +3,13 @@ import * as util from 'util';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 
-import {IClientData} from 'front/admin/models/client-data';
 import {formBundleUrl} from 'server/lib/client-urls';
-
 import {config} from 'server/config';
 import {telegramAuth} from 'server/middlewares/telegram-auth';
 import {isMobile} from 'server/lib/mobile-check';
+
+import {IAdminClientData} from 'common/types';
+import {dbAllowedValues} from 'common/db-allowed-values';
 
 export const adminRouter = express.Router();
 
@@ -32,9 +33,10 @@ adminRouter
             req.adminForbidden = true;
         }
 
-        const clientData: IClientData = {
+        const clientData: IAdminClientData = {
             forbidden: req.adminForbidden || false,
-            telegramBotName: config['telegram.botName']
+            telegramBotName: config['telegram.botName'],
+            dbAllowedValues
         };
 
         const params: IRenderParams = {

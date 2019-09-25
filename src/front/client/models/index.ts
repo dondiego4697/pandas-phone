@@ -1,11 +1,12 @@
-import {ClientDataModel, IClientData} from 'client/models/client-data';
+import {ClientDataModel} from 'client/models/client-data';
+import {IClientClientData} from 'common/types';
 import {MainPageModel} from 'client/models/main';
 import {CartPageModel} from 'client/models/cart';
 
 declare global {
     // tslint:disable-next-line
     interface Window {
-        clientData: IClientData;
+        clientData: IClientClientData;
     }
 }
 

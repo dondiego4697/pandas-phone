@@ -4,12 +4,12 @@ import {Column} from 'material-table';
 import {RouteComponentProps} from 'react-router';
 import {Snackbar} from '@material-ui/core';
 
-import {IOrder, OrdersPageModel} from 'admin/models/orders';
+import {IOrder, OrdersPageModel} from 'admin/models/ARCHIVE/orders';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {Table} from 'admin/components/table';
 import {TableTitle} from 'admin/components/table-title';
-import bevis from '@denstep/libs/bevis';
-import {PageStatus} from '@denstep/libs/types';
+import bevis from '@denstep-core/libs/bevis';
+import {PageStatus} from '@denstep-core/libs/types';
 
 import './index.scss';
 

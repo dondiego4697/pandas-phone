@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 import './index.scss';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 import {IIphone} from 'client/models/main';
 import {iPhoneModelMapper} from 'client/libs/text-mapper';

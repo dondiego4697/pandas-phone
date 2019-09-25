@@ -3,9 +3,11 @@ import * as util from 'util';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 
-import {IClientData} from 'front/client/models/client-data';
 import {formBundleUrl} from 'server/lib/client-urls';
 import {isMobile} from 'server/lib/mobile-check';
+
+import {IClientClientData} from 'common/types';
+import {dbAllowedValues} from 'common/db-allowed-values';
 
 interface IRenderParams {
     meta: {
@@ -23,12 +25,13 @@ interface IRenderParams {
 export const clientRouter = express.Router();
 
 clientRouter.get('*', wrap<Request, Response>(async (req, res) => {
-    const clientData: IClientData = {
+    const clientData: IClientClientData = {
         isMobile: isMobile(req),
         socialLinks: {
             vk: 'https://vk.com/pandaphone12',
             instagram: 'https://www.instagram.com/pandaphone12/'
-        }
+        },
+        dbAllowedValues
     };
     const params: IRenderParams = {
         meta: {

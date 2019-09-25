@@ -1,7 +1,7 @@
 import * as Boom from '@hapi/boom';
 import * as Joi from '@hapi/joi';
 
-import {allowedValues} from 'server/api/v1/allowed-values';
+import {dbAllowedValues} from 'common/db-allowed-values';
 
 const orderCreateSchema = Joi.object().keys({
     customer_name: Joi.string().required(),
@@ -11,7 +11,7 @@ const orderCreateSchema = Joi.object().keys({
 const orderUpdateSchema = Joi.object().keys({
     customer_name: Joi.string().optional(),
     customer_phone: Joi.string().optional(),
-    status: Joi.string().valid(...allowedValues.orderStatus).optional()
+    status: Joi.string().valid(...dbAllowedValues.orderStatus).optional()
 }).min(1);
 
 export class OrderValidatorRequest {

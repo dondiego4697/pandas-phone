@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import {IIphone, IIphoneFull} from 'admin/models/iphones';
-import {IAirpod, IAirpodFull} from 'admin/models/airpods';
-import {IOrder} from 'admin/models/orders';
-import {IOrderItems} from 'admin/models/order';
+import {IIphone, IIphoneFull} from 'admin/models/ARCHIVE/iphones';
+import {IAirpod, IAirpodFull} from 'admin/models/ARCHIVE/airpods';
+import {IOrder} from 'admin/models/ARCHIVE/orders';
+import {IOrderItems} from 'admin/models/ARCHIVE/order';
 
 interface IDefaultParams {
     limit: number;

@@ -4,15 +4,15 @@ import {inject, observer} from 'mobx-react';
 import {Column} from 'material-table';
 import {Button, Snackbar} from '@material-ui/core';
 
-import {OrderPageModel} from 'admin/models/order';
+import {OrderPageModel} from 'admin/models/ARCHIVE/order';
 import {TableTitle} from 'admin/components/table-title';
 import {Table} from 'admin/components/table';
 import {ProgressBar} from 'admin/components/progress-bar';
 import {NotFoundPage} from 'admin/pages/not-found';
-import {IAirpodFull} from 'admin/models/airpods';
-import {IIphoneFull} from 'admin/models/iphones';
-import {PageStatus} from '@denstep/libs/types';
-import bevis from '@denstep/libs/bevis';
+import {IAirpodFull} from 'admin/models/ARCHIVE/airpods';
+import {IIphoneFull} from 'admin/models/ARCHIVE/iphones';
+import {PageStatus} from '@denstep-core/libs/types';
+import bevis from '@denstep-core/libs/bevis';
 
 const b = bevis('order');
 

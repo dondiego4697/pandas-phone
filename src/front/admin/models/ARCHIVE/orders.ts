@@ -1,7 +1,7 @@
 import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
-import {PageStatus} from '@denstep/libs/types';
+import {PageStatus} from '@denstep-core/libs/types';
 import {
     getOpenedOrders,
     updateOrder,

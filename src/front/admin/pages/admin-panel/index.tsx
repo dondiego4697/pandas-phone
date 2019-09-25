@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import {AdminPanelPageModel} from 'admin/models/admin-panel';
 import {Bender} from 'admin/components/bender';
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 import './index.scss';
 
@@ -23,11 +23,11 @@ export class AdminPanelPage extends React.Component<IProps> {
                 <Bender/>
                 <div className={b('container')}>
                     {this.props.adminPanelPageModel!.pages.map((page, i) =>
-                        <li key={`li-${page.url}-${i}`}>
-                            <h1 key={`h1-${page.url}-${i}`}>
+                        <li key={`li-${page.path}-${i}`}>
+                            <h1 key={`h1-${page.path}-${i}`}>
                                 <Link
-                                    key={`link-${page.url}-${i}`}
-                                    to={`/bender-root/${page.url}`}
+                                    key={`link-${page.path}-${i}`}
+                                    to={`/bender-root${page.path}`}
                                 >
                                     {page.title}
                                 </Link>

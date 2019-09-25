@@ -1,9 +1,9 @@
 import {observable, action, runInAction} from 'mobx';
 
-import {PageStatus} from '@denstep/libs/types';
+import {PageStatus} from '@denstep-core/libs/types';
 import {getBarItems, getIphoneEnums} from 'client/libs/request';
 import {ClientCookie} from 'client/libs/cookie';
-import {SelectBoxItem} from '@denstep/components/select-box';
+import {SelectBoxItem} from '@denstep-core/components/select-box';
 import {iPhoneModelMapper} from 'client/libs/text-mapper';
 
 export interface IAirpod {

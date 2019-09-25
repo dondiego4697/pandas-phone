@@ -4,6 +4,7 @@ import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const localNodeModulesPath = path.resolve('./node_modules');
 const frontPath = path.resolve('./src/front');
+const srcPath = path.resolve('./src');
 
 const configs = [
     {
@@ -71,7 +72,8 @@ function getBaseConfig(isProduction: boolean, tsConfigFileName: string): webpack
             alias: {
                 client: path.resolve(frontPath, './client'),
                 admin: path.resolve(frontPath, './admin'),
-                '@denstep': path.resolve(frontPath, './@denstep')
+                '@denstep-core': path.resolve(frontPath, './@denstep-core'),
+                common: path.resolve(srcPath, './common')
             },
             modules: [
                 frontPath,

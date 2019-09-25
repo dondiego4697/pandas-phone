@@ -15,12 +15,12 @@
         "jsx": "react",
         "baseUrl": "./",
         "paths": {
-            "@denstep/*": [
-                "./*"
+            "@denstep-core/*": [
+                "../@denstep-core/*"
             ]
         }
     },
     "include": [
-        "../@denstep"
+        "../@denstep-core"
     ]
 }

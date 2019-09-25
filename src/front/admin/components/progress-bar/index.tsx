@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 import './index.scss';
 

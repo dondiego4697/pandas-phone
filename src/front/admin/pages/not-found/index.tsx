@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {inject} from 'mobx-react';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 const b = bevis('not-found');
 

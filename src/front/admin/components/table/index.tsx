@@ -3,7 +3,7 @@ import * as React from 'react';
 import MaterialTable, {Column, Action, Options} from 'material-table';
 
 import {Pagination} from 'admin/components/pagination';
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 
 const b = bevis('table');
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer, inject} from 'mobx-react';
 import {withRouter, RouteComponentProps} from 'react-router';
 
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 import {ClientDataModel} from 'admin/models/client-data';
 
 import './index.scss';

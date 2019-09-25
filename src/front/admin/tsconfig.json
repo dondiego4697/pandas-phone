@@ -18,13 +18,17 @@
             "admin/*": [
                 "./*"
             ],
-            "@denstep/*": [
-                "../@denstep/*"
+            "@denstep-core/*": [
+                "../@denstep-core/*"
+            ],
+            "common/*": [
+                "../../common/*"
             ]
         }
     },
     "include": [
         "../admin",
-        "../@denstep"
+        "../../common",
+        "../@denstep-core"
     ]
 }

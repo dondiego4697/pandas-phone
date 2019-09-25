@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-import {ISocialLinks} from 'client/models/client-data';
-import bevis from '@denstep/libs/bevis';
+import bevis from '@denstep-core/libs/bevis';
 import {Social} from 'client/components/social';
+import {IClientSocialLinks} from 'common/types';
 
 import './index.scss';
 
 const b = bevis('face-panel');
 
 interface IProps {
-    socialLinks: ISocialLinks;
+    socialLinks: IClientSocialLinks;
 }
 
 export class FacePanel extends React.Component<IProps> {

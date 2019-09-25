@@ -28,9 +28,9 @@ export class GoodItemProvider {
         if (searchTagValues.length > 0) {
             pairs.push(`
                 (
-                    ${searchTagValues.map((tag, i) => {
+                    ${searchTagValues.map((tag) => {
                         values.push(tag);
-                        return `search_tags LIKE '%' || $${values.length} || '%'`;
+                        return `$${values.length} = ANY (search_tags)`;
                     }).join(' OR ')}
                 )`
             );

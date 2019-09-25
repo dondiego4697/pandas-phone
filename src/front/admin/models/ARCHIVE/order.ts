@@ -1,12 +1,12 @@
 import {observable, action, runInAction} from 'mobx';
 import {Column} from 'material-table';
 
-import {PageStatus} from '@denstep/libs/types';
-import {IOrder} from 'admin/models/orders';
-import {IAirpodFull} from 'admin/models/airpods';
-import {IIphoneFull} from 'admin/models/iphones';
+import {PageStatus} from '@denstep-core/libs/types';
+import {IOrder} from 'admin/models/ARCHIVE/orders';
+import {IAirpodFull} from 'admin/models/ARCHIVE/airpods';
+import {IIphoneFull} from 'admin/models/ARCHIVE/iphones';
 import {makeLookup} from 'admin/libs/table-lookup';
-import {getPriceWithDiscount, priceToString} from '@denstep/libs/get-price';
+import {getPriceWithDiscount, priceToString} from '@denstep-core/libs/get-price';
 
 import {
     getOrder,
