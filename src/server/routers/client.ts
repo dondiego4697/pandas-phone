@@ -22,7 +22,7 @@ interface IRenderParams {
 
 export const clientRouter = express.Router();
 
-clientRouter.get('/', wrap<Request, Response>(async (req, res) => {
+clientRouter.get('*', wrap<Request, Response>(async (req, res) => {
     const clientData: IClientData = {
         isMobile: isMobile(req),
         socialLinks: {

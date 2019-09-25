@@ -12,8 +12,8 @@ import * as bodyParser from 'body-parser';
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
+import {apiRouter as apiV1Router} from 'server/api/v1';
 import {adminRouter} from 'server/routers/admin';
-import {apiRouter} from 'server/routers/api/v2';
 import {clientRouter} from 'server/routers/client';
 
 declare global {
@@ -63,8 +63,8 @@ if (config['app.isNodeStatic']) {
 
 app
     .use(browserClient())
+    .use('/api/v1', apiV1Router)
     .use('/bender-root', adminRouter)
-    .use('/api/v2', apiRouter)
     .use('/*', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));

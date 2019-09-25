@@ -1,3 +1,5 @@
+import * as cleanDeep from 'clean-deep';
+
 interface IPagination {
     limit: number;
     offset: number;
@@ -15,28 +17,58 @@ export function seizePaginationParams(data: Record<string, any>): IPagination {
     return result;
 }
 
-interface IGetWhere {
-    pairsText: string[];
+interface IGetWhereParams {
+    pairs: string[];
     values: any[];
 }
 
-export function makeWhere(data: Record<string, any>): IGetWhere {
+export function makeWhereParams(rawData: Record<string, any>): IGetWhereParams {
+    const data = cleanDeep(rawData, {nullValues: false});
     return Object.entries(data).reduce((res, [key, value], i) => {
-        res.pairsText.push(`${key}=$${i + 1}`);
+        res.pairs.push(`${key}=$${i + 1}`);
         res.values.push(value);
         return res;
-    }, {pairsText: [], values: []} as IGetWhere);
+    }, {pairs: [], values: []} as IGetWhereParams);
 }
 
-interface IInsert {
-    names: string[];
+interface IInsertParams {
+    fields: string[];
     values: any[];
 }
 
-export function makeInsert(data: Record<string, any>): IInsert {
+export function makeInsertParams(rawData: Record<string, any>): IInsertParams {
+    const data = cleanDeep(rawData, {nullValues: false});
     return Object.entries(data).reduce((res, [key, value], i) => {
-        res.names.push(key);
+        res.fields.push(key);
         res.values.push(value);
         return res;
-    }, {names: [], values: []} as IInsert);
+    }, {fields: [], values: []} as IInsertParams);
+}
+
+export function makeInsertText(tableName: string, fields: string[]): string {
+    return `
+        INSERT INTO ${tableName}
+        (${fields.join(', ')}) VALUES (${fields.map((_, i) => `$${i + 1}`).join(', ')})
+        RETURNING *;
+    `;
+}
+
+export function makeUpdateText(tableName: string, fields: string[]): string {
+    if (fields.length === 1) {
+        return `
+            UPDATE ${tableName}
+            SET ${fields.join(', ')}=${fields.map((_, i) => `$${i + 2}`).join(', ')}
+            WHERE id=$1 RETURNING *;
+        `;
+    }
+
+    return `
+        UPDATE ${tableName}
+        SET (${fields.join(', ')})=(${fields.map((_, i) => `$${i + 2}`).join(', ')})
+        WHERE id=$1 RETURNING *;
+    `;
+}
+
+export function makeDeleteText(tableName: string): string {
+    return `DELETE FROM ${tableName} WHERE id=$1 RETURNING *;`;
 }
