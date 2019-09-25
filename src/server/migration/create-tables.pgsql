@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS good_item (
     series INTEGER DEFAULT NULL,
     original BOOLEAN DEFAULT TRUE NOT NULL,
 
-    search_tags TEXT DEFAULT '' NOT NULL,
+    search_tags TEXT DEFAULT NULL,
 
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,

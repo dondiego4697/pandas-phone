@@ -11,7 +11,7 @@ const goodItemCreateSchema = Joi.object().keys({
     memory_capacity: Joi.number().optional().allow(null),
     series: Joi.number().optional().allow(null),
     original: Joi.boolean().optional(),
-    search_tags: Joi.string().optional(),
+    search_tags: Joi.string().optional().allow(null),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).optional(),
     public: Joi.boolean().optional()
