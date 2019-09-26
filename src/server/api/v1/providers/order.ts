@@ -19,7 +19,6 @@ export class OrderProvider {
         const {rows} = await makeRequest({
             text: `
                 SELECT * FROM ${TABLE_NAME}
-                WHERE status='new' OR status='called'
                 ORDER BY order_date DESC
                 LIMIT ${pagination.limit} OFFSET ${pagination.offset};
             `,

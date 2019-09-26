@@ -21,6 +21,6 @@
         }
     },
     "include": [
-        "../@denstep-core"
+        "../@denstep-core/**/*"
     ]
 }

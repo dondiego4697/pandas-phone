@@ -5,15 +5,12 @@ const orderItemCreateSchema = Joi.object().keys({
     order_id: Joi.string().guid().required(),
     good_item_id: Joi.string().guid().required(),
     serial_number: Joi.string().optional().allow(null),
-    imei: Joi.string().optional().allow(null),
-    price: Joi.number().positive().required(),
-    discount: Joi.number().min(0).max(100).optional()
+    imei: Joi.string().optional().allow(null)
 });
 
 const orderItemUpdateSchema = orderItemCreateSchema.append({
     order_id: Joi.string().optional(),
-    good_item_id: Joi.string().optional(),
-    price: Joi.number().positive().optional()
+    good_item_id: Joi.string().optional()
 }).min(1);
 
 export class OrderItemValidatorRequest {

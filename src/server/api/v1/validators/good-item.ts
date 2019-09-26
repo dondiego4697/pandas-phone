@@ -9,7 +9,6 @@ const goodItemCreateSchema = Joi.object().keys({
     brand: Joi.string().optional().allow(null),
     color: Joi.string().optional().allow(null),
     memory_capacity: Joi.number().optional().allow(null),
-    series: Joi.number().optional().allow(null),
     original: Joi.boolean().optional(),
     search_tags: Joi.array().items(
         Joi.string().valid(dbAllowedValues.searchTags)

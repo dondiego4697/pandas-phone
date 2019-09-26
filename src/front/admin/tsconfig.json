@@ -16,7 +16,7 @@
         "baseUrl": "./",
         "paths": {
             "admin/*": [
-                "./*"
+                "../admin/*"
             ],
             "@denstep-core/*": [
                 "../@denstep-core/*"
@@ -27,8 +27,8 @@
         }
     },
     "include": [
-        "../admin",
-        "../../common",
-        "../@denstep-core"
+        "../admin/**/*",
+        "../../common/**/*",
+        "../@denstep-core/**/*"
     ]
 }

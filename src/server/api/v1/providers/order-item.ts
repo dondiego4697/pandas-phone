@@ -27,11 +27,8 @@ export class OrderItemProvider {
                     good_item.brand,
                     good_item.color,
                     good_item.memory_capacity,
-                    good_item.series,
                     good_item.original,
                     good_item.search_tags,
-                    order_item.price,
-                    order_item.discount,
                     order_item.serial_number,
                     order_item.imei
                 FROM order_item
