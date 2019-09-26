@@ -53,8 +53,7 @@ export const app = express()
     })
     .set('view engine', 'mustache')
     .set('views', path.resolve('./res/views'))
-    .get('/ping', (_req: Request, res: Response) => res.end())
-    .use('/favicon.ico', express.static(path.resolve('./res/imgs/favicon.ico')));
+    .get('/ping', (_req: Request, res: Response) => res.end());
 
 if (config['app.isNodeStatic']) {
     app.use(config['app.publicPath'], express.static(path.resolve('./out/src/front')));

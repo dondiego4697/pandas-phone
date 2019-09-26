@@ -5,8 +5,9 @@ import {AdminRequest} from '@denstep-core/libs/api-requests';
 
 export class GoodItemsPageModel {
     @observable public status = PageStatus.LOADING;
-    @observable public limit = 10;
+    @observable public limit = 100;
     @observable public offset = 0;
+    @observable public total = 0;
 
     @action public fetchData(): void {
         runInAction(() => {
@@ -16,8 +17,10 @@ export class GoodItemsPageModel {
                 limit: this.limit,
                 offset: this.offset
             }).then((data) => {
-                console.log(data);
+                this.total = data.total;
                 this.status = PageStatus.DONE;
+
+                console.log(data);
             });
         });
     }

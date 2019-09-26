@@ -17,10 +17,15 @@ function postRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
+interface IGoodItemsResponse {
+    total: number;
+    rows: any[];
+}
+
 export class AdminRequest {
-    static getGoodItems(params: IDefaultParams): Promise<any[]> {
+    static getGoodItems(params: IDefaultParams): Promise<IGoodItemsResponse> {
         const {limit, offset} = params;
-        return getRequest<any[]>(`/api/v1/good_item?limit=${limit}&offset=${offset}`);
+        return getRequest<IGoodItemsResponse>(`/api/v1/good_item?limit=${limit}&offset=${offset}`);
     }
 }
 

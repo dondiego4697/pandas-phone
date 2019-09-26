@@ -7,8 +7,6 @@ import {AdminPanelPage} from 'admin/pages/admin-panel';
 
 import {ForbiddenPage} from 'admin/pages/forbidden';
 import {NotFoundPage} from 'admin/pages/not-found';
-// import {OrderPage} from 'admin/pages/order';
-// import {OrdersPage} from 'admin/pages/orders';
 import {GoodItemsPage} from 'admin/pages/good-items';
 
 import {ClientDataModel} from 'admin/models/client-data';

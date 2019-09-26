@@ -14,6 +14,7 @@
         font-size: 18px;
         font-family: 'Roboto', sans-serif;
         z-index: 100;
+        border-radius: 5px;
     }
 
     &__wrapper {
@@ -47,6 +48,7 @@
         width: 20px;
         opacity: 0.3;
         transition: 0.2s ease;
+        user-select: none;
     }
 
     &__input-text {
@@ -76,9 +78,9 @@
         list-style: none;
         opacity: 0;
 
-        animation-name: HideList;
-        animation-duration: 0.5s;
-        animation-delay: 0.5s;
+        animation-name: SelectBoxHideList;
+        animation-duration: 1s;
+        animation-delay: 1s;
         animation-fill-mode: forwards;
         animation-timing-function: step-start;
         box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
@@ -88,19 +90,28 @@
         display: block;
         padding: 15px;
         background-color: #fff;
+        border-radius: 5px;
 
         &:hover, &:focus {
             color: #546c84;
-            background-color: #fbfbfb;
+            background-color: #f6f5f5;
         }
     }
 
-    @keyframes HideList {
+    @keyframes SelectBoxHideList {
         from {
             transform: scaleY(1);
         }
         to {
             transform: scaleY(0);
         }
+    }
+
+    &__placeholder {
+        position: absolute;
+        top: -50%;
+        font-size: 14px;
+        font-family: 'Roboto', sans-serif;
+        user-select: none;
     }
 }

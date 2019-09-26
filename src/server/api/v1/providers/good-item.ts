@@ -36,16 +36,22 @@ export class GoodItemProvider {
             );
         }
 
-        const {rows} = await makeRequest({
-            text: `
-                SELECT * FROM ${TABLE_NAME}
-                ${values.length === 0 ? '' : `WHERE ${pairs.join(' AND ')}`}
-                LIMIT ${limit} OFFSET ${offset};
-            `,
-            values
-        });
+        const [{rows: [total]}, {rows}] = await Promise.all([
+            makeRequest({
+                text: `SELECT COUNT(*) FROM ${TABLE_NAME};`,
+                values: []
+            }),
+            makeRequest({
+                text: `
+                    SELECT * FROM ${TABLE_NAME}
+                    ${values.length === 0 ? '' : `WHERE ${pairs.join(' AND ')}`}
+                    LIMIT ${limit} OFFSET ${offset};
+                `,
+                values
+            })
+        ]);
 
-        return rows;
+        return {total: Number(total.count), rows};
     }
 
     static async createGoodItem(client: PoolClient, rawBody: Record<string, any>) {

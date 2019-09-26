@@ -29,6 +29,7 @@ export class SelectBox extends React.Component<IProps, IState> {
         return (
             <div className={b()}>
                 <div className={b('container')} >
+                    <div className={b('placeholder')}>{this.props.placeholder || ''}</div>
                     <div
                         tabIndex={1}
                         onBlur={this.onBlurHandler}
@@ -55,7 +56,7 @@ export class SelectBox extends React.Component<IProps, IState> {
                         })}
                         <img
                             className={b('icon')}
-                            src='/public/imgs/angle-down.svg'
+                            src='/public/imgs/components/select-box/angle-down.svg'
                             alt='Arrow Icon'
                             aria-hidden='true'
                         />
