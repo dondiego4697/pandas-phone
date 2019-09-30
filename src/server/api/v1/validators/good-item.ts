@@ -4,14 +4,27 @@ import * as Joi from '@hapi/joi';
 import {dbAllowedValues} from 'common/db-allowed-values';
 
 const goodItemCreateSchema = Joi.object().keys({
-    type: Joi.string().valid(dbAllowedValues.goodItemType).required(),
-    model: Joi.string().optional().allow(null),
-    brand: Joi.string().optional().allow(null),
-    color: Joi.string().optional().allow(null),
-    memory_capacity: Joi.number().optional().allow(null),
+    type: Joi.string().valid(dbAllowedValues['goodItem.type']).required(),
+    model: Joi.string()
+        .valid(
+            dbAllowedValues['goodItem.airpod.model']
+                .concat(dbAllowedValues['goodItem.iphone.model'])
+        )
+        .optional().allow(null),
+    brand: Joi.string()
+        .valid(dbAllowedValues['goodItem.brand'])
+        .optional().allow(null),
+    color: Joi.string()
+        .valid(
+            dbAllowedValues['goodItem.airpod.color']
+                .concat(dbAllowedValues['goodItem.iphone.color'])
+        )
+        .optional().allow(null),
+    memory_capacity: Joi.number()
+        .valid(dbAllowedValues['goodItem.memoryCapacity']).optional().allow(null),
     original: Joi.boolean().optional(),
     search_tags: Joi.array().items(
-        Joi.string().valid(dbAllowedValues.searchTags)
+        Joi.string().valid(dbAllowedValues['goodItem.searchTag'])
     ).min(1).optional().allow(null),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).optional(),
@@ -19,7 +32,7 @@ const goodItemCreateSchema = Joi.object().keys({
 });
 
 const goodItemUpdateSchema = goodItemCreateSchema.append({
-    type: Joi.string().valid(dbAllowedValues.goodItemType).optional(),
+    type: Joi.string().valid(dbAllowedValues['goodItem.type']).optional(),
     price: Joi.number().positive().optional()
 }).min(1);
 

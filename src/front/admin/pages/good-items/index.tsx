@@ -6,6 +6,7 @@ import {PageStatus} from '@denstep-core/libs/types';
 import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {Pagination} from '@denstep-core/components/pagination';
 import {Paper} from '@denstep-core/components/paper';
+import {Table, ITableSchema} from '@denstep-core/components/table';
 import {ClientDataModel} from 'admin/models/client-data';
 import {Bender} from 'admin/components/bender';
 import {GoodItemsPageModel} from 'admin/models/good-items';
@@ -37,19 +38,100 @@ export class GoodItemsPage extends React.Component<IProps> {
                 <Bender/>
                 <div className={b('container')}>
                     <Paper>
-                        <Pagination
-                            limit={this.props.goodItemsPageModel!.limit}
-                            offset={this.props.goodItemsPageModel!.offset}
-                            total={this.props.goodItemsPageModel!.total}
-                            onChange={this.onPaginationChageHandler}
-                        />
+                        <div className={b('paper-wrapper')}>
+                            <div className={b('table-container')}>
+                                <Table
+                                    header='Good items'
+                                    schema={this.getTableSchema()}
+                                    items={this.props.goodItemsPageModel!.data}
+                                    editable={{
+                                        onAdd: this.onAddHandler,
+                                        onDelete: this.onDeleteHandler,
+                                        onEdit: this.onEditHandler
+                                    }}
+                                />
+                            </div>
+                            <div className={b('pagination-container')}>
+                                <Pagination
+                                    limit={this.props.goodItemsPageModel!.limit}
+                                    offset={this.props.goodItemsPageModel!.offset}
+                                    total={this.props.goodItemsPageModel!.total}
+                                    onChange={this.onPaginationChageHandler}
+                                />
+                            </div>
+                        </div>
                     </Paper>
                 </div>
             </div>
         );
     }
 
+    private onAddHandler = (): void => {
+
+    }
+
+    private onEditHandler = (data: any): void => {
+        console.log(data);
+    }
+
+    private onDeleteHandler = (data: any): void => {
+        console.log(data);
+    }
+
     private onPaginationChageHandler = (offset: number): void => {
         this.props.goodItemsPageModel!.offset = offset;
+        this.props.goodItemsPageModel!.fetchData();
+    }
+
+    private getTableSchema(): ITableSchema[] {
+        return [
+            {
+                key: 'id',
+                title: 'ID'
+            },
+            {
+                key: 'type',
+                title: 'Type'
+            },
+            {
+                key: 'brand',
+                title: 'Brand'
+            },
+            {
+                key: 'model',
+                title: 'Model'
+            },
+            {
+                key: 'color',
+                title: 'Color'
+            },
+            {
+                key: 'memory_capacity',
+                title: 'Memory capacity'
+            },
+            {
+                key: 'original',
+                title: 'Original',
+                type: 'boolean'
+            },
+            {
+                key: 'search_tags',
+                title: 'Search tags',
+                type: 'array'
+            },
+            {
+                key: 'price',
+                title: 'Price'
+            },
+            {
+                key: 'discount',
+                title: 'Discount'
+            },
+            {
+                key: 'public',
+                title: 'Public',
+                type: 'boolean'
+            }
+        ];
     }
 }

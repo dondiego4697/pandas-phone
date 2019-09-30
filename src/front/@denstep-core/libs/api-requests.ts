@@ -17,9 +17,23 @@ function postRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
+interface IGoodItem {
+    id: string;
+    type: 'iphone' | 'airpod';
+    brand: string | null;
+    color: string | null;
+    model: string | null;
+    memory_capacity: number | null;
+    search_tags: string[] | null;
+    price: number;
+    discount: number;
+    public: boolean;
+    original: boolean;
+}
+
 interface IGoodItemsResponse {
     total: number;
-    rows: any[];
+    rows: IGoodItem[];
 }
 
 export class AdminRequest {

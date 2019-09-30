@@ -8,6 +8,7 @@ export class GoodItemsPageModel {
     @observable public limit = 100;
     @observable public offset = 0;
     @observable public total = 0;
+    @observable public data: any[] = [];
 
     @action public fetchData(): void {
         runInAction(() => {
@@ -18,6 +19,7 @@ export class GoodItemsPageModel {
                 offset: this.offset
             }).then((data) => {
                 this.total = data.total;
+                this.data = data.rows;
                 this.status = PageStatus.DONE;
 
                 console.log(data);

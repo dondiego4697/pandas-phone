@@ -52,13 +52,7 @@ export class Pagination extends React.Component<IProps> {
                     [b('button_right')]: direction === Direction.RIGHT,
                     [b('button_disabled')]: disabled
                 })}
-                onClick={() => {
-                    if (direction === Direction.LEFT) {
-                        this.props.onChange((this.getPage() - 2) * this.props.limit);
-                    } else {
-                        this.props.onChange(this.getPage() * this.props.limit)
-                    }
-                }}
+                onClick={() => this.onButtonClickHandler(direction)}
             >
                 <div/>
             </div>
@@ -90,13 +84,7 @@ export class Pagination extends React.Component<IProps> {
                             'current': String(pageNumber) === page
                         })}
                         onClick={(event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-                            const {target} = event;
-                            const newPageNumber = (target as HTMLElement).innerText;
-                            if (newPageNumber === DOTS) {
-                                return;
-                            }
-
-                            this.props.onChange((Number(newPageNumber) - 1) * this.props.limit);
+                            this.onItemClickHandler(event.target as HTMLElement, pageNumber);
                         }}
                     >
                         <span>{page}</span>
@@ -105,5 +93,26 @@ export class Pagination extends React.Component<IProps> {
                 ))}
             </ul>
         );
+    }
+
+    private onItemClickHandler = (target: HTMLElement, pageNumber: number) => {
+        const newPageNumber = target.innerText;
+        if (
+            !newPageNumber ||
+            newPageNumber === DOTS ||
+            newPageNumber === String(pageNumber)
+        ) {
+            return;
+        }
+
+        this.props.onChange((Number(newPageNumber) - 1) * this.props.limit);
+    }
+
+    private onButtonClickHandler = (direction: Direction) => {
+        if (direction === Direction.LEFT) {
+            this.props.onChange((this.getPage() - 2) * this.props.limit);
+        } else {
+            this.props.onChange(this.getPage() * this.props.limit)
+        }
     }
 }
