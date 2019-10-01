@@ -5,6 +5,7 @@ import {RouteComponentProps} from 'react-router';
 import bevis from '@denstep-core/libs/bevis';
 import {PageStatus} from '@denstep-core/libs/types';
 import {ScreenLocker} from '@denstep-core/components/screen-locker';
+import {Paper} from '@denstep-core/components/paper';
 import {Switch} from '@denstep-core/components/switch';
 import {CheckBox} from '@denstep-core/components/check-box';
 import {SelectBox} from '@denstep-core/components/select-box';
@@ -49,23 +50,6 @@ export class GoodItemEditPage extends React.Component<IProps> {
             <div className={b()}>
                 <Bender/>
                 <div className={b('container')}>
-                    <div className={b('switch-wrapper')}>
-                        <div className={b('switch-item-wrapper')}>
-                            <Switch
-                                label='Original:'
-                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.original)}
-                                onChange={(value) => this.updateGoodItem('original', value)}
-                            />
-                        </div>
-                        <div className={b('switch-item-wrapper')}>
-                            <Switch
-                                label='Public:'
-                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.public)}
-                                onChange={(value) => this.updateGoodItem('public', value)}
-                            />
-                        </div>
-                    </div>
-
                     <div className={b('paper-wrapper')}>
                         <SelectBox
                             placeholder='Type'
@@ -105,18 +89,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
                                 onChange={(key) => this.updateGoodItem('memory_capacity', key)}
                             />
                         }
-                    </div>
 
-                    <div className={b('paper-wrapper')}>
-                        <CheckBox
-                            label='Search tags:'
-                            selected={(this.props.goodItemEditPageModel!.goodItem.search_tags || []).map(String)}
-                            items={dbAllowedValues['goodItem.searchTag']}
-                            onChange={(selected) => this.updateGoodItem('search_tags', selected)}
-                        />
-                    </div>
-
-                    <div className={b('paper-wrapper')}>
                         <EditText
                             id='good-item-price-edit-text'
                             placeholder='Price'
@@ -133,10 +106,38 @@ export class GoodItemEditPage extends React.Component<IProps> {
                         />
                     </div>
 
+                    <Paper>
+                        <div className={b('switch-wrapper')}>
+                            <div className={b('switch-item-wrapper')}>
+                                <Switch
+                                    label='Original:'
+                                    initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.original)}
+                                    onChange={(value) => this.updateGoodItem('original', value)}
+                                />
+                            </div>
+                            <div className={b('switch-item-wrapper')}>
+                                <Switch
+                                    label='Public:'
+                                    initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.public)}
+                                    onChange={(value) => this.updateGoodItem('public', value)}
+                                />
+                            </div>
+
+                            <div className={b('switch-item-wrapper')}>
+                                <CheckBox
+                                    label='Search tags:'
+                                    selected={(this.props.goodItemEditPageModel!.goodItem.search_tags || []).map(String)}
+                                    items={dbAllowedValues['goodItem.searchTag']}
+                                    onChange={(selected) => this.updateGoodItem('search_tags', selected)}
+                                />
+                            </div>
+                        </div>
+                    </Paper>
+
                     <div className={b('control-wrapper')}>
                         <Button
                             text='Save'
-                            onClick={() => {this.onSaveClickHandler}}
+                            onClick={this.onSaveClickHandler}
                         />
                     </div>
                 </div>
@@ -173,6 +174,9 @@ export class GoodItemEditPage extends React.Component<IProps> {
     }
 
     private onSaveClickHandler = () => {
-        // TODO send request (create, update) -> show alerts with error or open history.replace()
+        this.props.goodItemEditPageModel!
+            .updateGoodItem(this.props.match.params.goodItemId)
+            .then(() => this.props.history.replace('/bender-root/good-items'))
+            .catch((err) => alert(err.response.data.message));
     }
 }

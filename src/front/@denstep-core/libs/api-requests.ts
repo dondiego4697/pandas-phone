@@ -29,6 +29,7 @@ export interface IGoodItem {
     discount: number;
     public: boolean;
     original: boolean;
+    updated: string;
 }
 
 interface IGoodItemsResponse {
@@ -44,6 +45,21 @@ export class AdminRequest {
 
     static getGoodItem(id: string): Promise<IGoodItem> {
         return getRequest<IGoodItem>(`/api/v1/good_item/${id}`);
+    }
+
+    static createGoodItem(goodItem: IGoodItem): Promise<IGoodItem> {
+        return postRequest<IGoodItem>('/api/v1/good_item/create', goodItem);
+    }
+
+    static updateGoodItem(goodItem: IGoodItem): Promise<IGoodItem> {
+        const {id} = goodItem;
+        delete goodItem.id;
+
+        return postRequest<IGoodItem>(`/api/v1/good_item/${id}/update`, goodItem);
+    }
+
+    static deleteGoodItem(id: string): Promise<IGoodItem> {
+        return postRequest<IGoodItem>(`/api/v1/good_item/${id}/delete`, {});
     }
 }
 

@@ -8,11 +8,11 @@ export class AdminPanelPageModel {
     @observable public pages: IPage[] = [
         {
             path: '/good-items',
-            title: 'Товары'
+            title: 'Good items'
         },
         {
             path: '/orders',
-            title: 'Заказы'
+            title: 'Orders'
         }
     ];
 }

@@ -18,7 +18,8 @@
 
         &:hover {
             background-color: #CA3248;
-            box-shadow: 0.2rem 0.2rem 0.6rem #E8E8E8;
+            // box-shadow: 0.2rem 0.2rem 0.6rem #E8E8E8;
+            box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
         }
     }
 

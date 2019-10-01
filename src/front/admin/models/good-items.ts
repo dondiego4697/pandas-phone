@@ -1,14 +1,14 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
-import {AdminRequest} from '@denstep-core/libs/api-requests';
+import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
 
 export class GoodItemsPageModel {
     @observable public status = PageStatus.LOADING;
-    @observable public limit = 100;
+    @observable public limit = 20;
     @observable public offset = 0;
     @observable public total = 0;
-    @observable public data: any[] = [];
+    @observable public data: IGoodItem[] = [];
 
     @action public fetchData(): void {
         runInAction(() => {
@@ -18,12 +18,20 @@ export class GoodItemsPageModel {
                 limit: this.limit,
                 offset: this.offset
             }).then((data) => {
-                this.total = data.total;
+                this.total = data.total || 1;
                 this.data = data.rows;
                 this.status = PageStatus.DONE;
-
-                console.log(data);
             });
         });
+    }
+
+    @action public deleteGoodItem(goodItemId: string): Promise<IGoodItem> {
+        this.status = PageStatus.LOADING;
+
+        return AdminRequest
+            .deleteGoodItem(goodItemId)
+            .finally(() => {
+                this.status = PageStatus.DONE;
+            });
     }
 }

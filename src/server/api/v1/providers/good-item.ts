@@ -45,6 +45,7 @@ export class GoodItemProvider {
                 text: `
                     SELECT * FROM ${TABLE_NAME}
                     ${values.length === 0 ? '' : `WHERE ${pairs.join(' AND ')}`}
+                    ORDER BY updated DESC
                     LIMIT ${limit} OFFSET ${offset};
                 `,
                 values

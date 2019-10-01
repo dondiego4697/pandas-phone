@@ -1,12 +1,18 @@
 .good-item-edit {
     display: flex;
     width: 100%;
-    height: 100%;
+    height: 100vh;
 
     &__container {
         margin: auto;
         width: 80%;
         display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 2vw;
+
+        & .paper {
+            margin-top: 32px;
+        }
     }
 
     &__paper-wrapper {
@@ -20,16 +26,21 @@
 
     &__switch-wrapper {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
     }
 
     &__switch-item-wrapper {
-        margin-right: 8px;
+        margin-top: 16px;
+
+        &:first-child {
+            margin: 0;
+        }
     }
 
     &__control-wrapper {
         width: 200px;
         margin-top: 16px;
         margin-left: auto;
+        grid-column: 2;
     }
 }

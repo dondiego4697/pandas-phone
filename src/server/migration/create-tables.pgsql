@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS orders (
     customer_name TEXT NOT NULL,
     customer_phone TEXT NOT NULL,
     called BOOLEAN DEFAULT FALSE NOT NULL,
-    order_date TIMESTAMP WITH TIME ZONE DEFAULT now()  NOT NULL,
+    order_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
 
     _status_v1 STAT_V1_STATUS_T DEFAULT NULL
 );
@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS good_item (
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,
 
-    public BOOLEAN DEFAULT FALSE NOT NULL
+    public BOOLEAN DEFAULT FALSE NOT NULL,
+
+    updated TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS good_item__model ON good_item (LOWER(model));
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS order_item (
     imei TEXT UNIQUE DEFAULT NULL
 );
 
-CREATE OR REPLACE FUNCTION afterOrderUpdate() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION setOrderResolution() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW._status_v1='resolve' OR NEW._status_v1='reject' THEN
@@ -95,9 +97,10 @@ END;
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER afterOrderUpdate AFTER UPDATE ON orders FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE afterOrderUpdate();
+CREATE TRIGGER setOrderResolutionTrigger AFTER UPDATE
+    ON orders FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE setOrderResolution();
 
-CREATE OR REPLACE FUNCTION beforeGoodItemUpdate() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION checkGoodItemUpdateEnabled() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF (SELECT COUNT(*) FROM order_item WHERE good_item_id=NEW.id) > 0 THEN
@@ -108,4 +111,17 @@ END;
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER beforeGoodItemUpdate BEFORE UPDATE ON good_item FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE beforeGoodItemUpdate();
+CREATE TRIGGER checkGoodItemUpdateEnabledTrigger BEFORE UPDATE
+    ON good_item FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE checkGoodItemUpdateEnabled();
+
+CREATE OR REPLACE FUNCTION updateGoodItemUpdatedDate() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    UPDATE good_item SET updated=now() WHERE id=NEW.id;
+    RETURN new;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER updateGoodItemUpdatedDateTrigger AFTER UPDATE
+    ON good_item FOR EACH ROW WHEN (pg_trigger_depth() < 1) EXECUTE PROCEDURE updateGoodItemUpdatedDate();

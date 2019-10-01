@@ -8,6 +8,7 @@ import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {Pagination} from '@denstep-core/components/pagination';
 import {Paper} from '@denstep-core/components/paper';
 import {Table, ITableSchema} from '@denstep-core/components/table';
+import {IGoodItem} from '@denstep-core/libs/api-requests';
 import {ClientDataModel} from 'admin/models/client-data';
 import {Bender} from 'admin/components/bender';
 import {GoodItemsPageModel} from 'admin/models/good-items';
@@ -24,7 +25,6 @@ const b = bevis('good-items');
 @inject('clientDataModel', 'goodItemsPageModel')
 @observer
 export class GoodItemsPage extends React.Component<IProps> {
-
     public componentDidMount(): void {
         this.props.goodItemsPageModel!.fetchData();
     }
@@ -75,8 +75,14 @@ export class GoodItemsPage extends React.Component<IProps> {
         this.props.history.push(`/bender-root/good-item/${data.id}`);
     }
 
-    private onDeleteHandler = (data: any): void => {
-        // TODO send request on Delete -> refresh data or show alert
+    private onDeleteHandler = (data: IGoodItem): void => {
+        if (!confirm('Are you sure?')) {
+            return;
+        }
+
+        this.props.goodItemsPageModel!.deleteGoodItem(data.id)
+            .then(() => this.props.goodItemsPageModel!.fetchData())
+            .catch((err) => alert(err.response.data.message));
     }
 
     private onPaginationChageHandler = (offset: number): void => {

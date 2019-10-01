@@ -4,8 +4,8 @@
     height: 100%;
 
     &__container {
-        margin: auto;
-        width: 80%;
+        margin: 100px auto;
+        width: calc(100vw - 200px);
     }
 
     &__paper-wrapper {
