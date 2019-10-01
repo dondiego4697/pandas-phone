@@ -67,8 +67,10 @@ export class SelectBox extends React.Component<IProps, IState> {
                                 <li key={`select-box-li-${i}`}>
                                     <label
                                         htmlFor={item.key}
-                                        onClick={this.onItemClickHandler}
-                                        className={b('option')}
+                                        onMouseDown={this.onItemClickHandler}
+                                        className={classnames(b('option'), {
+                                            [b('option-selected')]: this.props.selected === item.key
+                                        })}
                                     >
                                         {item.value}
                                     </label>
@@ -92,6 +94,5 @@ export class SelectBox extends React.Component<IProps, IState> {
     private onItemClickHandler = (event: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
         const key = (event.target as HTMLElement).getAttribute('for');
         this.props.onChange(key!);
-        this.onBlurHandler();
     }
 }

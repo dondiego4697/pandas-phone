@@ -17,7 +17,7 @@ function postRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
-interface IGoodItem {
+export interface IGoodItem {
     id: string;
     type: 'iphone' | 'airpod';
     brand: string | null;
@@ -40,6 +40,10 @@ export class AdminRequest {
     static getGoodItems(params: IDefaultParams): Promise<IGoodItemsResponse> {
         const {limit, offset} = params;
         return getRequest<IGoodItemsResponse>(`/api/v1/good_item?limit=${limit}&offset=${offset}`);
+    }
+
+    static getGoodItem(id: string): Promise<IGoodItem> {
+        return getRequest<IGoodItem>(`/api/v1/good_item/${id}`);
     }
 }
 

@@ -1,3 +1,5 @@
+@import '../../const/styles.scss';
+
 .screen-locker {
     display: flex;
     width: 100%;
@@ -5,7 +7,7 @@
 
     &__preset_blue {
         & div {
-            background: rgb(26, 33, 76);
+            background: $theme_purple__primary-dark-color;
         }
     }
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
+import {RouteComponentProps} from 'react-router';
 
 import bevis from '@denstep-core/libs/bevis';
 import {PageStatus} from '@denstep-core/libs/types';
@@ -13,7 +14,7 @@ import {GoodItemsPageModel} from 'admin/models/good-items';
 
 import './index.scss';
 
-interface IProps {
+interface IProps extends RouteComponentProps<{}> {
     clientDataModel?: ClientDataModel;
     goodItemsPageModel?: GoodItemsPageModel;
 }
@@ -67,11 +68,11 @@ export class GoodItemsPage extends React.Component<IProps> {
     }
 
     private onAddHandler = (): void => {
-
+        this.props.history.push('/bender-root/good-item/new');
     }
 
     private onEditHandler = (data: any): void => {
-        console.log(data);
+        this.props.history.push(`/bender-root/good-item/${data.id}`);
     }
 
     private onDeleteHandler = (data: any): void => {

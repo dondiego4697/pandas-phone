@@ -11,6 +11,10 @@ goodItemRouter.get('/', wrap<Request, Response>(async (req, res) => {
     res.json(await GoodItemProvider.getGoodItems(req.query));
 }));
 
+goodItemRouter.get('/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await GoodItemProvider.getGoodItem(req.params.id));
+}));
+
 goodItemRouter.post('/create', wrap<Request, Response>(async (req, res) => {
     const client = await getPgClient();
     try {

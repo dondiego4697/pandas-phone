@@ -1,14 +1,17 @@
+@import '../../const/styles.scss';
+
 .image-button {
     width: 32px;
     height: 32px;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.5s ease;
-    background: #8a84ac;
+    background: $theme_purple__primary-dark-color;
     display: flex;
+    transition: all .2 ease;
 
     &:hover {
-        background: #5b5777;
+        opacity: .7;
     }
 
     &__container {

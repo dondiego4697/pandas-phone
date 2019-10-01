@@ -8,6 +8,7 @@ import {AdminPanelPage} from 'admin/pages/admin-panel';
 import {ForbiddenPage} from 'admin/pages/forbidden';
 import {NotFoundPage} from 'admin/pages/not-found';
 import {GoodItemsPage} from 'admin/pages/good-items';
+import {GoodItemEditPage} from 'admin/pages/good-item-edit';
 
 import {ClientDataModel} from 'admin/models/client-data';
 
@@ -36,6 +37,7 @@ export class RoutesApp extends React.Component<IProps> {
             <Switch>
                 <Route exact path='/bender-root' component={AdminPanelPage} />
                 <Route exact path='/bender-root/good-items' component={GoodItemsPage} />
+                <Route exact path='/bender-root/good-item/:goodItemId' component={GoodItemEditPage} />
                 {/* <Route exact path='/bender-root/orders' component={OrdersPage} /> */}
                 {/* <Route exact path='/bender-root/order/:orderId' component={OrderPage} />; */}
                 <Route component={NotFoundPage} />

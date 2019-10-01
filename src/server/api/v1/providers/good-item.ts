@@ -54,6 +54,15 @@ export class GoodItemProvider {
         return {total: Number(total.count), rows};
     }
 
+    static async getGoodItem(id: string) {
+        const {rows} = await makeRequest({
+            text: `SELECT * FROM ${TABLE_NAME} WHERE id=$1;`,
+            values: [id]
+        });
+
+        return rows[0];
+    }
+
     static async createGoodItem(client: PoolClient, rawBody: Record<string, any>) {
         const body = GoodItemValidatorRequest.validateGoodItemCreate(rawBody);
         const {fields, values} = makeInsertParams(body);
