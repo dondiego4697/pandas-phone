@@ -6,7 +6,6 @@
     &__container {
         margin: auto;
         width: 80%;
-        height: 80%;
     }
 
     &__paper-wrapper {
@@ -14,11 +13,9 @@
         height: 100%;
     }
 
-    &__table-container {
-
-    }
-
     &__pagination-container {
         margin-top: 16px;
+        display: inline-flex;
+        float: right;
     }
 }

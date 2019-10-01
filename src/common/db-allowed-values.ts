@@ -2,8 +2,8 @@ export interface IDbAllowedValues {
     'goodItem.type': string[];
     'goodItem.brand': string[];
     'goodItem.searchTag': string[];
-    'goodItem.memoryCapacity': number[];
 
+    'goodItem.iphoneMemoryCapacity': number[];
     'goodItem.iphone.model': string[];
     'goodItem.iphone.color': string[];
 
@@ -15,7 +15,7 @@ export const dbAllowedValues: IDbAllowedValues = {
     'goodItem.type': ['iphone', 'airpod'],
     'goodItem.brand': ['apple'],
     'goodItem.searchTag': ['charging_case', 'best_seller'],
-    'goodItem.memoryCapacity': [8, 16, 32, 64, 128, 256, 512, 1024],
+    'goodItem.iphoneMemoryCapacity': [8, 16, 32, 64, 128, 256, 512, 1024],
 
     'goodItem.iphone.model': [
         '11_pro_max', '11_pro', '11',

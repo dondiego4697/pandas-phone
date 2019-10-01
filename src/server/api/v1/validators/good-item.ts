@@ -21,7 +21,7 @@ const goodItemCreateSchema = Joi.object().keys({
         )
         .optional().allow(null),
     memory_capacity: Joi.number()
-        .valid(dbAllowedValues['goodItem.memoryCapacity']).optional().allow(null),
+        .valid(dbAllowedValues['goodItem.iphoneMemoryCapacity']).optional().allow(null),
     original: Joi.boolean().optional(),
     search_tags: Joi.array().items(
         Joi.string().valid(dbAllowedValues['goodItem.searchTag'])

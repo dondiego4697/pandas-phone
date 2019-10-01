@@ -6,23 +6,30 @@
     &__container {
         margin: auto;
         width: 80%;
-        height: 80%;
         display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 2vw;
     }
 
     &__paper-wrapper {
         width: 100%;
         height: 100%;
 
-        & .select-box {
+        & .select-box, & .edit-text {
             margin-top: 32px;
         }
+    }
 
-        & .switch {
-            margin-top: 16px;
-        }
+    &__switch-wrapper {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__switch-item-wrapper {
+        margin-right: 8px;
+    }
+
+    &__control-wrapper {
+        width: 200px;
+        margin-top: 16px;
+        margin-left: auto;
     }
 }

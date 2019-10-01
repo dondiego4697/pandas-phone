@@ -2,6 +2,7 @@
 
 .edit-text {
     font-family: $font-family-main;
+    height: 50px;
 
     &__wrapper {
         flex: 0 0 100%;
@@ -20,14 +21,14 @@
     &__input-text {
         display: block;
         margin: 0;
-        padding: 0.8rem 1.6rem;
+        padding: 15px;
         width: 100%;
-        font-size: 1rem;
-        line-height: 1.8;
+        font-size: $text-size;
         border: none;
         border-radius: 0.4rem;
         transition: box-shadow 300ms;
-        background-color: #F0F0F0;
+        background-color: $component-item-bg-color;
+        box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
 
         &::placeholder {
             color: #b9b8b8;
@@ -35,7 +36,6 @@
 
         &:focus {
             outline: none;
-            box-shadow: 0.2rem 0.2rem 0.6rem #F0F0F0;
         }
     }
 

@@ -3,7 +3,13 @@ import {observable, action, runInAction} from 'mobx';
 import {PageStatus} from '@denstep-core/libs/types';
 import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
 
-const EMPTY_GOOD_ITEM = {} as IGoodItem;
+const EMPTY_GOOD_ITEM = {
+    type: 'iphone',
+    original: true,
+    public: false,
+    discount: 0
+} as IGoodItem;
+
 export class GoodItemEditPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public goodItem = EMPTY_GOOD_ITEM;

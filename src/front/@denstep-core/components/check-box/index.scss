@@ -1,0 +1,54 @@
+@import '../../const/styles.scss';
+
+.check-box {
+
+    &__container {
+        & p {
+            font-family: $font-family-main;
+            font-size: $text-size;
+            color: $text-color;
+            font-weight: 700;
+            user-select: none;
+        }
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    &__item {
+        display: inline;
+        margin-right: 8px;
+    }
+
+    &__item-label {
+        display: inline-block;
+        background-color: $component-item-bg-color;
+        color: $text-color;
+        font-family: $font-family-main;
+        font-size: $text-size;
+
+        border-radius: 25px;
+        white-space: nowrap;
+        margin: 3px 0px;
+        user-select: none;
+        transition: all .2s;
+
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    &__item {
+        & input[type='checkbox']:checked + .check-box__item-label {
+            background-color: $primary-dark-color;
+            color: white;
+            transition: all .2s;
+        }
+
+        & input[type='checkbox'] {
+            display: none;
+        }
+    }
+}

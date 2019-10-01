@@ -52,16 +52,16 @@ export class GoodItemsPage extends React.Component<IProps> {
                                     }}
                                 />
                             </div>
-                            <div className={b('pagination-container')}>
-                                <Pagination
-                                    limit={this.props.goodItemsPageModel!.limit}
-                                    offset={this.props.goodItemsPageModel!.offset}
-                                    total={this.props.goodItemsPageModel!.total}
-                                    onChange={this.onPaginationChageHandler}
-                                />
-                            </div>
                         </div>
                     </Paper>
+                    <div className={b('pagination-container')}>
+                        <Pagination
+                            limit={this.props.goodItemsPageModel!.limit}
+                            offset={this.props.goodItemsPageModel!.offset}
+                            total={this.props.goodItemsPageModel!.total}
+                            onChange={this.onPaginationChageHandler}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -76,7 +76,7 @@ export class GoodItemsPage extends React.Component<IProps> {
     }
 
     private onDeleteHandler = (data: any): void => {
-        console.log(data);
+        // TODO send request on Delete -> refresh data or show alert
     }
 
     private onPaginationChageHandler = (offset: number): void => {

@@ -13,7 +13,7 @@ export interface SelectBoxItem {
 }
 interface IProps {
     items: SelectBoxItem[];
-    selected?: string;
+    selected?: string | null;
     onChange: (key: string) => void;
     placeholder?: string;
 }
@@ -25,11 +25,13 @@ interface IState {
 export class SelectBox extends React.Component<IProps, IState> {
     public state = {opened: false}
 
+    public componentDidMount() {}
+
     public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')} >
-                    <div className={b('placeholder')}>{this.props.placeholder || ''}</div>
+                    <label className={b('placeholder')}>{this.props.placeholder || ''}</label>
                     <div
                         tabIndex={1}
                         onBlur={this.onBlurHandler}
