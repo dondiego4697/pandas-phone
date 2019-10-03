@@ -11,7 +11,7 @@
         display: block;
         width: 100%;
         margin: 0 auto;
-        font-family: $font-family-main;
+        font-family: $font-family-main_light;
         border-radius: 5px;
     }
 
@@ -22,10 +22,21 @@
         cursor: pointer;
         outline: none;
         user-select: none;
+
+        & svg {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            width: 16px;
+            opacity: 0.3;
+            transition: 0.2s ease;
+            user-select: none;
+        }
     }
 
     &__wrapper.opened {
-        .select-box__icon {
+        & svg {
             transform: translateY(-50%) rotate(180deg);
         }
 
@@ -40,25 +51,14 @@
         }
     }
 
-    &__icon {
-        position: absolute;
-        top: 50%;
-        right: 15px;
-        transform: translateY(-50%);
-        width: 16px;
-        opacity: 0.3;
-        transition: 0.2s ease;
-        user-select: none;
-    }
-
     &__input-text {
         display: none;
         width: 100%;
         margin: 0;
         padding: 15px;
-        background-color: $component-item-bg-color;
+        background-color:  $component-item-bg-color;
         border-radius: 5px;
-        font-size: $text-size;
+        font-size: 14px;
     }
 
     &__value.visible {
@@ -86,7 +86,7 @@
         overflow-y: scroll;
         max-height: 250px;
         border-radius: 5px;
-        font-size: $text-size;
+        font-size: 14px;
 
         animation-name: SelectBoxHideList;
         animation-duration: 1s;
@@ -113,16 +113,16 @@
         padding: 15px;
         background-color: white;
         user-select: none;
-        transition: all .2s ease;
+        transition: all 200ms ease;
 
         &:hover, &:focus {
-            color: $primary-dark-color;
+            color: $primary-color;
             cursor: pointer;
         }
     }
 
     &__option-selected {
-        color: $primary-dark-color;
+        color: $primary-color;
     }
 
     @keyframes SelectBoxHideList {
@@ -137,8 +137,10 @@
     &__placeholder {
         position: absolute;
         top: -50%;
-        font-size: 13px;
-        font-family: $font-family-main;
         user-select: none;
+        margin: 0;
+        font-size: 13px;
+        font-family: $font-family-main_bold;
+        color: $font-color_header_dark;
     }
 }

@@ -1,8 +1,11 @@
+@import '../../../@denstep-core/const/styles.scss';
+@import '../../../@denstep-core/const/fonts.scss';
+
 html, body, #root {
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #F0F6FB;
+    background: $bg-color_light;
 }
 
 .admin {

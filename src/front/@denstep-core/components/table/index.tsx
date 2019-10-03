@@ -2,6 +2,13 @@ import * as React from 'react';
 
 import bevis from '@denstep-core/libs/bevis';
 import {ImageButton} from '@denstep-core/components/image-button';
+import {
+    pencilSvg,
+    plusSvg,
+    binSvg,
+    trueSvg,
+    falseSvg
+} from '@denstep-core/components/svg';
 
 import './index.scss';
 
@@ -41,12 +48,16 @@ export class Table extends React.Component<IProps> {
             <div className={b()}>
                 <div className={b('container')}>
                     <header>
-                        <h3>{this.props.header}</h3>
+                        <h2>{this.props.header}</h2>
                         <div className='add-item-button'>
-                            {this.props.editable.onAdd && <ImageButton
-                                src='/public/imgs/components/table/add.svg'
-                                onClick={this.onAddClickHandler}
-                            />}
+                            {
+                                this.props.editable.onAdd &&
+                                <ImageButton
+                                    onClick={this.onAddClickHandler}
+                                >
+                                    {plusSvg}
+                                </ImageButton>
+                            }
                         </div>
                     </header>
                     <div className={b('table-content')}>
@@ -72,9 +83,7 @@ export class Table extends React.Component<IProps> {
                 key={`table-header-${i}`}
                 className={b('header-item')}
             >
-                <span>
-                    {title}
-                </span>
+                <h2>{title}</h2>
             </th>
         ));
     }
@@ -87,23 +96,26 @@ export class Table extends React.Component<IProps> {
         const type = this.props.schema[index].type;
 
         if (type === 'boolean') {
-            return <img
-                className={b('boolean-row-item')}
-                src={`/public/imgs/components/table/${item}.svg`}
-            />;
+            return (
+                <div className={b('boolean-row-item')}>
+                    {item ? trueSvg : falseSvg}
+                </div>
+            );
         }
 
         if (type === 'array') {
             return (
                 <div className={b('array-row-item')}>
                     {(item as any[]).map((el, i) => (
-                        <span key={`array-row-item-${index}-${i}`}>{el}</span>
+                        <h2 key={`array-row-item-${index}-${i}`}>
+                            {el}
+                        </h2>
                     ))}
                 </div>
             );
         }
 
-        return String(item);
+        return <p>{item}</p>;
     }
 
     private renderRows(rows: any[][]) {
@@ -117,21 +129,27 @@ export class Table extends React.Component<IProps> {
                         key={`table-row-item-${j}`}
                         className={b('row-item')}
                     >
-                        <div>
-                            {this.renderRowItem(item, j)}
-                        </div>
+                        {this.renderRowItem(item, j)}
                     </td>
                 ))}
                 <td className={b('row-item')}>
                     <div className={b('row-controls-container')}>
-                        {this.props.editable.onEdit && <ImageButton
-                            src='/public/imgs/components/table/edit.svg'
-                            onClick={() => this.onEditClickHandler(this.props.items[i])}
-                        />}
-                        {this.props.editable.onDelete && <ImageButton
-                            src='/public/imgs/components/table/delete.svg'
-                            onClick={() => this.onDeleteClickHandler(this.props.items[i])}
-                        />}
+                        {
+                            this.props.editable.onEdit &&
+                            <ImageButton
+                                onClick={() => this.onEditClickHandler(this.props.items[i])}
+                            >
+                                {pencilSvg}
+                            </ImageButton>
+                        }
+                        {
+                            this.props.editable.onDelete &&
+                            <ImageButton
+                                onClick={() => this.onDeleteClickHandler(this.props.items[i])}
+                            >
+                                {binSvg}
+                            </ImageButton>
+                        }
                     </div>
                 </td>
             </tr>

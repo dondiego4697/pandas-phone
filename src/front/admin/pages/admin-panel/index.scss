@@ -7,8 +7,6 @@
 
     &__container {
         margin: auto;
-        width: 80%;
-        height: 80%;
     }
 
     &__items-container {
@@ -16,23 +14,5 @@
         padding: 64px;
         border-radius: 3px;
         list-style-type: none;
-
-        & li {
-            font-family: 'Open Sans', sans-serif;
-            margin-top: 8px;
-
-            & h1 {
-                font-size: 24px;
-
-                & a {
-                    text-decoration: none;
-                    color: $text-color;
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                }
-            }
-        }
     }
 }

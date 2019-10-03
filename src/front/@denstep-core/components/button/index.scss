@@ -8,27 +8,93 @@
 
     &__container {
         margin: 0;
-        font-family: $font-family-main;
-        border-radius: 5px;
-        background-color: #F23E59;
-        color: white;
-        text-align: center;
-        padding: 0.8rem 1.6rem;
-        transition: all .4s ease;
+        font-family: $font-family-main_bold;
+    }
 
-        &:hover {
-            background-color: #CA3248;
-            // box-shadow: 0.2rem 0.2rem 0.6rem #E8E8E8;
-            box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+    &__button {
+        width: 100%;
+        margin-top: 16px;
+
+        font-size: 16px;
+        line-height: 16px;
+        padding: 12px 24px;
+        border: none;
+        border-radius: .6rem;
+        font-weight: bolder;
+        cursor: pointer;
+        transition: all 120ms;
+        text-align: center;
+
+        &.dark {
+            box-shadow: 0 0.1rem 0.1rem transparent;
+            background-color: $primary-color;
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.1rem rgba(0,0,0,.3);
+                outline: 0;
+            }
+        }
+
+        &.light {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background-color: #FFFFFF;
+            color: $primary-color;
+
+            &:hover {
+                background-color: #F2F2F2;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
         }
     }
 
-    &__light {
-        background-color: #f0EDED !important;
-        color: black !important;
+    &__link {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 18px;
+        transition: all 120ms;
+        height: 34px;
 
-        &:hover {
-            background-color: #E5E2E2 !important;
+        &.dark {
+            color: $primary-color;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+
+        &.light {
+            color: #FFFFFF;
+            opacity: .8;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        & svg {
+            fill: currentColor;
+            margin-left: 8px;
+            margin-top: 4px;
+        }
+    }
+
+    &__simple {
+        border-radius: 6px;
+        padding: 12px 36px;
+        text-align: center;
+        transition: all 120ms;
+
+        &.dark {
+            box-shadow: 0 0.1rem 0.1rem transparent;
+            background-color: $secondary-color;
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+            }
         }
     }
 }

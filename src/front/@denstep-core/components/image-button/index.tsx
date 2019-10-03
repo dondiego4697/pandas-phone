@@ -7,7 +7,6 @@ import './index.scss';
 const b = bevis('image-button');
 
 interface IProps {
-    src: string;
     onClick: () => void;
 }
 
@@ -16,7 +15,7 @@ export class ImageButton extends React.Component<IProps> {
         return (
             <div className={b()} onClick={this.props.onClick}>
                 <div className={b('container')}>
-                    <img src={this.props.src} />
+                    {this.props.children}
                 </div>
             </div>
         );

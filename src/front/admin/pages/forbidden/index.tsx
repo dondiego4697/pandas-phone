@@ -2,16 +2,17 @@ import * as React from 'react';
 import {inject} from 'mobx-react';
 
 import bevis from '@denstep-core/libs/bevis';
+import {Text} from '@denstep-core/components/text';
 import {ClientDataModel} from 'admin/models/client-data';
 import {Bender} from 'admin/components/bender';
 
-const b = bevis('forbidden');
+import './index.scss';
 
 interface IProps {
     clientDataModel?: ClientDataModel;
 }
 
-import './index.scss';
+const b = bevis('forbidden');
 
 @inject('clientDataModel')
 export class ForbiddenPage extends React.Component<IProps> {
@@ -35,9 +36,11 @@ export class ForbiddenPage extends React.Component<IProps> {
             <div className={b()}>
                 <Bender/>
                 <div className={b('auth-container')}>
-                    <div className={b('text')}>
-                        <h1>Forbidden</h1>
-                    </div>
+                    <Text
+                        text='Forbidden'
+                        colorPreset='dark'
+                        typePreset='header'
+                    />
                     <div className={b('login-button')} ref={this.telegramAuthRef}/>
                 </div>
             </div>

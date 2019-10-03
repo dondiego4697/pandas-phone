@@ -5,10 +5,9 @@ import {RouteComponentProps} from 'react-router';
 import bevis from '@denstep-core/libs/bevis';
 import {PageStatus} from '@denstep-core/libs/types';
 import {ScreenLocker} from '@denstep-core/components/screen-locker';
-import {Paper} from '@denstep-core/components/paper';
 import {Switch} from '@denstep-core/components/switch';
 import {CheckBox} from '@denstep-core/components/check-box';
-import {SelectBox} from '@denstep-core/components/select-box';
+import {SelectBox, ISelectBoxItem} from '@denstep-core/components/select-box';
 import {EditText} from '@denstep-core/components/edit-text';
 import {Button} from '@denstep-core/components/button';
 import {dbAllowedValues} from 'common/db-allowed-values';
@@ -34,7 +33,9 @@ const b = bevis('good-item-edit');
 export class GoodItemEditPage extends React.Component<IProps> {
 
     public componentDidMount(): void {
-        this.props.goodItemEditPageModel!.fetchData(this.props.match.params.goodItemId);
+        this.props.goodItemEditPageModel!
+            .fetchData(this.props.match.params.goodItemId)
+            .catch(() => this.props.history.replace('/bender-root/not-found'));
     }
 
     public componentWillUnmount(): void {
@@ -106,37 +107,36 @@ export class GoodItemEditPage extends React.Component<IProps> {
                         />
                     </div>
 
-                    <Paper>
-                        <div className={b('switch-wrapper')}>
-                            <div className={b('switch-item-wrapper')}>
-                                <Switch
-                                    label='Original:'
-                                    initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.original)}
-                                    onChange={(value) => this.updateGoodItem('original', value)}
-                                />
-                            </div>
-                            <div className={b('switch-item-wrapper')}>
-                                <Switch
-                                    label='Public:'
-                                    initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.public)}
-                                    onChange={(value) => this.updateGoodItem('public', value)}
-                                />
-                            </div>
-
-                            <div className={b('switch-item-wrapper')}>
-                                <CheckBox
-                                    label='Search tags:'
-                                    selected={(this.props.goodItemEditPageModel!.goodItem.search_tags || []).map(String)}
-                                    items={dbAllowedValues['goodItem.searchTag']}
-                                    onChange={(selected) => this.updateGoodItem('search_tags', selected)}
-                                />
-                            </div>
+                    <div className={b('switch-wrapper')}>
+                        <div className={b('switch-item-wrapper')}>
+                            <Switch
+                                label='Original:'
+                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.original)}
+                                onChange={(value) => this.updateGoodItem('original', value)}
+                            />
                         </div>
-                    </Paper>
+                        <div className={b('switch-item-wrapper')}>
+                            <Switch
+                                label='Public:'
+                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.public)}
+                                onChange={(value) => this.updateGoodItem('public', value)}
+                            />
+                        </div>
+                        <div className={b('switch-item-wrapper')}>
+                            <CheckBox
+                                label='Search tags:'
+                                selected={(this.props.goodItemEditPageModel!.goodItem.search_tags || []).map(String)}
+                                items={dbAllowedValues['goodItem.searchTag']}
+                                onChange={(selected) => this.updateGoodItem('search_tags', selected)}
+                            />
+                        </div>
+                    </div>
 
                     <div className={b('control-wrapper')}>
                         <Button
                             text='Save'
+                            colorPreset='dark'
+                            typePreset='button'
                             onClick={this.onSaveClickHandler}
                         />
                     </div>
@@ -145,7 +145,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
         );
     }
 
-    private updateGoodItem(key: string, value: any) {
+    private updateGoodItem(key: string, value: any): void {
         if (key === 'type') {
             this.props.goodItemEditPageModel!.clearData();
         }
@@ -153,11 +153,11 @@ export class GoodItemEditPage extends React.Component<IProps> {
         (this.props.goodItemEditPageModel!.goodItem as any)[key] = value;
     }
 
-    private getSelectValues(arr: string[]) {
+    private getSelectValues(arr: string[]): ISelectBoxItem[] {
         return arr.map((type) => ({key: type, value: type}));
     }
 
-    private getModelItems() {
+    private getModelItems(): ISelectBoxItem[] {
         if (this.props.goodItemEditPageModel!.goodItem.type === 'airpod') {
             return this.getSelectValues(dbAllowedValues['goodItem.airpod.model']);
         }
@@ -165,7 +165,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
         return this.getSelectValues(dbAllowedValues['goodItem.iphone.model']);
     }
 
-    private getColorItems() {
+    private getColorItems(): ISelectBoxItem[] {
         if (this.props.goodItemEditPageModel!.goodItem.type === 'airpod') {
             return this.getSelectValues(dbAllowedValues['goodItem.airpod.color']);
         }
@@ -173,7 +173,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
         return this.getSelectValues(dbAllowedValues['goodItem.iphone.color']);
     }
 
-    private onSaveClickHandler = () => {
+    private onSaveClickHandler = (): void => {
         this.props.goodItemEditPageModel!
             .updateGoodItem(this.props.match.params.goodItemId)
             .then(() => this.props.history.replace('/bender-root/good-items'))

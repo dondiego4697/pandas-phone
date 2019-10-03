@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
-import {Link} from 'react-router-dom';
+import {RouteComponentProps} from 'react-router';
 
 import {AdminPanelPageModel} from 'admin/models/admin-panel';
 import {Bender} from 'admin/components/bender';
-import {Paper} from '@denstep-core/components/paper';
 import bevis from '@denstep-core/libs/bevis';
+import {Button} from '@denstep-core/components/button';
 
 import './index.scss';
 
-interface IProps {
+interface IProps extends RouteComponentProps<{}> {
     adminPanelPageModel?: AdminPanelPageModel;
 }
 
@@ -23,22 +23,17 @@ export class AdminPanelPage extends React.Component<IProps> {
             <div className={b()}>
                 <Bender/>
                 <div className={b('container')}>
-                    <Paper>
-                        <div className={b('items-container')}>
-                            {this.props.adminPanelPageModel!.pages.map((page, i) =>
-                                <li key={`li-${page.path}-${i}`}>
-                                    <h1 key={`h1-${page.path}-${i}`}>
-                                        <Link
-                                            key={`link-${page.path}-${i}`}
-                                            to={`/bender-root${page.path}`}
-                                        >
-                                            {page.title}
-                                        </Link>
-                                    </h1>
-                                </li>
-                            )}
-                        </div>
-                    </Paper>
+                    <div className={b('items-container')}>
+                        {this.props.adminPanelPageModel!.pages.map((page, i) =>
+                            <Button
+                                key={`key-${page.path}-${i}`}
+                                text={page.title}
+                                typePreset='button'
+                                colorPreset='dark'
+                                onClick={() => this.props.history.push(page.path)}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         );

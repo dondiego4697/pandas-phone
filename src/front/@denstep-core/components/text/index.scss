@@ -1,0 +1,45 @@
+@import '../../const/styles.scss';
+
+.text {
+    width: 100%;
+
+    &__container {
+        width: 100%;
+        text-align: left;
+    }
+
+    &__header {
+        font-size: 4rem;
+        line-height: 1.2;
+        font-family: $font-family-main_bold;
+        margin: 0;
+        margin-bottom: 20px;
+
+        &.dark {
+            color: $font-color_header_dark;
+        }
+
+        &.light {
+            color: $font-color_header_light;
+        }
+    }
+
+    &__text {
+        font-size: 18px;
+        line-height: 2;
+        font-family: $font-family-main_light;
+        word-break: break-word;
+
+        &.dark {
+            color: $font-color_text_dark;
+        }
+
+        &.light {
+            color: $font-color_text_light;
+        }
+    }
+
+    &__align-center {
+        text-align: center;
+    }
+}

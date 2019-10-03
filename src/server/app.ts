@@ -58,6 +58,7 @@ export const app = express()
 if (config['app.isNodeStatic']) {
     app.use(config['app.publicPath'], express.static(path.resolve('./out/src/front')));
     app.use(`${config['app.publicPath']}/imgs`, express.static(path.resolve('./res/imgs')));
+    app.use(`${config['app.publicPath']}/fonts`, express.static(path.resolve('./res/fonts')));
 }
 
 app

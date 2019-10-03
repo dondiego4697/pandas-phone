@@ -2,6 +2,7 @@ import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
 import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
+import {ITableSchema} from '@denstep-core/components/table';
 
 export class GoodItemsPageModel {
     @observable public status = PageStatus.LOADING;
@@ -33,5 +34,53 @@ export class GoodItemsPageModel {
             .finally(() => {
                 this.status = PageStatus.DONE;
             });
+    }
+
+    public getTableSchema(): ITableSchema[] {
+        return [
+            {
+                key: 'type',
+                title: 'Type'
+            },
+            {
+                key: 'brand',
+                title: 'Brand'
+            },
+            {
+                key: 'model',
+                title: 'Model'
+            },
+            {
+                key: 'color',
+                title: 'Color'
+            },
+            {
+                key: 'memory_capacity',
+                title: 'Memory capacity'
+            },
+            {
+                key: 'original',
+                title: 'Original',
+                type: 'boolean'
+            },
+            {
+                key: 'search_tags',
+                title: 'Search tags',
+                type: 'array'
+            },
+            {
+                key: 'price',
+                title: 'Price'
+            },
+            {
+                key: 'discount',
+                title: 'Discount'
+            },
+            {
+                key: 'public',
+                title: 'Public',
+                type: 'boolean'
+            }
+        ];
     }
 }

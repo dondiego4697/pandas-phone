@@ -3,26 +3,22 @@
 .table {
     width: 100%;
     height: 100%;
-    color: $text-color;
+    color: $font-color_header_dark;
+    font-family: $font-family-main_bold;
 
     &__container {
         width: 100%;
         height: 100%;
 
-        font-family: $font-family-main;
-        font-size: 14px;
-        font-weight: 700;
-
         & header {
-            font-weight: 700;
-            background: #FAFAFA;
+            background: $bg-color_dark;
             border-radius: 5px;
             padding: 10px;
             display: flex;
 
-            & h3 {
+            & h2 {
                 margin: 0;
-                font-size: 1.35rem;
+                font-size: 20px;
             }
 
             & .add-item-button {
@@ -45,11 +41,18 @@
         padding: 6px 10px;
         padding-top: 5px;
         padding-bottom: 3px;
+
+        & h2 {
+            margin: 0;
+            font-size: 15px;
+        }
     }
 
     &__row {
+        background: $bg-color_light;
+
         &:nth-child(2n) {
-            background: #FAFAFA;
+            background: $bg-color_dark;
         }
     }
 
@@ -64,9 +67,13 @@
 
     &__row-item {
         padding: 10px;
+        min-width: 80px;
 
-        font-weight: 400;
-        font-size: 13px;
+        & p {
+            margin: 0;
+            font-size: 12px;
+            font-family: $font-family-main_light;
+        }
     }
 
     &__boolean-row-item {
@@ -78,13 +85,16 @@
         display: flex;
         flex-direction: column;
 
-        & span {
-            padding: 4px 8px;
+        & h2 {
+            font-size: 12px;
+            margin: 0;
             margin-top: 2px;
             border-radius: 20px;
+            padding: 4px 8px;
+            background: $primary-color;
+            color: #FFFFFF;
             text-align: center;
-            color: $text-color;
-            background: $component-item-bg-color;
+            font-family: $font-family-main_light;
         }
     }
 }

@@ -7,11 +7,11 @@ interface IPage {
 export class AdminPanelPageModel {
     @observable public pages: IPage[] = [
         {
-            path: '/good-items',
+            path: '/bender-root/good-items',
             title: 'Good items'
         },
         {
-            path: '/orders',
+            path: '/bender-root/orders',
             title: 'Orders'
         }
     ];

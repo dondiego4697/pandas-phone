@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 
 import bevis from '@denstep-core/libs/bevis';
+import {paginationArrowSvg} from '@denstep-core/components/svg';
 
 import './index.scss';
 
@@ -54,7 +55,7 @@ export class Pagination extends React.Component<IProps> {
                 })}
                 onClick={() => this.onButtonClickHandler(direction)}
             >
-                <div/>
+                {paginationArrowSvg}
             </div>
         );
     }

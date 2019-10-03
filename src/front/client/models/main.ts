@@ -3,7 +3,7 @@ import {observable, action, runInAction} from 'mobx';
 import {PageStatus} from '@denstep-core/libs/types';
 import {getBarItems, getIphoneEnums} from 'client/libs/request';
 import {ClientCookie} from 'client/libs/cookie';
-import {SelectBoxItem} from '@denstep-core/components/select-box';
+import {ISelectBoxItem} from '@denstep-core/components/select-box';
 import {iPhoneModelMapper} from 'client/libs/text-mapper';
 
 export interface IAirpod {
@@ -35,7 +35,7 @@ export class MainPageModel {
     @observable public cartCount = 0;
     @observable public showAddedToCartPopup = false;
 
-    @observable public iphoneSelectData: SelectBoxItem[] = [];
+    @observable public iphoneSelectData: ISelectBoxItem[] = [];
     @observable public iphoneSelectItem: string | undefined;
 
     @action public fetchData(): void {

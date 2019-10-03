@@ -5,9 +5,8 @@
     height: 32px;
     border-radius: 50%;
     cursor: pointer;
-    transition: 0.5s ease;
     display: flex;
-    transition: all .2 ease;
+    transition: all 500ms ease;
 
     &:hover {
         background: $component-item-bg-color;
@@ -18,9 +17,10 @@
         width: 16px;
         height: 16px;
 
-        & img {
+        & svg {
             width: 16px;
             height: 16px;
+            fill: $font-color_header_dark;
         }
     }
 }

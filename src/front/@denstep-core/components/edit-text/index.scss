@@ -1,7 +1,7 @@
 @import '../../const/styles.scss';
 
 .edit-text {
-    font-family: $font-family-main;
+    font-family: $font-family-main_bold;
     height: 50px;
 
     &__wrapper {
@@ -23,7 +23,7 @@
         margin: 0;
         padding: 15px;
         width: 100%;
-        font-size: $text-size;
+        font-size: 14px;
         border: none;
         border-radius: 0.4rem;
         transition: box-shadow 300ms;

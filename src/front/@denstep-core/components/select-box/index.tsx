@@ -2,17 +2,18 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 
 import bevis from '@denstep-core/libs/bevis';
+import {angleDownSvg} from '@denstep-core/components/svg';
 
 import './index.scss';
 
 const b = bevis('select-box');
 
-export interface SelectBoxItem {
+export interface ISelectBoxItem {
     key: string;
     value: string;
 }
 interface IProps {
-    items: SelectBoxItem[];
+    items: ISelectBoxItem[];
     selected?: string | null;
     onChange: (key: string) => void;
     placeholder?: string;
@@ -56,12 +57,7 @@ export class SelectBox extends React.Component<IProps, IState> {
                                 </div>
                             );
                         })}
-                        <img
-                            className={b('icon')}
-                            src='/public/imgs/components/select-box/angle-down.svg'
-                            alt='Arrow Icon'
-                            aria-hidden='true'
-                        />
+                        {angleDownSvg}
                     </div>
                     <ul className={b('list')}>
                         {this.props.items.map((item, i) => {
