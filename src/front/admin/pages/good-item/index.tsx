@@ -4,16 +4,17 @@ import {RouteComponentProps} from 'react-router';
 
 import bevis from '@denstep-core/libs/bevis';
 import {PageStatus} from '@denstep-core/libs/types';
-import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {Switch} from '@denstep-core/components/switch';
 import {CheckBox} from '@denstep-core/components/check-box';
 import {SelectBox, ISelectBoxItem} from '@denstep-core/components/select-box';
+import {Text} from '@denstep-core/components/text';
 import {EditText} from '@denstep-core/components/edit-text';
+import {getAdminSimpleError} from '@denstep-core/components/popup';
 import {Button} from '@denstep-core/components/button';
+import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {dbAllowedValues} from 'common/db-allowed-values';
 import {ClientDataModel} from 'admin/models/client-data';
-import {Bender} from 'admin/components/bender';
-import {GoodItemEditPageModel} from 'admin/models/good-item-edit';
+import {GoodItemPageModel} from 'admin/models/good-item';
 
 import './index.scss';
 
@@ -23,70 +24,88 @@ interface IRouteParams {
 
 interface IProps extends RouteComponentProps<IRouteParams> {
     clientDataModel?: ClientDataModel;
-    goodItemEditPageModel?: GoodItemEditPageModel;
+    goodItemPageModel?: GoodItemPageModel;
 }
 
-const b = bevis('good-item-edit');
+const b = bevis('good-item-page');
 
-@inject('clientDataModel', 'goodItemEditPageModel')
+@inject('clientDataModel', 'goodItemPageModel')
 @observer
-export class GoodItemEditPage extends React.Component<IProps> {
+export class GoodItemPage extends React.Component<IProps> {
 
     public componentDidMount(): void {
-        this.props.goodItemEditPageModel!
+        this.props.goodItemPageModel!
             .fetchData(this.props.match.params.goodItemId)
             .catch(() => this.props.history.replace('/bender-root/not-found'));
     }
 
     public componentWillUnmount(): void {
-        this.props.goodItemEditPageModel!.clearData();
+        this.props.goodItemPageModel!.clearData();
     }
 
     public render(): React.ReactNode {
-        if (this.props.goodItemEditPageModel!.status === PageStatus.LOADING) {
-            return <ScreenLocker preset='#blue'/>;
-        }
+        const {
+            id,
+            type,
+            brand,
+            model,
+            color,
+            memory_capacity,
+            price, discount,
+            original, public: isPublic,
+            search_tags
+
+        } = this.props.goodItemPageModel!.goodItem;
 
         return (
             <div className={b()}>
-                <Bender/>
+                <ScreenLocker
+                    transparent={true}
+                    show={this.props.goodItemPageModel!.status === PageStatus.LOADING}
+                />
+                <Text
+                    text={`Good item: ${id || 'new'}`}
+                    typePreset='header'
+                    colorPreset='dark'
+                    className={b('text-header')}
+                />
                 <div className={b('container')}>
                     <div className={b('paper-wrapper')}>
                         <SelectBox
                             placeholder='Type'
                             items={this.getSelectValues(dbAllowedValues['goodItem.type'])}
-                            selected={this.props.goodItemEditPageModel!.goodItem.type}
+                            selected={type}
                             onChange={(key) => this.updateGoodItem('type', key)}
                         />
                         <SelectBox
                             placeholder='Brand'
                             items={this.getSelectValues(dbAllowedValues['goodItem.brand'])}
-                            selected={this.props.goodItemEditPageModel!.goodItem.brand}
+                            selected={brand}
                             onChange={(key) => this.updateGoodItem('brand', key)}
                         />
 
                         <SelectBox
                             placeholder='Model'
                             items={this.getModelItems()}
-                            selected={this.props.goodItemEditPageModel!.goodItem.model}
+                            selected={model}
                             onChange={(key) => this.updateGoodItem('model', key)}
                         />
 
                         <SelectBox
                             placeholder='Color'
                             items={this.getColorItems()}
-                            selected={this.props.goodItemEditPageModel!.goodItem.color}
+                            selected={color}
                             onChange={(key) => this.updateGoodItem('color', key)}
                         />
 
                         {
-                            this.props.goodItemEditPageModel!.goodItem.type !== 'airpod' &&
+                            type !== 'airpod' &&
                             <SelectBox
                                 placeholder='Memory capacity'
                                 items={this.getSelectValues(
                                     dbAllowedValues['goodItem.iphoneMemoryCapacity'].map(String)
                                 )}
-                                selected={String(this.props.goodItemEditPageModel!.goodItem.memory_capacity)}
+                                selected={String(memory_capacity)}
                                 onChange={(key) => this.updateGoodItem('memory_capacity', key)}
                             />
                         }
@@ -94,14 +113,14 @@ export class GoodItemEditPage extends React.Component<IProps> {
                         <EditText
                             id='good-item-price-edit-text'
                             placeholder='Price'
-                            value={String(this.props.goodItemEditPageModel!.goodItem.price || '')}
+                            value={String(price)}
                             onChange={(value) => this.updateGoodItem('price', value)}
                             options={{type: 'number', minValue: 0}}
                         />
                         <EditText
                             id='good-item-discount-edit-text'
                             placeholder='Discount'
-                            value={String(this.props.goodItemEditPageModel!.goodItem.discount)}
+                            value={String(discount)}
                             onChange={(value) => this.updateGoodItem('discount', value)}
                             options={{type: 'number', minValue: 0, maxValue: 100}}
                         />
@@ -111,22 +130,22 @@ export class GoodItemEditPage extends React.Component<IProps> {
                         <div className={b('switch-item-wrapper')}>
                             <Switch
                                 label='Original:'
-                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.original)}
+                                initialValue={Boolean(original)}
                                 onChange={(value) => this.updateGoodItem('original', value)}
                             />
                         </div>
                         <div className={b('switch-item-wrapper')}>
                             <Switch
                                 label='Public:'
-                                initialValue={Boolean(this.props.goodItemEditPageModel!.goodItem.public)}
+                                initialValue={Boolean(isPublic)}
                                 onChange={(value) => this.updateGoodItem('public', value)}
                             />
                         </div>
                         <div className={b('switch-item-wrapper')}>
                             <CheckBox
                                 label='Search tags:'
-                                selected={(this.props.goodItemEditPageModel!.goodItem.search_tags || []).map(String)}
-                                items={dbAllowedValues['goodItem.searchTag']}
+                                selected={(search_tags).map(String)}
+                                items={this.getSelectValues(dbAllowedValues['goodItem.searchTag'])}
                                 onChange={(selected) => this.updateGoodItem('search_tags', selected)}
                             />
                         </div>
@@ -147,10 +166,10 @@ export class GoodItemEditPage extends React.Component<IProps> {
 
     private updateGoodItem(key: string, value: any): void {
         if (key === 'type') {
-            this.props.goodItemEditPageModel!.clearData();
+            this.props.goodItemPageModel!.clearData();
         }
 
-        (this.props.goodItemEditPageModel!.goodItem as any)[key] = value;
+        (this.props.goodItemPageModel!.goodItem as any)[key] = value;
     }
 
     private getSelectValues(arr: string[]): ISelectBoxItem[] {
@@ -158,7 +177,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
     }
 
     private getModelItems(): ISelectBoxItem[] {
-        if (this.props.goodItemEditPageModel!.goodItem.type === 'airpod') {
+        if (this.props.goodItemPageModel!.goodItem.type === 'airpod') {
             return this.getSelectValues(dbAllowedValues['goodItem.airpod.model']);
         }
 
@@ -166,7 +185,7 @@ export class GoodItemEditPage extends React.Component<IProps> {
     }
 
     private getColorItems(): ISelectBoxItem[] {
-        if (this.props.goodItemEditPageModel!.goodItem.type === 'airpod') {
+        if (this.props.goodItemPageModel!.goodItem.type === 'airpod') {
             return this.getSelectValues(dbAllowedValues['goodItem.airpod.color']);
         }
 
@@ -174,9 +193,11 @@ export class GoodItemEditPage extends React.Component<IProps> {
     }
 
     private onSaveClickHandler = (): void => {
-        this.props.goodItemEditPageModel!
-            .updateGoodItem(this.props.match.params.goodItemId)
-            .then(() => this.props.history.replace('/bender-root/good-items'))
-            .catch((err) => alert(err.response.data.message));
+        this.props.goodItemPageModel!
+            .updateGoodItem()
+            .then(() => this.props.history.replace('/bender-root'))
+            .catch((err) => this.props.clientDataModel!.setPopupContent(
+                getAdminSimpleError(err.response.data.message)
+            ));
     }
 }

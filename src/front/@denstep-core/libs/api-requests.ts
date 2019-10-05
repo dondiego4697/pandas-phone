@@ -17,24 +17,51 @@ function postRequest<T>(url: string, data: any): Promise<T> {
         .then((response) => response.data);
 }
 
-export interface IGoodItem {
-    id: string;
+interface IGoodItemBase {
     type: 'iphone' | 'airpod';
     brand: string | null;
     color: string | null;
     model: string | null;
     memory_capacity: number | null;
-    search_tags: string[] | null;
+    search_tags: string[];
+    original: boolean;
     price: number;
     discount: number;
+}
+
+export interface IGoodItem extends IGoodItemBase {
+    id: string;
     public: boolean;
-    original: boolean;
     updated: string;
 }
 
 interface IGoodItemsResponse {
     total: number;
     rows: IGoodItem[];
+}
+
+export interface IOrder {
+    id: string;
+    called: boolean;
+    customer_name: string;
+    customer_phone: string;
+    order_date: string;
+    _status_v1: string | null;
+}
+
+interface IOrdersResponse {
+    total: number;
+    rows: IOrder[];
+}
+
+export interface IOrderItemFull extends IOrderItem, IGoodItemBase {}
+
+export interface IOrderItem {
+    id: string;
+    good_item_id: string;
+    order_item_id: string;
+    serial_number: string | null;
+    imei: string | null;
 }
 
 export class AdminRequest {
@@ -60,6 +87,69 @@ export class AdminRequest {
 
     static deleteGoodItem(id: string): Promise<IGoodItem> {
         return postRequest<IGoodItem>(`/api/v1/good_item/${id}/delete`, {});
+    }
+
+    static getOrders(params: IDefaultParams): Promise<IOrdersResponse> {
+        const {limit, offset} = params;
+        return getRequest<IOrdersResponse>(`/api/v1/order?limit=${limit}&offset=${offset}`);
+    }
+
+    static getOrder(id: string): Promise<IOrder> {
+        return getRequest<IOrder>(`/api/v1/order/${id}`);
+    }
+
+    static getOrderItems(id: string): Promise<IOrderItemFull[]> {
+        return getRequest<IOrderItemFull[]>(`/api/v1/order/${id}/items`);
+    }
+
+    static createOrder(order: IOrder): Promise<IOrder> {
+        return postRequest<IOrder>('/api/v1/order/create', order);
+    }
+
+    static updateOrder(order: IOrder): Promise<IOrder> {
+        const {id} = order;
+        delete order.id;
+
+        return postRequest<IOrder>(`/api/v1/order/${id}/update`, order);
+    }
+
+    static resolveOrder(id: string): Promise<IOrder> {
+        return postRequest<IOrder>(`/api/v1/order/${id}/update`, {
+            _status_v1: 'resolve'
+        });
+    }
+
+    static rejectOrder(id: string): Promise<IOrder> {
+        return postRequest<IOrder>(`/api/v1/order/${id}/update`, {
+            _status_v1: 'reject'
+        });
+    }
+
+    static deleteOrderItem(id: string): Promise<IOrderItem> {
+        return postRequest<IOrderItem>(`/api/v1/order_item/${id}/delete`, {});
+    }
+
+    static getOrderItem(id: string): Promise<IOrderItem> {
+        return getRequest<IOrderItem>(`/api/v1/order_item/${id}`);
+    }
+
+    static createOrderItem(orderId: string, orderItem: IOrderItem): Promise<IOrderItem> {
+        const body = {
+            order_id: orderId,
+            good_item_id: orderItem.good_item_id,
+            serial_number: orderItem.serial_number,
+            imei: orderItem.imei
+        };
+        return postRequest<IOrderItem>('/api/v1/order_item/create', body);
+    }
+
+    static updateOrderItem(orderItem: IOrderItem): Promise<IOrderItem> {
+        const body = {
+            good_item_id: orderItem.good_item_id,
+            serial_number: orderItem.serial_number,
+            imei: orderItem.imei
+        };
+        return postRequest<IOrderItem>(`/api/v1/order_item/${orderItem.order_item_id}/update`, body);
     }
 }
 

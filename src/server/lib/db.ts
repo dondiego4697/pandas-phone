@@ -53,12 +53,12 @@ export function makeInsertText(tableName: string, fields: string[]): string {
     `;
 }
 
-export function makeUpdateText(tableName: string, fields: string[]): string {
+export function makeUpdateText(tableName: string, fields: string[], returning = '*'): string {
     if (fields.length === 1) {
         return `
             UPDATE ${tableName}
             SET ${fields.join(', ')}=${fields.map((_, i) => `$${i + 2}`).join(', ')}
-            WHERE id=$1 RETURNING *;
+            WHERE id=$1 RETURNING ${returning};
         `;
     }
 

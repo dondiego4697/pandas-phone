@@ -12,25 +12,45 @@ import {makeTransactionRequest} from 'server/db/client';
 import {OrderItemValidatorRequest} from 'server/api/v1/validators/order-item';
 
 const TABLE_NAME = 'order_item';
+const ORDER_ITEM_SELECT = `
+    good_item.id as good_item_id,
+    order_item.id as order_item_id,
+    good_item.type,
+    good_item.model,
+    good_item.brand,
+    good_item.color,
+    good_item.memory_capacity,
+    good_item.original,
+    good_item.search_tags,
+    good_item.price,
+    good_item.discount,
+    order_item.serial_number,
+    order_item.imei
+`;
 
 export class OrderItemProvider {
+    static async getOrderItem(orderItemId: string) {
+        const {rows} = await makeRequest({
+            text: `
+                SELECT
+                    ${ORDER_ITEM_SELECT}
+                FROM order_item
+                    INNER JOIN good_item ON order_item.good_item_id = good_item.id
+                WHERE order_item.id=$1;
+            `,
+            values: [orderItemId]
+        });
+
+        return rows[0];
+    }
+
     static async getOrderItems(orderId: string, query: Record<string, any>) {
         const {limit, offset} = seizePaginationParams(query);
 
         const {rows} = await makeRequest({
             text: `
                 SELECT
-                    good_item.id as good_item_id,
-                    order_item.id as order_item_id,
-                    good_item.type,
-                    good_item.model,
-                    good_item.brand,
-                    good_item.color,
-                    good_item.memory_capacity,
-                    good_item.original,
-                    good_item.search_tags,
-                    order_item.serial_number,
-                    order_item.imei
+                    ${ORDER_ITEM_SELECT}
                 FROM order_item
                     INNER JOIN good_item ON order_item.good_item_id = good_item.id
                 WHERE order_id=$1

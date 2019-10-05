@@ -9,6 +9,8 @@ export interface IDbAllowedValues {
 
     'goodItem.airpod.model': string[];
     'goodItem.airpod.color': string[];
+
+    'order.status': string[];
 }
 
 export const dbAllowedValues: IDbAllowedValues = {
@@ -32,5 +34,6 @@ export const dbAllowedValues: IDbAllowedValues = {
         'coral', 'blue', 'black', 'rose_gold',
         'space_gray', 'product_red',
         'black_matte', 'black_jet', 'red'
-    ]
+    ],
+    'order.status': ['resolve', 'reject']
 };

@@ -29,7 +29,7 @@ interface IEditable {
 }
 
 interface IProps {
-    header: string;
+    header?: string;
     schema: ISchema[];
     items: Record<string, any>[];
     editable: IEditable;
@@ -47,19 +47,22 @@ export class Table extends React.Component<IProps> {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <header>
-                        <h2>{this.props.header}</h2>
-                        <div className='add-item-button'>
-                            {
-                                this.props.editable.onAdd &&
-                                <ImageButton
-                                    onClick={this.onAddClickHandler}
-                                >
-                                    {plusSvg}
-                                </ImageButton>
-                            }
-                        </div>
-                    </header>
+                    {
+                        (this.props.header || this.props.editable.onAdd) &&
+                        <header>
+                            <h2>{this.props.header}</h2>
+                            <div className='add-item-button'>
+                                {
+                                    this.props.editable.onAdd &&
+                                    <ImageButton
+                                        onClick={this.onAddClickHandler}
+                                    >
+                                        {plusSvg}
+                                    </ImageButton>
+                                }
+                            </div>
+                        </header>
+                    }
                     <div className={b('table-content')}>
                         <table>
                             <thead>
@@ -107,9 +110,9 @@ export class Table extends React.Component<IProps> {
             return (
                 <div className={b('array-row-item')}>
                     {(item as any[]).map((el, i) => (
-                        <h2 key={`array-row-item-${index}-${i}`}>
+                        <p key={`array-row-item-${index}-${i}`}>
                             {el}
-                        </h2>
+                        </p>
                     ))}
                 </div>
             );

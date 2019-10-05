@@ -8,9 +8,9 @@ import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {Pagination} from '@denstep-core/components/pagination';
 import {Table} from '@denstep-core/components/table';
 import {IGoodItem} from '@denstep-core/libs/api-requests';
+import {getAdminSimpleError} from '@denstep-core/components/popup';
 import {ClientDataModel} from 'admin/models/client-data';
-import {Bender} from 'admin/components/bender';
-import {GoodItemsPageModel} from 'admin/models/good-items';
+import {GoodItemsPageModel, GOOD_ITEMS_TABLE_SCHEMA} from 'admin/models/good-items';
 
 import './index.scss';
 
@@ -19,7 +19,7 @@ interface IProps extends RouteComponentProps<{}> {
     goodItemsPageModel?: GoodItemsPageModel;
 }
 
-const b = bevis('good-items');
+const b = bevis('good-items-page');
 
 @inject('clientDataModel', 'goodItemsPageModel')
 @observer
@@ -29,18 +29,17 @@ export class GoodItemsPage extends React.Component<IProps> {
     }
 
     public render(): React.ReactNode {
-        if (this.props.goodItemsPageModel!.status === PageStatus.LOADING) {
-            return <ScreenLocker preset='#blue'/>;
-        }
-
         return (
             <div className={b()}>
-                <Bender/>
+                <ScreenLocker
+                    transparent={true}
+                    show={this.props.goodItemsPageModel!.status === PageStatus.LOADING}
+                />
                 <div className={b('container')}>
                     <div className={b('table-container')}>
                         <Table
                             header='Good items'
-                            schema={this.props.goodItemsPageModel!.getTableSchema()}
+                            schema={GOOD_ITEMS_TABLE_SCHEMA}
                             items={this.props.goodItemsPageModel!.data}
                             editable={{
                                 onAdd: this.onAddHandler,
@@ -66,18 +65,20 @@ export class GoodItemsPage extends React.Component<IProps> {
         this.props.history.push('/bender-root/good-item/new');
     }
 
-    private onEditHandler = (data: any): void => {
-        this.props.history.push(`/bender-root/good-item/${data.id}`);
+    private onEditHandler = (goodItem: IGoodItem): void => {
+        this.props.history.push(`/bender-root/good-item/${goodItem.id}`);
     }
 
-    private onDeleteHandler = (data: IGoodItem): void => {
+    private onDeleteHandler = (goodItem: IGoodItem): void => {
         if (!confirm('Are you sure?')) {
             return;
         }
 
-        this.props.goodItemsPageModel!.deleteGoodItem(data.id)
+        this.props.goodItemsPageModel!.deleteGoodItem(goodItem.id)
             .then(() => this.props.goodItemsPageModel!.fetchData())
-            .catch((err) => alert(err.response.data.message));
+            .catch((err) => this.props.clientDataModel!.setPopupContent(
+                getAdminSimpleError(err.response.data.message)
+            ));
     }
 
     private onPaginationChageHandler = (offset: number): void => {

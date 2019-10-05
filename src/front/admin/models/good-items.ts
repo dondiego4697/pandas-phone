@@ -35,52 +35,54 @@ export class GoodItemsPageModel {
                 this.status = PageStatus.DONE;
             });
     }
-
-    public getTableSchema(): ITableSchema[] {
-        return [
-            {
-                key: 'type',
-                title: 'Type'
-            },
-            {
-                key: 'brand',
-                title: 'Brand'
-            },
-            {
-                key: 'model',
-                title: 'Model'
-            },
-            {
-                key: 'color',
-                title: 'Color'
-            },
-            {
-                key: 'memory_capacity',
-                title: 'Memory capacity'
-            },
-            {
-                key: 'original',
-                title: 'Original',
-                type: 'boolean'
-            },
-            {
-                key: 'search_tags',
-                title: 'Search tags',
-                type: 'array'
-            },
-            {
-                key: 'price',
-                title: 'Price'
-            },
-            {
-                key: 'discount',
-                title: 'Discount'
-            },
-            {
-                key: 'public',
-                title: 'Public',
-                type: 'boolean'
-            }
-        ];
-    }
 }
+
+export const GOOD_ITEMS_TABLE_SCHEMA: ITableSchema[] = [
+    {
+        key: 'id',
+        title: 'ID'
+    },
+    {
+        key: 'type',
+        title: 'Type'
+    },
+    {
+        key: 'brand',
+        title: 'Brand'
+    },
+    {
+        key: 'model',
+        title: 'Model'
+    },
+    {
+        key: 'color',
+        title: 'Color'
+    },
+    {
+        key: 'memory_capacity',
+        title: 'Memory capacity'
+    },
+    {
+        key: 'original',
+        title: 'Original',
+        type: 'boolean'
+    },
+    {
+        key: 'search_tags',
+        title: 'Search tags',
+        type: 'array'
+    },
+    {
+        key: 'price',
+        title: 'Price'
+    },
+    {
+        key: 'discount',
+        title: 'Discount'
+    },
+    {
+        key: 'public',
+        title: 'Public',
+        type: 'boolean'
+    }
+];

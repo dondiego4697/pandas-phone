@@ -3,12 +3,13 @@ import {Switch, Route} from 'react-router-dom';
 import {inject} from 'mobx-react';
 
 import App from 'admin/pages/app';
-import {AdminPanelPage} from 'admin/pages/admin-panel';
-
 import {ForbiddenPage} from 'admin/pages/forbidden';
 import {NotFoundPage} from 'admin/pages/not-found';
 import {GoodItemsPage} from 'admin/pages/good-items';
-import {GoodItemEditPage} from 'admin/pages/good-item-edit';
+import {GoodItemPage} from 'admin/pages/good-item';
+import {OrdersPage} from 'admin/pages/orders';
+import {OrderPage} from 'admin/pages/order';
+import {OrderItemPage} from 'admin/pages/order-item';
 
 import {ClientDataModel} from 'admin/models/client-data';
 
@@ -27,19 +28,17 @@ export class RoutesApp extends React.Component<IProps> {
     }
 
     private renderRouter(): React.ReactNode {
-        const {forbidden} = this.props.clientDataModel!;
-
-        if (forbidden) {
+        if (this.props.clientDataModel!.forbidden) {
             return <ForbiddenPage />;
         }
 
         return (
             <Switch>
-                <Route exact path='/bender-root' component={AdminPanelPage} />
-                <Route exact path='/bender-root/good-items' component={GoodItemsPage} />
-                <Route exact path='/bender-root/good-item/:goodItemId' component={GoodItemEditPage} />
-                {/* <Route exact path='/bender-root/orders' component={OrdersPage} /> */}
-                {/* <Route exact path='/bender-root/order/:orderId' component={OrderPage} />; */}
+                <Route exact path='/bender-root' component={GoodItemsPage} />
+                <Route exact path='/bender-root/good-item/:goodItemId' component={GoodItemPage} />
+                <Route exact path='/bender-root/orders' component={OrdersPage} />
+                <Route exact path='/bender-root/order/:orderId' component={OrderPage} />
+                <Route exact path='/bender-root/order/:orderId/item/:orderItemId' component={OrderItemPage} />
                 <Route component={NotFoundPage} />
             </Switch>
         );

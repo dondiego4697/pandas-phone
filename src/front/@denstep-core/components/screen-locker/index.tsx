@@ -8,15 +8,21 @@ import './index.scss';
 const b = bevis('screen-locker');
 
 interface IProps {
-    preset: '#blue';
+    transparent?: boolean;
+    show?: boolean;
 }
 
 export class ScreenLocker extends React.Component<IProps> {
     public render(): React.ReactNode {
+        document.body.style.overflow = this.props.show ? 'hidden' : 'scroll';
+
         return (
-            <div className={b()}>
+            <div className={classnames(b(), {
+                ['transparent']: this.props.transparent,
+                ['hidden']: !this.props.show
+            })}>
                 <div className={classnames(b('container'), {
-                    [b('preset_blue')]: this.props.preset === '#blue'
+                    [b('blue')]: true
                 })}>
                     {
                         (new Array(9))

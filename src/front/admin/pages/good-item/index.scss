@@ -1,18 +1,25 @@
-.good-item-edit {
+.good-item-page {
     display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100vh;
 
+    &__text-header {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 32px;
+
+        & .text__header {
+            font-size: 2rem;
+        }
+    }
+
     &__container {
-        margin: auto;
+        margin: 0 auto;
         width: 80%;
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 2vw;
-
-        & .paper {
-            margin-top: 32px;
-        }
     }
 
     &__paper-wrapper {
@@ -39,7 +46,6 @@
     }
 
     &__control-wrapper {
-        width: 200px;
         margin-top: 16px;
         margin-left: auto;
         grid-column: 2;

@@ -7,6 +7,10 @@ import {OrderItemProvider} from 'server/api/v1/providers/order-item';
 
 export const orderItemRouter = express.Router();
 
+orderItemRouter.get('/:id', wrap<Request, Response>(async (req, res) => {
+    res.json(await OrderItemProvider.getOrderItem(req.params.id));
+}));
+
 orderItemRouter.post('/create', wrap<Request, Response>(async (req, res) => {
     const client = await getPgClient();
     try {

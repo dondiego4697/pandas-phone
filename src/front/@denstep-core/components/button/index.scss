@@ -12,28 +12,27 @@
     }
 
     &__button {
-        width: 100%;
         margin-top: 16px;
 
         font-size: 16px;
         line-height: 16px;
         padding: 12px 24px;
         border: none;
-        border-radius: .6rem;
+        border-radius: 30px;
         font-weight: bolder;
         cursor: pointer;
         transition: all 120ms;
         text-align: center;
+        outline: 0;
 
         &.dark {
-            box-shadow: 0 0.1rem 0.1rem transparent;
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
             background-color: $primary-color;
             color: #FFFFFF;
 
             &:hover {
                 opacity: .8;
-                box-shadow: 0 0.1rem 0.1rem rgba(0,0,0,.3);
-                outline: 0;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
             }
         }
 
@@ -43,7 +42,29 @@
             color: $primary-color;
 
             &:hover {
-                background-color: #F2F2F2;
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+
+        &.green {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background: linear-gradient(90deg, #01B197, #009A9D);
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+
+        &.red {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background: linear-gradient(90deg, #FF486D, #FC395F);
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
                 box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
             }
         }

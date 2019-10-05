@@ -6,11 +6,10 @@ CREATE TABLE IF NOT EXISTS admin (
     username TEXT UNIQUE NOT NULL
 );
 
-CREATE TYPE STAT_V1_STATUS_T as enum('resolve', 'reject');
 CREATE TABLE IF NOT EXISTS stat_v1 (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    status STAT_V1_STATUS_T NOT NULL,
-    data JSONB NOT NULL,
+    status TEXT NOT NULL,
+    data JSONB DEFAULT NULL,
     resolution_date TIMESTAMP WITH TIME ZONE DEFAULT now()  NOT NULL
 );
 
@@ -21,7 +20,7 @@ CREATE TABLE IF NOT EXISTS orders (
     called BOOLEAN DEFAULT FALSE NOT NULL,
     order_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
 
-    _status_v1 STAT_V1_STATUS_T DEFAULT NULL
+    _status_v1 TEXT DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS good_item (
@@ -34,7 +33,7 @@ CREATE TABLE IF NOT EXISTS good_item (
     memory_capacity INTEGER DEFAULT NULL,
     original BOOLEAN DEFAULT TRUE NOT NULL,
 
-    search_tags TEXT[] DEFAULT NULL,
+    search_tags TEXT[] NOT NULL DEFAULT '{}',
 
     price INTEGER NOT NULL,
     discount SMALLINT NOT NULL DEFAULT 0,
@@ -65,11 +64,13 @@ CREATE TABLE IF NOT EXISTS order_item (
 CREATE OR REPLACE FUNCTION setOrderResolution() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW._status_v1='resolve' OR NEW._status_v1='reject' THEN
+    IF NEW._status_v1='resolve' THEN
         IF (SELECT COUNT(*) FROM order_item WHERE order_id=NEW.id AND serial_number IS NULL) > 0 THEN
             RAISE EXCEPTION 'EMPTY_SERIAL_NUMBER';
         END IF;
+    END IF;
 
+    IF NEW._status_v1='resolve' OR NEW._status_v1='reject' THEN
         INSERT INTO stat_v1
             (status, data)
         VALUES (

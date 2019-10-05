@@ -1,7 +1,6 @@
 @import '../../const/styles.scss';
 
 .check-box {
-
     &__container {
         & p {
             font-family: $font-family-main_bold;
@@ -14,43 +13,98 @@
         }
     }
 
+    &__item {
+        margin-top: 16px;
+    }
+
     &__list {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-    &__item {
-        display: inline;
-        margin-right: 8px;
-    }
-
     &__item-label {
-        display: inline-block;
-        background-color: $component-item-bg-color;
-        color: $font-color_header_dark;
-        font-family: $font-family-main_bold;
-        font-size: 14px;
-
-        border-radius: 25px;
-        white-space: nowrap;
-        margin: 3px 0px;
-        user-select: none;
-        transition: all .2s;
-
-        padding: 8px 12px;
         cursor: pointer;
-    }
+        margin: auto;
+        height: 18px;
+        display: flex;
+        position: relative;
 
-    &__item {
-        & input[type='checkbox']:checked + .check-box__item-label {
-            background-color: $primary-color;
-            color: #FFFFFF;
-            transition: all .2s;
+        &:before {
+            content: "";
+            position: absolute;
+            top: -9px;
+            left: -9px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(#223254,.03);
+            opacity: 0;
+            transition: opacity .2s ease;
         }
 
-        & input[type='checkbox'] {
+        & svg {
+            z-index: 1;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke: $component-item-bg-color;
+            stroke-width: 1.5;
+            transform: translate3d(0,0,0);
+            transition: all .2s ease;
+
+            & path {
+                stroke-dasharray: 60;
+                stroke-dashoffset: 0;
+            }
+            & polyline {
+                stroke-dasharray: 22;
+                stroke-dashoffset: 66;
+            }
+        }
+
+        &:hover {
+            &:before {
+                opacity: 1;
+            }
+
+            svg {
+                stroke: $primary-color;
+            }
+        }
+
+        & span {
+            color: $font-color_header_dark;
+            font-family: $font-family-main_light;
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: middle;
+            transform: translate3d(0, 0, 0);
+            padding-left: 8px;
+            cursor: pointer;
+        }
+    }
+
+    &__item {
+        & input {
             display: none;
+        }
+
+        & input:checked + .check-box__item-label {
+            & svg {
+                stroke: $primary-color;
+
+                & path {
+                    stroke-dashoffset: 60;
+                    transition: all .3s linear;
+                }
+
+                & polyline {
+                    stroke-dashoffset: 42;
+                    transition: all .2s linear;
+                    transition-delay: .15s;
+                }
+            }
         }
     }
 }

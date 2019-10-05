@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {PhoneNumberFormat as PNF, PhoneNumberUtil} from 'google-libphonenumber';
 import * as classnames from 'classnames';
 
 import bevis from '@denstep-core/libs/bevis';
@@ -7,6 +8,7 @@ import {formatNumber} from '@denstep-core/libs/formatter';
 import './index.scss';
 
 const b = bevis('edit-text');
+const phoneUtil = PhoneNumberUtil.getInstance();
 
 interface INumberOptions {
     type: 'number';
@@ -14,12 +16,18 @@ interface INumberOptions {
     minValue?: number;
 }
 
+interface IPhoneNumberOptions {
+    type: 'phonenumber';
+}
+
+type Options = INumberOptions | IPhoneNumberOptions;
+
 interface IProps {
     id: string;
     placeholder: string;
     value: any;
     onChange: (value: string) => void;
-    options?: INumberOptions;
+    options?: Options;
 }
 
 interface IState {
@@ -64,19 +72,34 @@ export class EditText extends React.Component<IProps, IState> {
         );
     }
 
-    private format(value: string): string {
+    private format(rawValue: string): string {
         if (!this.props.options) {
-            return value;
+            return rawValue;
         }
 
         if (this.props.options.type === 'number') {
-            return formatNumber(value, {
+            return formatNumber(rawValue, {
                 min: this.props.options.minValue,
                 max: this.props.options.maxValue
             });
         }
 
-        return value;
+        if (this.props.options.type === 'phonenumber') {
+            let value = rawValue.replace(/[^\+0-9]/gim, '');
+            if (value.length <= 1 && value !== '+') {
+                return `+${value}`;
+            }
+
+            try {
+                const number = phoneUtil.parse(value, 'RU');
+                value = phoneUtil.format(number, PNF.INTERNATIONAL);
+                // tslint:disable-next-line
+            } catch (_) {} finally {
+                return value;
+            }
+        }
+
+        return rawValue;
     }
 
     private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

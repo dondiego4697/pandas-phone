@@ -25,7 +25,7 @@ const goodItemCreateSchema = Joi.object().keys({
     original: Joi.boolean().optional(),
     search_tags: Joi.array().items(
         Joi.string().valid(dbAllowedValues['goodItem.searchTag'])
-    ).min(1).optional().allow(null),
+    ).optional(),
     price: Joi.number().positive().required(),
     discount: Joi.number().min(0).max(100).optional(),
     public: Joi.boolean().optional()

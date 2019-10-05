@@ -6,21 +6,27 @@ import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
 const DEFAULT_GOOD_ITEM = {
     discount: 0,
     original: true,
+    price: 1,
     public: false,
+    search_tags: [] as string[],
     type: 'iphone'
 } as IGoodItem;
 
 const NEW_ID = 'new';
 
-export class GoodItemEditPageModel {
+export class GoodItemPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public goodItem = DEFAULT_GOOD_ITEM;
+    @observable public isNewGoodItem = true;
 
     @action public fetchData(goodItemId: string): Promise<void> {
+        this.isNewGoodItem = goodItemId === NEW_ID;
+
         return new Promise((resolve, reject) => {
             runInAction(() => {
                 this.status = PageStatus.LOADING;
-                if (goodItemId === NEW_ID) {
+
+                if (this.isNewGoodItem) {
                     this.status = PageStatus.DONE;
                     resolve();
                     return;
@@ -29,10 +35,10 @@ export class GoodItemEditPageModel {
                 AdminRequest.getGoodItem(goodItemId)
                     .then((data) => {
                         this.goodItem = data;
-                        this.status = PageStatus.DONE;
                         resolve();
                     })
-                    .catch(reject);
+                    .catch(reject)
+                    .finally(() => this.status = PageStatus.DONE);
             });
         });
     }
@@ -41,10 +47,10 @@ export class GoodItemEditPageModel {
         this.goodItem = DEFAULT_GOOD_ITEM;
     }
 
-    @action public updateGoodItem(goodItemId: string): Promise<IGoodItem> {
+    @action public updateGoodItem(): Promise<IGoodItem> {
         this.status = PageStatus.LOADING;
 
-        if (goodItemId === NEW_ID) {
+        if (this.isNewGoodItem) {
             return AdminRequest
                 .createGoodItem(beautifyGoodItem(this.goodItem))
                 .finally(() => {
@@ -62,10 +68,6 @@ export class GoodItemEditPageModel {
 
 function beautifyGoodItem(goodItem: IGoodItem): IGoodItem {
     const newGoodItem = {...goodItem};
-
-    if (newGoodItem.search_tags && !newGoodItem.search_tags.length) {
-        newGoodItem.search_tags = null;
-    }
 
     delete newGoodItem.updated;
 

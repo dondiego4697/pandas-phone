@@ -15,12 +15,15 @@ interface IProps {
     typePreset: TypePreset;
     colorPreset: ColorPreset;
     textAlign?: 'center';
+    className?: string;
 }
 
 export class Text extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
-            <div className={b()}>
+            <div className={classnames(b(), {
+                ...(this.props.className ? {[this.props.className]: true}: {})
+            })}>
                 <div className={b('container')}>
                     {this.renderText()}
                 </div>

@@ -16,16 +16,22 @@ export class OrderProvider {
     static async getOpenedOrders(query: Record<string, any>) {
         const pagination = seizePaginationParams(query);
 
-        const {rows} = await makeRequest({
-            text: `
-                SELECT * FROM ${TABLE_NAME}
-                ORDER BY order_date DESC
-                LIMIT ${pagination.limit} OFFSET ${pagination.offset};
-            `,
-            values: []
-        });
+        const [{rows: [total]}, {rows}] = await Promise.all([
+            makeRequest({
+                text: `SELECT COUNT(*) FROM ${TABLE_NAME};`,
+                values: []
+            }),
+            makeRequest({
+                text: `
+                    SELECT * FROM ${TABLE_NAME}
+                    ORDER BY order_date DESC
+                    LIMIT ${pagination.limit} OFFSET ${pagination.offset};
+                `,
+                values: []
+            })
+        ]);
 
-        return rows;
+        return {total: Number(total.count), rows};
     }
 
     static async getOrder(id: string) {

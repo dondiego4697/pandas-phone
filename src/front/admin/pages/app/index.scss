@@ -8,7 +8,12 @@ html, body, #root {
     background: $bg-color_light;
 }
 
-.admin {
+.admin-page {
     width: 100%;
     display: flex;
+
+    &__container {
+        margin-top: 82px;
+        width: 100%;
+    }
 }

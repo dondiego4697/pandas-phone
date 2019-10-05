@@ -1,0 +1,14 @@
+.devider {
+    width: 100%;
+
+    &__container {
+        width: 100%;
+
+        & hr {
+            padding: 0;
+            border: none;
+            height: 1px;
+            background-color: #DADADA;
+        }
+    }
+}

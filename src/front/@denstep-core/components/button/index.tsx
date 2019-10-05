@@ -9,7 +9,7 @@ import './index.scss';
 const b = bevis('button');
 
 type TypePreset = 'simple' | 'button' | 'link';
-type ColorPreset = 'dark' | 'light';
+type ColorPreset = 'dark' | 'light' | 'green' | 'red';
 
 interface IProps {
     text: string;
