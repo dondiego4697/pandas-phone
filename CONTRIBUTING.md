@@ -12,7 +12,7 @@ export PANDA_PHONE_TELEGRAM_BOT_API_TOKEN=$(value)
 
 export NODEJS_PORT=$(value)
 export DISABLE_LOGGING=$(value)
-export ENVIRONMENT=$(value)
+export NODEJS_ENV=$(value)
 ```
 
 ## Database instruction

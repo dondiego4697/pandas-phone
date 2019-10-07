@@ -1,9 +1,12 @@
 import * as pg from 'pg';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as Boom from '@hapi/boom';
 
 import {logger} from 'server/lib/logger';
 
 import {config as dbConfig} from 'server/db/config';
+import {config as mainConfig} from 'server/config';
 
 const {Pool} = pg;
 
@@ -14,7 +17,12 @@ const config = {
     database: dbConfig.database,
     port: dbConfig.port,
     idleTimeoutMillis: 1000 * 60 * 2,
-    connectionTimeoutMillis: 2000
+    connectionTimeoutMillis: 2000,
+    ...(mainConfig['db.ssl'] ? {
+        ssl: {
+            cert: fs.readFileSync(path.resolve(`./res/db/allCAs.pem`)).toString()
+        }
+    } : {})
 };
 
 const pool = new Pool(config);

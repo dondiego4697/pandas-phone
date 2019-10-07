@@ -13,6 +13,7 @@ interface IConfig {
     'telegram.workChatId': number;
     'cors.origin': string;
     'telegram.disableAuth': boolean;
+    'db.ssl': boolean;
 }
 
 const production: IConfig = {
@@ -25,7 +26,8 @@ const production: IConfig = {
     'telegram.timeout': 3000,
     'telegram.workChatId': -363392954,
     'cors.origin': 'https://pandaphone.ru',
-    'telegram.disableAuth': false
+    'telegram.disableAuth': false,
+    'db.ssl': true
 };
 
 const testing: IConfig = {
@@ -39,7 +41,8 @@ const development: IConfig = {
     'app.isNodeStatic': true,
     'app.needPort': true,
     'telegram.botName': 'PandaPhoneShopDevBot',
-    'telegram.disableAuth': true
+    'telegram.disableAuth': true,
+    'db.ssl': false
 };
 
 const stress: IConfig = {
