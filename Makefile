@@ -98,3 +98,7 @@ docker-build:
 .PHONY: docker-push
 docker-push:
 	docker push ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
+
+.PHONY: docker-pull
+docker-pull:
+	docker pull ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
