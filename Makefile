@@ -5,6 +5,7 @@ before-server-build = $(OUT_DIR)/node_modules
 $(OUT_DIR)/node_modules:
 	mkdir -p $@
 	ln -s ../src/server $@
+	ln -s ../src/common $@
 
 .PHONY: deps
 deps:
@@ -102,3 +103,7 @@ docker-push:
 .PHONY: docker-pull
 docker-pull:
 	docker pull ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
+
+.PHONY: docker-echo
+docker-echo:
+	echo ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
