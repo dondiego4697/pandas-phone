@@ -143,6 +143,7 @@ export class GoodItemPage extends React.Component<IProps> {
                         </div>
                         <div className={b('switch-item-wrapper')}>
                             <CheckBox
+                                id='good-item-search-tags-cb'
                                 label='Search tags:'
                                 selected={(search_tags).map(String)}
                                 items={this.getSelectValues(dbAllowedValues['goodItem.searchTag'])}

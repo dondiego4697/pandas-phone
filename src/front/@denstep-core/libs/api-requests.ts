@@ -64,10 +64,23 @@ export interface IOrderItem {
     imei: string | null;
 }
 
+interface IGetGoodItems extends IDefaultParams {
+    type: string[];
+    isPublic: string[];
+}
+
 export class AdminRequest {
-    static getGoodItems(params: IDefaultParams): Promise<IGoodItemsResponse> {
-        const {limit, offset} = params;
-        return getRequest<IGoodItemsResponse>(`/api/v1/good_item?limit=${limit}&offset=${offset}`);
+    static getGoodItems(params: IGetGoodItems): Promise<IGoodItemsResponse> {
+        const {limit, offset, type, isPublic} = params;
+        return getRequest<IGoodItemsResponse>(
+            '/api/v1/good_item?' +
+            [
+                `limit=${limit}`,
+                `offset=${offset}`,
+                `type=${type.join(',')}`,
+                `public=${isPublic.join(',')}`
+            ].join('&')
+        );
     }
 
     static getGoodItem(id: string): Promise<IGoodItem> {

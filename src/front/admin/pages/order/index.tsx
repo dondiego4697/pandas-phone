@@ -40,7 +40,6 @@ export class OrderPage extends React.Component<IProps> {
 
     public componentWillUnmount(): void {
         this.props.orderPageModel!.clearData();
-        // TODO add filter in good-items
     }
 
     public render(): React.ReactNode {

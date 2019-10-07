@@ -20,7 +20,7 @@ export class GoodItemProvider {
         const searchTagValues: string[] = [];
 
         if (query.search_tags) {
-            searchTagValues.push(...query.search_tags.split('|'));
+            searchTagValues.push(...query.search_tags.split(','));
             delete query.search_tags;
         }
 
@@ -36,15 +36,15 @@ export class GoodItemProvider {
             );
         }
 
+        const whereText = `${values.length === 0 ? '' : `WHERE ${pairs.join(' AND ')}`}`;
         const [{rows: [total]}, {rows}] = await Promise.all([
             makeRequest({
-                text: `SELECT COUNT(*) FROM ${TABLE_NAME};`,
-                values: []
+                text: `SELECT COUNT(*) FROM ${TABLE_NAME} ${whereText};`,
+                values: values
             }),
             makeRequest({
                 text: `
-                    SELECT * FROM ${TABLE_NAME}
-                    ${values.length === 0 ? '' : `WHERE ${pairs.join(' AND ')}`}
+                    SELECT * FROM ${TABLE_NAME} ${whereText}
                     ORDER BY updated DESC
                     LIMIT ${limit} OFFSET ${offset};
                 `,

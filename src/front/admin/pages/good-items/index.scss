@@ -13,4 +13,19 @@
         display: inline-flex;
         float: right;
     }
+
+    &__filter-container {
+        display: inline-flex;
+        flex-direction: row;
+    }
+
+    &__table-container {
+        margin-top: 32px;
+    }
+
+    &__filter-wrapper {
+        display: flex;
+        flex-grow: 1;
+        margin-right: 16px;
+    }
 }

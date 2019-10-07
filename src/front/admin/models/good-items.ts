@@ -4,20 +4,31 @@ import {PageStatus} from '@denstep-core/libs/types';
 import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
 import {ITableSchema} from '@denstep-core/components/table';
 
+interface ISelected {
+    goodItemType: string[];
+    goodItemPublic: string[];
+}
+
 export class GoodItemsPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public limit = 20;
     @observable public offset = 0;
     @observable public total = 0;
     @observable public data: IGoodItem[] = [];
+    @observable public selected: ISelected = {
+        goodItemPublic: [],
+        goodItemType: []
+    };
 
     @action public fetchData(): void {
         runInAction(() => {
             this.status = PageStatus.LOADING;
 
             AdminRequest.getGoodItems({
+                isPublic: this.selected.goodItemPublic,
                 limit: this.limit,
-                offset: this.offset
+                offset: this.offset,
+                type: this.selected.goodItemType
             }).then((data) => {
                 this.total = data.total || 1;
                 this.data = data.rows;

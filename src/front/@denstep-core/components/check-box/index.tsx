@@ -7,13 +7,14 @@ import './index.scss';
 const b = bevis('check-box');
 
 
-interface IItem {
+export interface ICheckBoxItem {
     key: string;
     value: string;
 }
 
 interface IProps {
-    items: IItem[];
+    id: string;
+    items: ICheckBoxItem[];
     selected: string[];
     label?: string;
     onChange: (selected: string[]) => void;
@@ -42,13 +43,13 @@ export class CheckBox extends React.Component<IProps> {
                         >
                             <input
                                 type='checkbox'
-                                id={`checkbox-${i}`}
+                                id={`checkbox-${this.props.id}-${i}`}
                                 value={item.value}
                                 checked={this.props.selected.includes(item.key)}
                                 onChange={this.onChange}
                             />
                             <label
-                                htmlFor={`checkbox-${i}`}
+                                htmlFor={`checkbox-${this.props.id}-${i}`}
                                 className={b('item-label')}
                             >
                                 <svg width='18px' height='18px' viewBox='0 0 18 18'>
@@ -75,7 +76,7 @@ export class CheckBox extends React.Component<IProps> {
         } else {
             const index = this.props.selected.indexOf(event.target.value);
             this.props.selected.splice(index, 1);
-            this.props.onChange(this.props.selected);
+            this.props.onChange(this.props.selected.concat([]));
         }
     }
 }

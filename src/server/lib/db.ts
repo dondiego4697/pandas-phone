@@ -24,9 +24,21 @@ interface IGetWhereParams {
 
 export function makeWhereParams(rawData: Record<string, any>): IGetWhereParams {
     const data = cleanDeep(rawData, {nullValues: false});
-    return Object.entries(data).reduce((res, [key, value], i) => {
-        res.pairs.push(`${key}=$${i + 1}`);
-        res.values.push(value);
+    let i = 0;
+    return Object.entries(data).reduce((res, [key, value]) => {
+        const parts = (value as string).split(',');
+        if (parts.length > 1) {
+            const orPairs = parts.map(() => {
+                i++;
+                return `${key}=$${i}`;
+            });
+            res.pairs.push(`(${orPairs.join(' OR ')})`);
+            res.values.push(...parts);
+        } else {
+            i++;
+            res.pairs.push(`${key}=$${i}`);
+            res.values.push(value);
+        }
         return res;
     }, {pairs: [], values: []} as IGetWhereParams);
 }
