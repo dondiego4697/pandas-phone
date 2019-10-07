@@ -24,7 +24,7 @@ const production: IConfig = {
     'telegram.botName': 'PandaPhoneShopBot',
     'telegram.timeout': 3000,
     'telegram.workChatId': -363392954,
-    'cors.origin': 'https://TODO',
+    'cors.origin': 'https://pandaphone.ru',
     'telegram.disableAuth': false
 };
 
