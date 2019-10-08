@@ -32,16 +32,6 @@ async function checkAccess(adminData: IAdminData): Promise<boolean> {
     return res.rows.length > 0;
 }
 
-async function log(req: Request): Promise<void> {
-    logger.info(`Request without token: ${JSON.stringify({
-        url: req.originalUrl,
-        query: req.query,
-        method: req.method,
-        ip: req.ip,
-        headers: req.headers
-    })}`);
-}
-
 async function getAuthToken(code: string): Promise<string | undefined> {
     let res: got.Response<any>;
     try {
@@ -110,7 +100,13 @@ export const adminAuth = wrap<Request, Response>(async (req, res, next) => {
     }
 
     if (!adminSessionToken) {
-        log(req);
+        logger.info(`Request without token: ${JSON.stringify({
+            url: req.originalUrl,
+            query: req.query,
+            method: req.method,
+            ip: req.ip,
+            headers: req.headers
+        })}`);
 
         const authToken = await getAuthToken(code);
         if (!authToken) {
@@ -120,6 +116,8 @@ export const adminAuth = wrap<Request, Response>(async (req, res, next) => {
         }
 
         const adminData = await getAdminData(authToken);
+        logger.info(`Admin user data: ${JSON.stringify(adminData)}`);
+
         if (!adminData) {
             req.adminForbidden = true;
             next();

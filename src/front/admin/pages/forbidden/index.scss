@@ -19,7 +19,6 @@
     &__login-button {
         display: flex;
         border-radius: 30px;
-        cursor: pointer;
         background-color: #FFDB4D;
         transition: all 200ms ease;
 
@@ -29,6 +28,7 @@
     }
 
     &__login-yandex {
+        cursor: pointer;
         padding: 16px;
         font-family: $font-family-main_bold;
         text-decoration: none;
