@@ -2,8 +2,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS admin (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    telegram_id TEXT UNIQUE NOT NULL,
-    username TEXT UNIQUE NOT NULL
+    yandex_user_id TEXT UNIQUE NOT NULL,
+    login TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS stat_v1 (

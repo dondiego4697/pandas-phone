@@ -15,21 +15,6 @@ const b = bevis('forbidden-page');
 
 @inject('clientDataModel')
 export class ForbiddenPage extends React.Component<IProps> {
-    private telegramAuthRef = React.createRef<HTMLDivElement>();
-
-    public componentDidMount(): void {
-        const authScript = document.createElement('script');
-        authScript.type = 'text/javascript';
-        authScript.async = true;
-        authScript.src = '/t-proxy';
-        authScript.setAttribute('data-telegram-login', this.props.clientDataModel!.telegramBotName);
-        authScript.setAttribute('data-size', 'large');
-        authScript.setAttribute('data-auth-url', '');
-        authScript.setAttribute('data-request-access', 'write');
-
-        this.telegramAuthRef.current!.appendChild(authScript);
-    }
-
     public render(): React.ReactNode {
         return (
             <div className={b()}>
@@ -40,7 +25,14 @@ export class ForbiddenPage extends React.Component<IProps> {
                         colorPreset='dark'
                         typePreset='header'
                     />
-                    <div className={b('login-button')} ref={this.telegramAuthRef}/>
+                    <div className={b('login-button')}>
+                        <a
+                            className={b('login-yandex')}
+                            href={this.props.clientDataModel!.authUrl}
+                        >
+                            Enter via Yandex
+                        </a>
+                    </div>
                 </div>
             </div>
         );

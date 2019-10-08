@@ -9,6 +9,8 @@ export PANDA_PHONE_DB_NAME=$(value)
 export PANDA_PHONE_DB_PORT=$(value)
 
 export PANDA_PHONE_TELEGRAM_BOT_API_TOKEN=$(value)
+export PANDA_PHONE_YANDEX_OAUTH_ID=$(value)
+export PANDA_PHONE_YANDEX_OAUTH_PASS=$(value)
 
 export NODEJS_PORT=$(value)
 export DISABLE_LOGGING=$(value)
@@ -24,5 +26,6 @@ SET timezone='UTC';
 
 ## Commands
 ```bash
+sudo docker pull cr.yandex/crpn0q4tiksugq5qds8d/ubuntu:VERSION
 sudo docker run -it -p 3000:80 --env-file ./panda-phone-env.list -d cr.yandex/crpn0q4tiksugq5qds8d/ubuntu:VERSION
 ```

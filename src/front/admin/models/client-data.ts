@@ -9,7 +9,7 @@ interface IGlobal {
 
 export class ClientDataModel {
     @observable public forbidden: boolean;
-    @observable public telegramBotName: string;
+    @observable public authUrl: string;
     @observable public dbAllowedValues: IDbAllowedValues;
     @observable public global: IGlobal = {
         popupContent: null
@@ -17,7 +17,7 @@ export class ClientDataModel {
 
     constructor(clientData: IAdminClientData) {
         this.forbidden = clientData.forbidden;
-        this.telegramBotName = clientData.telegramBotName;
+        this.authUrl = clientData.authUrl;
         this.dbAllowedValues = clientData.dbAllowedValues;
     }
 

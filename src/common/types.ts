@@ -2,7 +2,7 @@ import {IDbAllowedValues} from './db-allowed-values';
 
 export interface IAdminClientData {
     readonly forbidden: boolean;
-    readonly telegramBotName: string;
+    readonly authUrl: string;
     readonly dbAllowedValues: IDbAllowedValues;
 }
 

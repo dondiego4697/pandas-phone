@@ -1,3 +1,5 @@
+@import '../../../@denstep-core/const/styles.scss';
+
 .forbidden-page {
     display: flex;
     width: 100%;
@@ -16,9 +18,23 @@
 
     &__login-button {
         display: flex;
+        border-radius: 30px;
+        cursor: pointer;
+        background-color: #FFDB4D;
+        transition: all 200ms ease;
 
-        & iframe {
-            margin: 0 auto;
+        &:hover {
+            background-color: #EECC45;
         }
+    }
+
+    &__login-yandex {
+        padding: 16px;
+        font-family: $font-family-main_bold;
+        text-decoration: none;
+        color: $font-color_header_dark;
+        width: 100%;
+        user-select: none;
+        text-align: center;
     }
 }

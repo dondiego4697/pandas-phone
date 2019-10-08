@@ -12,7 +12,8 @@ interface IConfig {
     'telegram.timeout': number;
     'telegram.workChatId': number;
     'cors.origin': string;
-    'telegram.disableAuth': boolean;
+    'admin.disableAuth': boolean;
+    'admin.authRedirect': string;
     'db.ssl': boolean;
 }
 
@@ -26,7 +27,8 @@ const production: IConfig = {
     'telegram.timeout': 3000,
     'telegram.workChatId': -363392954,
     'cors.origin': 'https://pandaphone.ru',
-    'telegram.disableAuth': false,
+    'admin.disableAuth': false,
+    'admin.authRedirect': 'https://pandaphone.ru/bender-root',
     'db.ssl': true
 };
 
@@ -41,7 +43,8 @@ const development: IConfig = {
     'app.isNodeStatic': true,
     'app.needPort': true,
     'telegram.botName': 'PandaPhoneShopDevBot',
-    'telegram.disableAuth': true,
+    'admin.disableAuth': false,
+    'admin.authRedirect': 'http://localhost:3000/bender-root',
     'db.ssl': false
 };
 
@@ -63,7 +66,9 @@ function getEnv(key: string): string | undefined {
     'PANDA_PHONE_DB_PASSWORD',
     'PANDA_PHONE_DB_NAME',
     'PANDA_PHONE_DB_PORT',
-    'PANDA_PHONE_TELEGRAM_BOT_API_TOKEN'
+    'PANDA_PHONE_TELEGRAM_BOT_API_TOKEN',
+    'PANDA_PHONE_YANDEX_OAUTH_ID',
+    'PANDA_PHONE_YANDEX_OAUTH_PASS'
 ].forEach((key) => assert(getEnv(key), `Environment variable "${key}" wasn't set`));
 
 export {config};

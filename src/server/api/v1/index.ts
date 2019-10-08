@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as Boom from '@hapi/boom';
 
-import {telegramAuth} from 'server/middlewares/telegram-auth';
+import {adminAuth} from 'middlewares/admin-auth';
 import {orderRouter} from 'server/api/v1/routers/order';
 import {orderItemRouter} from 'server/api/v1/routers/order-item';
 import {goodItemRouter} from 'server/api/v1/routers/good-item';
@@ -17,7 +17,7 @@ apiRouter
     .use('/public', publicRouter);
 
 apiRouter
-    .use(telegramAuth)
+    .use(adminAuth)
     .use((req, _, next) => {
         if (req.adminForbidden) {
             throw Boom.forbidden();
