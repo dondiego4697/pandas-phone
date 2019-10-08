@@ -24,5 +24,5 @@ SET timezone='UTC';
 
 ## Commands
 ```bash
-sudo docker run -it -p 3000:80 --env-file ./panda-phone-env.list -d cr.yandex/crpn0q4tiksugq5qds8d/ubuntu:0.0.7
+sudo docker run -it -p 3000:80 --env-file ./panda-phone-env.list -d cr.yandex/crpn0q4tiksugq5qds8d/ubuntu:VERSION
 ```
