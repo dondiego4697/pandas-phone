@@ -5,7 +5,7 @@ import {wrap} from 'async-middleware';
 
 import {formBundleUrl} from 'server/lib/client-urls';
 import {config} from 'server/config';
-import {adminAuth} from 'middlewares/admin-auth';
+import {adminAuth} from 'server/middlewares/admin-auth';
 import {isMobile} from 'server/lib/mobile-check';
 
 import {IAdminClientData} from 'common/types';

@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as Boom from '@hapi/boom';
 
-import {adminAuth} from 'middlewares/admin-auth';
+import {adminAuth} from 'server/middlewares/admin-auth';
 import {orderRouter} from 'server/api/v1/routers/order';
 import {orderItemRouter} from 'server/api/v1/routers/order-item';
 import {goodItemRouter} from 'server/api/v1/routers/good-item';
