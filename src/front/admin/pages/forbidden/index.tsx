@@ -21,7 +21,7 @@ export class ForbiddenPage extends React.Component<IProps> {
         const authScript = document.createElement('script');
         authScript.type = 'text/javascript';
         authScript.async = true;
-        authScript.src = 'https://telegram.org/js/telegram-widget.js?7';
+        authScript.src = '/t-proxy';
         authScript.setAttribute('data-telegram-login', this.props.clientDataModel!.telegramBotName);
         authScript.setAttribute('data-size', 'large');
         authScript.setAttribute('data-auth-url', '');

@@ -6,6 +6,8 @@ import {config} from 'server/config';
 
 const telegramApiHost = `https://api.telegram.org`;
 
+// TODO write message only in production mode
+// in dev mode write to console
 export class TelegramBot {
     static async sendMessageToChat(text: string): Promise<void> {
         const url = new URL(`/bot${process.env.PANDA_PHONE_TELEGRAM_BOT_API_TOKEN}/sendMessage`, telegramApiHost);
