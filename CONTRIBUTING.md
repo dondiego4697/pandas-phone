@@ -21,3 +21,8 @@ CREATE USER $(username) WITH SUPERUSER CREATEDB CREATEROLE REPLICATION BYPASSRLS
 CREATE DATABASE $(dbname) WITH ENCODING 'UTF8' OWNER $(rolename);
 SET timezone='UTC';
 ```
+
+## Commands
+```bash
+sudo docker run -it -p 3000:80 --env-file ./panda-phone-env.list -d cr.yandex/crpn0q4tiksugq5qds8d/ubuntu:0.0.7
+```
