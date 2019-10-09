@@ -9,13 +9,11 @@ import './index.scss';
 
 const b = bevis('cookie-info');
 
-interface IProps {}
-
 interface IState {
     visible: boolean;
 }
 
-export class CookieInfo extends React.Component<IProps, IState> {
+export class CookieInfo extends React.Component<{}, IState> {
     public state = {visible: true};
 
     public componentDidMount(): void {
