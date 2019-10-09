@@ -4,6 +4,7 @@ import {inject} from 'mobx-react';
 import bevis from '@denstep-core/libs/bevis';
 import {Text} from '@denstep-core/components/text';
 import {ClientDataModel} from 'admin/models/client-data';
+import {textDictionary} from 'common/text-dictionary';
 
 import './index.scss';
 
@@ -21,7 +22,7 @@ export class ForbiddenPage extends React.Component<IProps> {
                 <div className={b('auth-container')}>
                     <img src='/public/imgs/bender-root/forbidden.png'/>
                     <Text
-                        text='Forbidden'
+                        text={textDictionary['page.forbidden.mainText']}
                         colorPreset='dark'
                         typePreset='header'
                     />
@@ -30,7 +31,7 @@ export class ForbiddenPage extends React.Component<IProps> {
                             className={b('login-yandex')}
                             href={this.props.clientDataModel!.authUrl}
                         >
-                            Enter via Yandex
+                            {textDictionary['page.forbidden.buttonText']}
                         </a>
                     </div>
                 </div>

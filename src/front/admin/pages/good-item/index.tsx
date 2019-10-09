@@ -12,9 +12,11 @@ import {EditText} from '@denstep-core/components/edit-text';
 import {getAdminSimpleError} from '@denstep-core/components/popup';
 import {Button} from '@denstep-core/components/button';
 import {ScreenLocker} from '@denstep-core/components/screen-locker';
-import {dbAllowedValues} from 'common/db-allowed-values';
+import {dbAllowedPairs} from 'common/db-allowed-values';
 import {ClientDataModel} from 'admin/models/client-data';
 import {GoodItemPageModel} from 'admin/models/good-item';
+import {IGoodItemModel} from 'common/models/good-item';
+import {textDictionary} from 'common/text-dictionary';
 
 import './index.scss';
 
@@ -50,11 +52,10 @@ export class GoodItemPage extends React.Component<IProps> {
             brand,
             model,
             color,
-            memory_capacity,
+            memoryCapacity,
             price, discount,
             original, public: isPublic,
-            search_tags
-
+            searchTags
         } = this.props.goodItemPageModel!.goodItem;
 
         return (
@@ -64,7 +65,11 @@ export class GoodItemPage extends React.Component<IProps> {
                     show={this.props.goodItemPageModel!.status === PageStatus.LOADING}
                 />
                 <Text
-                    text={`Good item: ${id || 'new'}`}
+                    text={
+                        id ?
+                            textDictionary['template.goodItem.header'].replace('%id', id) :
+                            textDictionary['goodItem.new']
+                    }
                     typePreset='header'
                     colorPreset='dark'
                     className={b('text-header')}
@@ -72,27 +77,27 @@ export class GoodItemPage extends React.Component<IProps> {
                 <div className={b('container')}>
                     <div className={b('paper-wrapper')}>
                         <SelectBox
-                            placeholder='Type'
-                            items={this.getSelectValues(dbAllowedValues['goodItem.type'])}
+                            placeholder={textDictionary['goodItem.field.type']}
+                            items={dbAllowedPairs['goodItem.type']}
                             selected={type}
                             onChange={(key) => this.updateGoodItem('type', key)}
                         />
                         <SelectBox
-                            placeholder='Brand'
-                            items={this.getSelectValues(dbAllowedValues['goodItem.brand'])}
+                            placeholder={textDictionary['goodItem.field.brand']}
+                            items={dbAllowedPairs['goodItem.brand']}
                             selected={brand}
                             onChange={(key) => this.updateGoodItem('brand', key)}
                         />
 
                         <SelectBox
-                            placeholder='Model'
+                            placeholder={textDictionary['goodItem.field.model']}
                             items={this.getModelItems()}
                             selected={model}
                             onChange={(key) => this.updateGoodItem('model', key)}
                         />
 
                         <SelectBox
-                            placeholder='Color'
+                            placeholder={textDictionary['goodItem.field.color']}
                             items={this.getColorItems()}
                             selected={color}
                             onChange={(key) => this.updateGoodItem('color', key)}
@@ -101,25 +106,23 @@ export class GoodItemPage extends React.Component<IProps> {
                         {
                             type !== 'airpod' &&
                             <SelectBox
-                                placeholder='Memory capacity'
-                                items={this.getSelectValues(
-                                    dbAllowedValues['goodItem.iphoneMemoryCapacity'].map(String)
-                                )}
-                                selected={String(memory_capacity)}
-                                onChange={(key) => this.updateGoodItem('memory_capacity', key)}
+                                placeholder={textDictionary['goodItem.field.memoryCapacity']}
+                                items={dbAllowedPairs['goodItem.iphone.memoryCapacity']}
+                                selected={String(memoryCapacity)}
+                                onChange={(key) => this.updateGoodItem('memoryCapacity', key)}
                             />
                         }
 
                         <EditText
                             id='good-item-price-edit-text'
-                            placeholder='Price'
+                            placeholder={textDictionary['goodItem.field.price']}
                             value={String(price)}
                             onChange={(value) => this.updateGoodItem('price', value)}
                             options={{type: 'number', minValue: 0}}
                         />
                         <EditText
                             id='good-item-discount-edit-text'
-                            placeholder='Discount'
+                            placeholder={textDictionary['goodItem.field.discount']}
                             value={String(discount)}
                             onChange={(value) => this.updateGoodItem('discount', value)}
                             options={{type: 'number', minValue: 0, maxValue: 100}}
@@ -129,14 +132,14 @@ export class GoodItemPage extends React.Component<IProps> {
                     <div className={b('switch-wrapper')}>
                         <div className={b('switch-item-wrapper')}>
                             <Switch
-                                label='Original:'
+                                label={`${textDictionary['goodItem.field.original']}:`}
                                 initialValue={Boolean(original)}
                                 onChange={(value) => this.updateGoodItem('original', value)}
                             />
                         </div>
                         <div className={b('switch-item-wrapper')}>
                             <Switch
-                                label='Public:'
+                                label={`${textDictionary['goodItem.field.public']}:`}
                                 initialValue={Boolean(isPublic)}
                                 onChange={(value) => this.updateGoodItem('public', value)}
                             />
@@ -144,17 +147,17 @@ export class GoodItemPage extends React.Component<IProps> {
                         <div className={b('switch-item-wrapper')}>
                             <CheckBox
                                 id='good-item-search-tags-cb'
-                                label='Search tags:'
-                                selected={(search_tags).map(String)}
-                                items={this.getSelectValues(dbAllowedValues['goodItem.searchTag'])}
-                                onChange={(selected) => this.updateGoodItem('search_tags', selected)}
+                                label={`${textDictionary['goodItem.field.searchTags']}:`}
+                                selected={(searchTags).map(String)}
+                                items={dbAllowedPairs['goodItem.searchTag']}
+                                onChange={(selected) => this.updateGoodItem('searchTags', selected)}
                             />
                         </div>
                     </div>
 
                     <div className={b('control-wrapper')}>
                         <Button
-                            text='Save'
+                            text={textDictionary['button.save']}
                             colorPreset='dark'
                             typePreset='button'
                             onClick={this.onSaveClickHandler}
@@ -165,7 +168,7 @@ export class GoodItemPage extends React.Component<IProps> {
         );
     }
 
-    private updateGoodItem(key: string, value: any): void {
+    private updateGoodItem(key: keyof IGoodItemModel, value: any): void {
         if (key === 'type') {
             this.props.goodItemPageModel!.clearData();
         }
@@ -173,24 +176,20 @@ export class GoodItemPage extends React.Component<IProps> {
         (this.props.goodItemPageModel!.goodItem as any)[key] = value;
     }
 
-    private getSelectValues(arr: string[]): ISelectBoxItem[] {
-        return arr.map((type) => ({key: type, value: type}));
-    }
-
     private getModelItems(): ISelectBoxItem[] {
         if (this.props.goodItemPageModel!.goodItem.type === 'airpod') {
-            return this.getSelectValues(dbAllowedValues['goodItem.airpod.model']);
+            return dbAllowedPairs['goodItem.airpod.model'];
         }
 
-        return this.getSelectValues(dbAllowedValues['goodItem.iphone.model']);
+        return dbAllowedPairs['goodItem.iphone.model'];
     }
 
     private getColorItems(): ISelectBoxItem[] {
         if (this.props.goodItemPageModel!.goodItem.type === 'airpod') {
-            return this.getSelectValues(dbAllowedValues['goodItem.airpod.color']);
+            return dbAllowedPairs['goodItem.airpod.color'];
         }
 
-        return this.getSelectValues(dbAllowedValues['goodItem.iphone.color']);
+        return dbAllowedPairs['goodItem.iphone.color'];
     }
 
     private onSaveClickHandler = (): void => {

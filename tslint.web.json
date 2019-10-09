@@ -25,6 +25,7 @@
         "typedef": [true, "call-signature"],
         "no-shadowed-variable": false,
         "object-shorthand-properties-first": false,
-        "no-object-literal-type-assertion": false
+        "no-object-literal-type-assertion": false,
+        "object-literal-sort-keys": false
     }
 }

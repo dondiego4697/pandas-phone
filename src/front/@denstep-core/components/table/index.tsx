@@ -14,7 +14,9 @@ import './index.scss';
 
 const b = bevis('table');
 
-export interface ITableSchema extends ISchema {};
+export interface ITableSchema<T extends string> extends ISchema {
+    key: T;
+};
 
 interface ISchema {
     title: string;

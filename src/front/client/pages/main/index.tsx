@@ -46,8 +46,8 @@ export class MainPage extends React.Component<IProps> {
                 >
                     {this.renderPopupContent()}
                 </Popup>
-                {!this.props.clientDataModel!.isMobile && this.renderBrowser()}
-                {this.props.clientDataModel!.isMobile && this.renderMobile()}
+                {/* {!this.props.clientDataModel!.isMobile && this.renderBrowser()} */}
+                {/* {this.props.clientDataModel!.isMobile && this.renderMobile()} */}
             </div>
         );
     }

@@ -1,15 +1,17 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
-import {AdminRequest, IOrder} from '@denstep-core/libs/api-requests';
 import {ITableSchema} from '@denstep-core/components/table';
+import {AdminRequest} from 'common/libs/api-requests';
+import {OrderModel} from 'common/models/order';
+import {textDictionary} from 'common/text-dictionary';
 
 export class OrdersPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public limit = 20;
     @observable public offset = 0;
     @observable public total = 0;
-    @observable public data: IOrder[] = [];
+    @observable public orders: OrderModel[] = [];
 
     @action public fetchData(): void {
         runInAction(() => {
@@ -20,33 +22,33 @@ export class OrdersPageModel {
                 offset: this.offset
             }).then((data) => {
                 this.total = data.total || 1;
-                this.data = data.rows;
+                this.orders = data.rows.map((row) => new OrderModel(row));
                 this.status = PageStatus.DONE;
             });
         });
     }
 }
 
-export const ORDERS_TABLE_SCHEMA: ITableSchema[] = [
+export const ORDERS_TABLE_SCHEMA: ITableSchema<keyof OrderModel>[] = [
     {
         key: 'id',
-        title: 'ID'
+        title: textDictionary['order.field.id']
     },
     {
-        key: 'customer_name',
-        title: 'Customer name'
+        key: 'customerName',
+        title: textDictionary['order.field.customerName']
     },
     {
-        key: 'customer_phone',
-        title: 'Customer phone'
+        key: 'customerPhone',
+        title: textDictionary['order.field.customerPhone']
     },
     {
         key: 'called',
-        title: 'Called',
+        title: textDictionary['order.field.called'],
         type: 'boolean'
     },
     {
-        key: 'order_date',
-        title: 'Order date'
+        key: 'orderDate',
+        title: textDictionary['order.field.orderDate']
     }
 ];

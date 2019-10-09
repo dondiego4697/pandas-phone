@@ -1,10 +1,12 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
-import {AdminRequest, IGoodItem} from '@denstep-core/libs/api-requests';
 import {ITableSchema} from '@denstep-core/components/table';
+import {GoodItemModel, IGoodItemDbModel, IGoodItemModel} from 'common/models/good-item';
+import {AdminRequest} from 'common/libs/api-requests';
+import {textDictionary} from 'common/text-dictionary';
 
-interface ISelected {
+interface IFilter {
     goodItemType: string[];
     goodItemPublic: string[];
 }
@@ -14,8 +16,8 @@ export class GoodItemsPageModel {
     @observable public limit = 20;
     @observable public offset = 0;
     @observable public total = 0;
-    @observable public data: IGoodItem[] = [];
-    @observable public selected: ISelected = {
+    @observable public goodItems: GoodItemModel[] = [];
+    @observable public filter: IFilter = {
         goodItemPublic: [],
         goodItemType: []
     };
@@ -25,19 +27,19 @@ export class GoodItemsPageModel {
             this.status = PageStatus.LOADING;
 
             AdminRequest.getGoodItems({
-                isPublic: this.selected.goodItemPublic,
+                isPublic: this.filter.goodItemPublic,
                 limit: this.limit,
                 offset: this.offset,
-                type: this.selected.goodItemType
+                type: this.filter.goodItemType
             }).then((data) => {
                 this.total = data.total || 1;
-                this.data = data.rows;
+                this.goodItems = data.rows.map((row) => new GoodItemModel(row));
                 this.status = PageStatus.DONE;
             });
         });
     }
 
-    @action public deleteGoodItem(goodItemId: string): Promise<IGoodItem> {
+    @action public deleteGoodItem(goodItemId: string): Promise<IGoodItemDbModel> {
         this.status = PageStatus.LOADING;
 
         return AdminRequest
@@ -48,52 +50,52 @@ export class GoodItemsPageModel {
     }
 }
 
-export const GOOD_ITEMS_TABLE_SCHEMA: ITableSchema[] = [
+export const GOOD_ITEMS_TABLE_SCHEMA: ITableSchema<keyof IGoodItemModel>[] = [
     {
         key: 'id',
-        title: 'ID'
+        title: textDictionary['goodItem.field.id']
     },
     {
         key: 'type',
-        title: 'Type'
+        title: textDictionary['goodItem.field.type']
     },
     {
         key: 'brand',
-        title: 'Brand'
+        title: textDictionary['goodItem.field.brand']
     },
     {
         key: 'model',
-        title: 'Model'
+        title: textDictionary['goodItem.field.model']
     },
     {
         key: 'color',
-        title: 'Color'
+        title: textDictionary['goodItem.field.color']
     },
     {
-        key: 'memory_capacity',
-        title: 'Memory capacity'
+        key: 'memoryCapacity',
+        title: textDictionary['goodItem.field.memoryCapacity']
     },
     {
         key: 'original',
-        title: 'Original',
+        title: textDictionary['goodItem.field.original'],
         type: 'boolean'
     },
     {
-        key: 'search_tags',
-        title: 'Search tags',
+        key: 'searchTags',
+        title: textDictionary['goodItem.field.searchTags'],
         type: 'array'
     },
     {
         key: 'price',
-        title: 'Price'
+        title: textDictionary['goodItem.field.price']
     },
     {
         key: 'discount',
-        title: 'Discount'
+        title: textDictionary['goodItem.field.discount']
     },
     {
         key: 'public',
-        title: 'Public',
+        title: textDictionary['goodItem.field.public'],
         type: 'boolean'
     }
 ];

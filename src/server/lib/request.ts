@@ -9,13 +9,10 @@ interface IOptions {
     body?: any;
     headers?: Record<string, any>;
     json?: boolean;
+    timeout?: number;
 }
 
-const DEFAULT_OPTIONS: IOptions = {
-    method: 'GET'
-};
-
-export async function request(url: URL, options = DEFAULT_OPTIONS): Promise<got.Response<any>> {
+export async function request(url: URL, options: IOptions): Promise<got.Response<any>> {
     const requestInfo = [
         `${options.method} => ${url}`,
         `query=${JSON.stringify(options.query)}`,
@@ -28,7 +25,7 @@ export async function request(url: URL, options = DEFAULT_OPTIONS): Promise<got.
         res = await got(url, {
             method: options.method.toLowerCase(),
             ...(options.json ? {json: true} : {}),
-            timeout: 2000,
+            timeout: options.timeout || 2000,
             ...(options.method === 'GET' ? {query: options.query} : {}),
             ...(options.method === 'POST' ? {body: options.body} : {}),
             headers: options.headers

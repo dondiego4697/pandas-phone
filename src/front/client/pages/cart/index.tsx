@@ -52,8 +52,8 @@ export class CartPage extends React.Component<IProps> {
                     transparent={this.props.cartPageModel!.transparentProgressLock}
                     show={this.props.cartPageModel!.status === PageStatus.LOADING}
                 />
-                {!this.props.clientDataModel!.isMobile && this.renderBrowser()}
-                {this.props.clientDataModel!.isMobile && this.renderMobile()}
+                {/* {!this.props.clientDataModel!.isMobile && this.renderBrowser()} */}
+                {/* {this.props.clientDataModel!.isMobile && this.renderMobile()} */}
             </div>
         );
     }

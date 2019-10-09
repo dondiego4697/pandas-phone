@@ -1,65 +1,55 @@
 import {URL} from 'url';
-import * as got from 'got';
 
 import {logger} from 'server/lib/logger';
+import {request} from 'server/lib/request';
 import {config} from 'server/config';
 
 const telegramApiHost = `https://api.telegram.org`;
 
-// TODO write message only in production mode
-// in dev mode write to console
 export class TelegramBot {
-    static async sendMessageToChat(text: string): Promise<void> {
+    static async sendMessageToWorkChat(text: string): Promise<void> {
         const url = new URL(`/bot${process.env.PANDA_PHONE_TELEGRAM_BOT_API_TOKEN}/sendMessage`, telegramApiHost);
-
-        const params = {
+        const body = {
             chat_id: config['telegram.workChatId'],
             text,
             parse_mode: 'HTML'
         };
 
-        const requestInfo = `POST => ${url} body=${JSON.stringify(params)}`;
-        logger.debug(`Request ${requestInfo}`);
+        if (!config['telegram.writeToWorkChat']) {
+            logger.info(`TELEGRAM MOCK: POST => ${url}, ${JSON.stringify(body)}`);
+            return;
+        }
 
-        let checkRes: got.Response<any>;
         try {
-            checkRes = await got.post(url, {
-                body: params,
+            await request(url, {
+                method: 'POST',
+                body,
                 json: true,
                 timeout: config['telegram.timeout']
             });
         } catch (err) {
-            logger.error(`Request ${requestInfo} failed: ${err}`);
-            return;
-        }
-
-        const checkResLogMessage = `Got response for ${requestInfo}: ` +
-            `statusCode=${checkRes.statusCode}, body=${JSON.stringify(checkRes.body)}`;
-
-        if (checkRes.statusCode !== 200) {
-            logger.error(checkResLogMessage);
             return;
         }
     }
 
     static messageCreateNewOrder(id: string, ammount: string): string {
         return [
-            '<b>New order was created</b>',
+            '<b>Создан новый заказ</b>',
             `ID: <i>${id}</i>`,
-            `Ammount: <i>${ammount}</i>`
+            `Сумма: <i>${ammount}</i>`
         ].join('\n');
     }
 
     static messageCreateNewOrderError(message: string): string {
         return [
-            '<b>Error while creating new order</b>',
+            '<b>Ошибка при создании нового заказа</b>',
             `<code>${message}</code>`
         ].join('\n');
     }
 
     static messageMakeOrderResolution(id: string, status: string) {
         return [
-            `<b>Order resolution: ${status}</b>`,
+            `<b>Резулюция заказа: ${status}</b>`,
             `ID: <i>${id}</i>`
         ].join('\n');
     }

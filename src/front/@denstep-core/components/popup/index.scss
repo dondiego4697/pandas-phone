@@ -48,8 +48,12 @@
     }
 
     &__admin-simple-error {
+        display: flex;
+        flex-direction: column;
+
         & img {
-            height: 300px
+            height: 300px;
+            margin: 0 auto;
         }
     }
 }

@@ -1,14 +1,16 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
-import {AdminRequest, IOrderItem} from '@denstep-core/libs/api-requests';
+import {OrderItemModel, IOrderItemDbModel} from 'common/models/order-item';
+import {AdminRequest} from 'common/libs/api-requests';
 
-const DEFAULT_ORDER_ITEM = {
+const DEFAULT_ORDER_ITEM = new OrderItemModel({
+    id: '',
     good_item_id: '',
     imei: '',
-    order_item_id: '',
+    order_id: '',
     serial_number: ''
-} as IOrderItem;
+});
 
 const NEW_ID = 'new';
 
@@ -32,11 +34,11 @@ export class OrderItemPageModel {
 
                 AdminRequest.getOrderItem(orderItemId)
                     .then((data) => {
-                        this.orderItem = {
-                            ...data,
-                            imei: data.imei || DEFAULT_ORDER_ITEM.imei,
-                            serial_number: data.serial_number || DEFAULT_ORDER_ITEM.serial_number
-                        };
+                        this.orderItem = new OrderItemModel({
+                            ...data.orderItem,
+                            imei: data.orderItem.imei || DEFAULT_ORDER_ITEM.imei,
+                            serial_number: data.orderItem.serial_number || DEFAULT_ORDER_ITEM.serialNumber
+                        });
                         this.status = PageStatus.DONE;
                     })
                     .catch(reject);
@@ -48,7 +50,7 @@ export class OrderItemPageModel {
         this.orderItem = DEFAULT_ORDER_ITEM;
     }
 
-    @action public updateOrderItem(orderId: string): Promise<IOrderItem> {
+    @action public updateOrderItem(orderId: string): Promise<IOrderItemDbModel> {
         this.status = PageStatus.LOADING;
 
         if (this.isNewOrderItem) {
@@ -67,13 +69,14 @@ export class OrderItemPageModel {
     }
 }
 
-function beautifyOrderItem(orderItem: IOrderItem): IOrderItem {
-    const newOrderItem = {...orderItem};
-    if (!newOrderItem.serial_number) {
+function beautifyOrderItem(orderItem: OrderItemModel): IOrderItemDbModel {
+    const newOrderItem = {...orderItem.getDbData()};
+
+    if (!orderItem.serialNumber) {
         newOrderItem.serial_number = null;
     }
 
-    if (!newOrderItem.imei) {
+    if (!orderItem.imei) {
         newOrderItem.imei = null;
     }
 

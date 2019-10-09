@@ -12,6 +12,7 @@ export interface ISelectBoxItem {
     key: string;
     value: string;
 }
+
 interface IProps {
     items: ISelectBoxItem[];
     selected?: string | null;

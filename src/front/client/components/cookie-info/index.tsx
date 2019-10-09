@@ -9,9 +9,7 @@ import './index.scss';
 
 const b = bevis('cookie-info');
 
-interface IProps {
-    isMobile: boolean;
-}
+interface IProps {}
 
 interface IState {
     visible: boolean;
@@ -28,7 +26,7 @@ export class CookieInfo extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         return (
             <div className={`${b()} ${this.state.visible ? '' : b('hidden')}`}>
-                <div className={`${b('container')} ${this.props.isMobile ? 'mobile' : ''}`}>
+                <div className={`${b('container')}`}>
                     <div className={b('text-container')}>
                         <h1>
                             Этот сайт использует куки-файлы и другие технологии, чтобы помочь вам в навигации,

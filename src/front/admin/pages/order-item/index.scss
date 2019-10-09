@@ -24,11 +24,6 @@
         row-gap: 4vw;
     }
 
-    &__table-container {
-        grid-column: 1 / span 2;
-        grid-row: 2 / span 2;
-    }
-
     &__edit-container {
         & .edit-text {
             margin-top: 32px;

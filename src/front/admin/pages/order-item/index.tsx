@@ -9,10 +9,10 @@ import {ClientDataModel} from 'admin/models/client-data';
 import {EditText} from '@denstep-core/components/edit-text';
 import {Text} from '@denstep-core/components/text';
 import {Button} from '@denstep-core/components/button';
-import {Table} from '@denstep-core/components/table';
 import {getAdminSimpleError} from '@denstep-core/components/popup';
 import {OrderItemPageModel} from 'admin/models/order-item';
-import {GOOD_ITEMS_TABLE_SCHEMA} from 'admin/models/good-items';
+import {IOrderItemModel} from 'common/models/order-item';
+import {textDictionary} from 'common/text-dictionary';
 
 import './index.scss';
 
@@ -53,40 +53,26 @@ export class OrderItemPage extends React.Component<IProps> {
                     show={this.props.orderItemPageModel!.status === PageStatus.LOADING}
                 />
                 <Text
-                    text={`Order item: ${orderItemId || 'new'}`}
+                    text={
+                        orderItemId ?
+                            textDictionary['template.orderItem.header'].replace('%id', orderItemId) :
+                            textDictionary['orderItem.new']
+                    }
                     typePreset='header'
                     colorPreset='dark'
                     className={b('text-header')}
                 />
                 <div className={b('container')}>
-                    {this.renderTableContainer()}
                     {this.renderEditContainer()}
                 </div>
             </div>
         );
     }
 
-    private renderTableContainer(): React.ReactNode {
-        if (this.props.orderItemPageModel!.isNewOrderItem) {
-            return;
-        }
-
-        return (
-            <div className={b('table-container')}>
-                <Table
-                    header={'Good item'}
-                    schema={GOOD_ITEMS_TABLE_SCHEMA}
-                    items={[this.props.orderItemPageModel!.orderItem]}
-                    editable={{}}
-                />
-            </div>
-        );
-    }
-
     private renderEditContainer(): React.ReactNode {
         const {
-            good_item_id,
-            serial_number,
+            goodItemId,
+            serialNumber,
             imei
         } = this.props.orderItemPageModel!.orderItem;
 
@@ -94,24 +80,24 @@ export class OrderItemPage extends React.Component<IProps> {
             <div className={b('edit-container')}>
                 <EditText
                     id='order-item-good-item-edit-text'
-                    placeholder='Good item ID'
-                    value={String(good_item_id)}
-                    onChange={(value) => this.updateOrderItem('good_item_id', value)}
+                    placeholder={textDictionary['orderItem.field.goodItemId']}
+                    value={String(goodItemId)}
+                    onChange={(value) => this.updateOrderItem('goodItemId', value)}
                 />
                 <EditText
                     id='order-item-serial-number-edit-text'
-                    placeholder='Serial number'
-                    value={String(serial_number)}
-                    onChange={(value) => this.updateOrderItem('serial_number', value)}
+                    placeholder={textDictionary['orderItem.field.serialNumber']}
+                    value={String(serialNumber)}
+                    onChange={(value) => this.updateOrderItem('serialNumber', value)}
                 />
                 <EditText
                     id='order-item-imei-edit-text'
-                    placeholder='IMEI'
+                    placeholder={textDictionary['orderItem.field.imei']}
                     value={String(imei)}
                     onChange={(value) => this.updateOrderItem('imei', value)}
                 />
                 <Button
-                    text='Save'
+                    text={textDictionary['button.save']}
                     typePreset='button'
                     colorPreset='dark'
                     onClick={this.onSaveOrderItemClickHandler}
@@ -121,20 +107,18 @@ export class OrderItemPage extends React.Component<IProps> {
     }
 
     private onSaveOrderItemClickHandler = () => {
-        const orderItemId = this.props.match.params.orderItemId;
         const orderId = this.props.match.params.orderId;
 
         this.props.orderItemPageModel!.updateOrderItem(orderId)
             .then(() => {
                 this.props.history.replace(`/bender-root/order/${orderId}`);
-                this.props.orderItemPageModel!.fetchData(orderItemId);
             })
             .catch((err) => this.props.clientDataModel!.setPopupContent(
                 getAdminSimpleError(err.response.data.message)
             ));
     }
 
-    private updateOrderItem(key: string, value: any): void {
+    private updateOrderItem(key: keyof IOrderItemModel, value: any): void {
         (this.props.orderItemPageModel!.orderItem as any)[key] = value;
     }
 }

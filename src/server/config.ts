@@ -8,9 +8,9 @@ interface IConfig {
     'app.isNodeStatic': boolean;
     'app.needPort': boolean;
     'app.publicPath': string;
-    'telegram.botName': string;
     'telegram.timeout': number;
     'telegram.workChatId': number;
+    'telegram.writeToWorkChat': boolean;
     'cors.origin': string;
     'admin.disableAuth': boolean;
     'admin.authRedirect': string;
@@ -23,9 +23,9 @@ const production: IConfig = {
     'app.isNodeStatic': false,
     'app.needPort': false,
     'app.publicPath': '/public',
-    'telegram.botName': 'PandaPhoneShopBot',
     'telegram.timeout': 3000,
     'telegram.workChatId': -363392954,
+    'telegram.writeToWorkChat': true,
     'cors.origin': 'https://pandaphone.ru',
     'admin.disableAuth': false,
     'admin.authRedirect': 'https://pandaphone.ru/bender-root',
@@ -42,10 +42,10 @@ const development: IConfig = {
     'logger.level': 'silly',
     'app.isNodeStatic': true,
     'app.needPort': true,
-    'telegram.botName': 'PandaPhoneShopDevBot',
     'admin.disableAuth': false,
     'admin.authRedirect': 'http://localhost:3000/bender-root',
-    'db.ssl': false
+    'db.ssl': false,
+    'telegram.writeToWorkChat': true
 };
 
 const stress: IConfig = {

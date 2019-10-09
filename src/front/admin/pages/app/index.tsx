@@ -6,6 +6,7 @@ import bevis from '@denstep-core/libs/bevis';
 import {Popup} from '@denstep-core/components/popup';
 import {Navbar} from '@denstep-core/components/navbar';
 import {ClientDataModel} from 'admin/models/client-data';
+import {textDictionary} from 'common/text-dictionary';
 
 import './index.scss';
 
@@ -41,11 +42,11 @@ class App extends React.Component<IProps, {}> {
                 pages={[
                     {
                         path: '/bender-root',
-                        title: 'Good items'
+                        title: textDictionary['table.goodItems.header']
                     },
                     {
                         path: '/bender-root/orders',
-                        title: 'Orders'
+                        title: textDictionary['table.orders.header']
                     }
                 ]}
                 current={this.props.location.pathname}

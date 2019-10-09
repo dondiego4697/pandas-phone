@@ -6,10 +6,11 @@ import bevis from '@denstep-core/libs/bevis';
 import {PageStatus} from '@denstep-core/libs/types';
 import {ScreenLocker} from '@denstep-core/components/screen-locker';
 import {Pagination} from '@denstep-core/components/pagination';
-import {IOrder} from '@denstep-core/libs/api-requests';
 import {Table} from '@denstep-core/components/table';
 import {ClientDataModel} from 'admin/models/client-data';
 import {OrdersPageModel, ORDERS_TABLE_SCHEMA} from 'admin/models/orders';
+import {textDictionary} from 'common/text-dictionary';
+import {OrderModel} from 'common/models/order';
 
 import './index.scss';
 
@@ -38,9 +39,9 @@ export class OrdersPage extends React.Component<IProps> {
                 <div className={b('container')}>
                     <div className={b('table-container')}>
                         <Table
-                            header='Orders'
+                            header={textDictionary['table.orders.header']}
                             schema={ORDERS_TABLE_SCHEMA}
-                            items={this.props.ordersPageModel!.data}
+                            items={this.props.ordersPageModel!.orders}
                             editable={{
                                 onAdd: this.onAddHandler,
                                 onEdit: this.onEditHandler
@@ -64,7 +65,7 @@ export class OrdersPage extends React.Component<IProps> {
         this.props.history.push('/bender-root/order/new');
     }
 
-    private onEditHandler = (order: IOrder): void => {
+    private onEditHandler = (order: OrderModel): void => {
         this.props.history.push(`/bender-root/order/${order.id}`);
     }
 

@@ -5,7 +5,6 @@ import * as path from 'path';
 import {Request, Response, NextFunction} from 'express';
 import * as Boom from '@hapi/boom';
 import * as mustache from 'mustache';
-import * as browserClient from 'browser-client';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
@@ -20,19 +19,6 @@ declare global {
     namespace Express {
         // tslint:disable-next-line
         interface Request {
-            browserClient: {
-                iphone: boolean;
-                ipod: boolean;
-                ipad: boolean;
-                operaMini: boolean;
-                operaMobile: boolean;
-                mobileSafari: boolean;
-                android: boolean;
-                blackberry: boolean;
-                mobile: boolean;
-                tablet: boolean;
-                platform: string;
-            };
             adminForbidden?: boolean;
         }
     }
@@ -62,7 +48,6 @@ if (config['app.isNodeStatic']) {
 }
 
 app
-    .use(browserClient())
     .use('/api/v1', apiV1Router)
     .use('/bender-root', adminRouter)
     .use('/*', clientRouter);

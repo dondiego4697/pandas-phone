@@ -1,22 +1,28 @@
 import {observable, action, runInAction} from 'mobx';
 
 import {PageStatus} from '@denstep-core/libs/types';
-import {AdminRequest, IOrder, IOrderItem, IOrderItemFull} from '@denstep-core/libs/api-requests';
 import {ITableSchema} from '@denstep-core/components/table';
 import {getPriceWithDiscount, priceToString} from '@denstep-core/libs/get-price';
 import {GOOD_ITEMS_TABLE_SCHEMA as GOOD_ITEMS_TABLE_SCHEMA_BASE} from 'admin/models/good-items';
+import {OrderItemModel, IOrderItemDbModel} from 'common/models/order-item';
+import {OrderModel, IOrderDbModel, IOrderModel} from 'common/models/order';
+import {AdminRequest} from 'common/libs/api-requests';
+import {GoodItemModel, IGoodItemModel} from 'common/models/good-item';
+import {textDictionary} from 'common/text-dictionary';
 
-const DEFAULT_ORDER = {
+const DEFAULT_ORDER = new OrderModel({
     customer_name: '',
-    customer_phone: ''
-} as IOrder;
+    customer_phone: '',
+    called: false,
+    order_date: ''
+});
 
 const NEW_ID = 'new';
 
 export class OrderPageModel {
     @observable public status = PageStatus.LOADING;
     @observable public order = DEFAULT_ORDER;
-    @observable public orderItems: IOrderItemFull[] = [];
+    @observable public orderItems: OrderItemModel[] = [];
     @observable public isNewOrder = true;
     @observable public totalPrice = '';
 
@@ -37,8 +43,13 @@ export class OrderPageModel {
                     AdminRequest.getOrderItems(orderId)
                 ])
                 .then(([order, orderItems]) => {
-                    this.order = order;
-                    this.orderItems = orderItems;
+                    this.order = new OrderModel(order);
+                    this.orderItems = orderItems.map((item) => {
+                        return new OrderItemModel(
+                            item.orderItem,
+                            item.goodItem
+                        );
+                    });
                     this.calcTotalPrice();
                 })
                 .catch(reject)
@@ -49,7 +60,7 @@ export class OrderPageModel {
         });
     }
 
-    @action public deleteOrderItem(id: string): Promise<IOrderItem> {
+    @action public deleteOrderItem(id: string): Promise<IOrderItemDbModel> {
         this.status = PageStatus.LOADING;
 
         return AdminRequest
@@ -63,7 +74,7 @@ export class OrderPageModel {
         this.order = DEFAULT_ORDER;
     }
 
-    @action public updateOrder(): Promise<IOrder> {
+    @action public updateOrder(): Promise<IOrderDbModel> {
         this.status = PageStatus.LOADING;
 
         if (this.isNewOrder) {
@@ -81,7 +92,7 @@ export class OrderPageModel {
             });
     }
 
-    @action public resolveOrder(id: string): Promise<IOrder> {
+    @action public resolveOrder(id: string): Promise<IOrderDbModel> {
         this.status = PageStatus.LOADING;
         return AdminRequest
             .resolveOrder(id)
@@ -90,7 +101,7 @@ export class OrderPageModel {
             });
     }
 
-    @action public rejectOrder(id: string): Promise<IOrder> {
+    @action public rejectOrder(id: string): Promise<IOrderDbModel> {
         this.status = PageStatus.LOADING;
 
         return AdminRequest
@@ -102,7 +113,7 @@ export class OrderPageModel {
 
     @action public calcTotalPrice(): void {
         const totalPrice = this.orderItems.reduce(
-            (result, order) => result + getPriceWithDiscount(order.price, order.discount),
+            (result, order) => result + getPriceWithDiscount(order.goodItem!.price, order.goodItem!.discount),
             0
         );
 
@@ -110,21 +121,21 @@ export class OrderPageModel {
     }
 }
 
-function beautifyOrder(order: IOrder): IOrder {
-    const newOrder = {...order};
+function beautifyOrder(order: OrderModel): IOrderDbModel {
+    const newOrder = {...order.getDbData()};
 
     delete newOrder.order_date;
     return newOrder;
 }
 
-export const ORDER_ITEMS_TABLE_SCHEMA: ITableSchema[] = [
+export const ORDER_ITEMS_TABLE_SCHEMA: ITableSchema<any>[] = [
     ...GOOD_ITEMS_TABLE_SCHEMA_BASE.filter((item) => item.key !== 'id'),
     {
-        key: 'serial_number',
-        title: 'Serial number'
+        key: 'serialNumber',
+        title: textDictionary['orderItem.field.serialNumber']
     },
     {
         key: 'imei',
-        title: 'IMEI'
+        title: textDictionary['orderItem.field.imei']
     }
 ];

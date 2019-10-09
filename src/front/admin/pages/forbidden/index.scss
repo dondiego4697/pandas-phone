@@ -21,6 +21,8 @@
         border-radius: 30px;
         background-color: #FFDB4D;
         transition: all 200ms ease;
+        max-width: 400px;
+        margin: 0 auto;
 
         &:hover {
             background-color: #EECC45;
@@ -29,12 +31,16 @@
 
     &__login-yandex {
         cursor: pointer;
-        padding: 16px;
+        padding: 16px 24px;
         font-family: $font-family-main_bold;
         text-decoration: none;
         color: $font-color_header_dark;
         width: 100%;
         user-select: none;
+        text-align: center;
+    }
+
+    & .text__header {
         text-align: center;
     }
 }

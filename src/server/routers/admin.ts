@@ -6,10 +6,8 @@ import {wrap} from 'async-middleware';
 import {formBundleUrl} from 'server/lib/client-urls';
 import {config} from 'server/config';
 import {adminAuth} from 'server/middlewares/admin-auth';
-import {isMobile} from 'server/lib/mobile-check';
 
 import {IAdminClientData} from 'common/types';
-import {dbAllowedValues} from 'common/db-allowed-values';
 
 export const adminRouter = express.Router();
 
@@ -29,18 +27,13 @@ interface IRenderParams {
 adminRouter
     .use(adminAuth)
     .get('*', wrap<Request, Response>(async (req, res) => {
-        if (isMobile(req)) {
-            req.adminForbidden = true;
-        }
-
         const clientData: IAdminClientData = {
             forbidden: req.adminForbidden || false,
             authUrl: [
                 'https://oauth.yandex.ru/authorize?response_type=code',
                 `client_id=${process.env.PANDA_PHONE_YANDEX_OAUTH_ID}`,
                 `redirect_uri=${config['admin.authRedirect']}`
-            ].join('&'),
-            dbAllowedValues
+            ].join('&')
         };
 
         const params: IRenderParams = {
