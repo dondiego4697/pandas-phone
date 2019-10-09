@@ -9,9 +9,9 @@ import {
 } from 'server/lib/db';
 import {makeTransactionRequest} from 'server/db/client';
 import {OrderValidatorRequest} from 'server/api/v1/validators/order';
+import {TelegramBot} from 'server/lib/telegram-bot';
 import {IGetOrdersResponse} from 'common/types';
 import {IOrderDbModel} from 'common/models/order';
-import {TelegramBot} from 'lib/telegram-bot';
 
 const TABLE_NAME = 'orders';
 
