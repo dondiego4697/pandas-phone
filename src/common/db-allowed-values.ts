@@ -90,7 +90,7 @@ export const dbAllowedPairs: IDbAllowedPairs = {
             value: '7'
         },
         {
-            key: '7',
+            key: '7_plus',
             value: '7 Plus'
         },
         {
