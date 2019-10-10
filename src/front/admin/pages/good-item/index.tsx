@@ -38,7 +38,7 @@ export class GoodItemPage extends React.Component<IProps> {
     public componentDidMount(): void {
         this.props.goodItemPageModel!
             .fetchData(this.props.match.params.goodItemId)
-            .catch(() => this.props.history.replace('/bender-root/not-found'));
+            .catch(() => this.props.history.replace('/bender-root/404'));
     }
 
     public componentWillUnmount(): void {

@@ -23,7 +23,7 @@ export const textDictionary = {
 
     'page.forbidden.mainText': 'Доступ закрыт, ублюдок',
     'page.forbidden.buttonText': 'Войти через Яндекс',
-    'page.notFound.mainText': 'Не найдено',
+    'page.notFound.mainText': '404',
 
     'confirm.sureQuestion': 'Вы уверены?',
 

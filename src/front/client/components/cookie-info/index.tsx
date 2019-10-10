@@ -1,51 +1,47 @@
 import * as React from 'react';
 
 import bevis from '@denstep-core/libs/bevis';
-
-import {Button} from 'client/components/button';
-import {ClientCookie} from 'client/libs/cookie';
+import {Button} from '@denstep-core/components/button';
+import {Text} from '@denstep-core/components/text';
 
 import './index.scss';
 
 const b = bevis('cookie-info');
 
-interface IState {
-    visible: boolean;
+interface IProps {
+    onClickAccept: () => void;
 }
 
-export class CookieInfo extends React.Component<{}, IState> {
-    public state = {visible: true};
-
-    public componentDidMount(): void {
-        const isCookieAccept = ClientCookie.isCookieAccept();
-        this.setState({visible: !isCookieAccept});
-    }
-
+export class CookieInfo extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
-            <div className={`${b()} ${this.state.visible ? '' : b('hidden')}`}>
-                <div className={`${b('container')}`}>
+            <div className={b()}>
+                <div className={b('container')}>
+                    <div className={b('img-container')}>
+                        <img src='/public/imgs/client/cookie.jpg' />
+                    </div>
                     <div className={b('text-container')}>
-                        <h1>
-                            Этот сайт использует куки-файлы и другие технологии, чтобы помочь вам в навигации,
-                            а также предоставить лучший пользовательский опыт,
-                            анализировать использование наших продуктов и услуг,
-                            повысить качество рекламных и маркетинговых активностей.
-                        </h1>
+                        <Text
+                            colorPreset='dark'
+                            typePreset='text'
+                            text={`
+                                Этот сайт использует куки-файлы и другие технологии, чтобы помочь вам в навигации,
+                                а также предоставить лучший пользовательский опыт,
+                                анализировать использование наших продуктов и услуг,
+                                повысить качество рекламных и маркетинговых активностей.
+                            `}
+                        />
                     </div>
                     <div className={b('button-container')}>
                         <Button
+                            typePreset='button'
+                            colorPreset='dark'
                             text='Принять'
-                            onClick={this.pnAcceptHandler}
+                            onClick={this.props.onClickAccept}
                         />
                     </div>
                 </div>
             </div>
         );
-    }
-
-    private pnAcceptHandler = () => {
-        ClientCookie.setCookieAccept();
-        this.setState({visible: false});
     }
 }

@@ -4,8 +4,10 @@
     position: fixed;
     top: 0;
     left: 0;
+    opacity: 1;
     background: white;
     z-index: 20;
+    transition: all 600ms ease;
 
     &__container {
         width: 100%;
@@ -21,7 +23,8 @@
     }
 
     &__hidden {
-        display: none;
+        top: -150%;
+        opacity: 0;
     }
 
     &__cross-container {

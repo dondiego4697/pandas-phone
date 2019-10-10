@@ -4,8 +4,9 @@ import {withRouter, RouteComponentProps} from 'react-router';
 
 import bevis from '@denstep-core/libs/bevis';
 import {ClientDataModel} from 'client/models/client-data';
+import {Popup} from '@denstep-core/components/popup';
+import {Navbar} from 'client/components/navbar';
 import {CookieInfo} from 'client/components/cookie-info';
-import {ClientCookie} from 'client/libs/cookie';
 
 import './index.scss';
 
@@ -20,12 +21,51 @@ const b = bevis('app');
 @observer
 class App extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
-        const isCookieAccept = ClientCookie.isCookieAccept();
         return (
             <div className={b()}>
-                {!isCookieAccept && <CookieInfo/>}
-                {this.props.children}
+                {this.renderCookiePanel()}
+                {this.renderPopup()}
+                {this.renderNavbar()}
+                <div className={b('container')}>
+                    {this.props.children}
+                </div>
             </div>
+        );
+    }
+
+    private renderCookiePanel(): React.ReactNode {
+        if (this.props.clientDataModel!.cookieAccepted) {
+            return;
+        }
+
+        return (
+            <CookieInfo
+                onClickAccept={() => this.props.clientDataModel!.setCookieAccepted()}
+            />
+        );
+    }
+
+    private renderPopup(): React.ReactNode {
+        if (this.props.clientDataModel!) {
+            return;
+        }
+
+        return (
+            <Popup
+                show={this.props.clientDataModel!.global.popupContent !== null}
+                onClose={() => this.props.clientDataModel!.setPopupContent(null)}
+            >
+                {this.props.clientDataModel!.global.popupContent}
+            </Popup>
+        );
+    }
+
+    private renderNavbar(): React.ReactNode {
+        return (
+            <Navbar
+                cartItemsCount={this.props.clientDataModel!.cartItemsCount}
+                onCartClick={() => this.props.history.push('/cart')}
+            />
         );
     }
 }

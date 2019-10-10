@@ -4,9 +4,10 @@ import {inject} from 'mobx-react';
 
 import {ClientDataModel} from 'client/models/client-data';
 import App from 'client/pages/app';
+
 import {MainPage} from 'client/pages/main';
-import {NotFoundPage} from 'client/pages/not-fount';
 import {CartPage} from 'client/pages/cart';
+import {NotFoundPage} from 'client/pages/not-fount';
 
 interface IProps {
     clientDataModel?: ClientDataModel;

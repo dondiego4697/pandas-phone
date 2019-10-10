@@ -17,12 +17,17 @@ interface IProps {
 export class Popup extends React.Component<IProps> {
     public render(): React.ReactNode {
         return (
-            <div className={classnames(b(), {
-                [b('hidden')]: !this.props.show
-            })}>
+            <div
+                className={classnames(b(), {
+                    [b('hidden')]: !this.props.show
+                })}
+            >
                 <div className={b('container')}>
                     <div className={b('wrapper')}>
-                        <div className={b('cross-container')} onClick={this.props.onClose}>
+                        <div
+                            className={b('cross-container')}
+                            onClick={this.props.onClose}
+                        >
                             <div className={b('cross')}>
                                 {crossPopupSvg}
                             </div>

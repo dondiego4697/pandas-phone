@@ -36,7 +36,7 @@ export class OrderItemPage extends React.Component<IProps> {
         window.scrollTo(0, 0);
         this.props.orderItemPageModel!
             .fetchData(this.props.match.params.orderItemId)
-            .catch(() => this.props.history.replace('/bender-root/not-found'));
+            .catch(() => this.props.history.replace('/bender-root/404'));
     }
 
     public componentWillUnmount(): void {

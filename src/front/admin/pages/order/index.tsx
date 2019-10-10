@@ -38,7 +38,7 @@ export class OrderPage extends React.Component<IProps> {
     public componentDidMount(): void {
         this.props.orderPageModel!
             .fetchData(this.props.match.params.orderId)
-            .catch(() => this.props.history.replace('/bender-root/not-found'));
+            .catch(() => this.props.history.replace('/bender-root/404'));
     }
 
     public componentWillUnmount(): void {

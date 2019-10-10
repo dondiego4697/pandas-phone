@@ -22,6 +22,7 @@ interface IProps {
     pages: IPage[];
     current?: string;
     logo?: ILogo;
+    buttons?: React.ReactNode;
 }
 
 export class Navbar extends React.Component<IProps> {
@@ -32,15 +33,27 @@ export class Navbar extends React.Component<IProps> {
                     <nav className={b('navbar')}>
                         {this.renderLogo()}
                         {this.renderMenu()}
+                        {this.renderButtons()}
                     </nav>
                 </div>
             </div>
         );
     }
 
-    private renderMenu(): React.ReactNode {
-        const forcePath = !this.props.current ? this.props.pages[0].path : null;
+    private renderButtons(): React.ReactNode {
+        return (
+            <div className={b('buttons-container')}>
+                {this.props.buttons}
+            </div>
+        );
+    }
 
+    private renderMenu(): React.ReactNode {
+        if (this.props.pages.length === 0) {
+            return <div className={b('menu')}/>;
+        }
+
+        const forcePath = !this.props.current ? this.props.pages[0].path : null;
         return (
             <div className={b('menu')}>
                 {
