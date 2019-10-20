@@ -1,0 +1,16 @@
+.not-found-page {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 82px);
+
+    &__container {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+
+        & img {
+            margin: 0 auto;
+            height: 150px;
+        }
+    }
+}

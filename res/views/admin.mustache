@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{tmpl:"{meta.title}"}</title>
+    <link rel="icon" href="/public/imgs/favicon-panda.png">
+    <link href="{tmpl:"{urls.bundle.css}"}" rel="stylesheet"/>
+</head>
+<body>
+    <div id="root"></div>
+    <script>window.clientData = JSON.parse('{tmpl:"{clientData}"}');</script>
+    <script src="{tmpl:"{urls.bundle.js}"}"></script>
+</body>
+</html>

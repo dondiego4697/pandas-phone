@@ -1,0 +1,146 @@
+@import '../../const/styles.scss';
+
+.select-box {
+    width: 100%;
+    height: 50px;
+
+    &__container {
+        height: 100%;
+        background: $component-item-bg-color;
+        position: relative;
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+        font-family: $font-family-main_light;
+        border-radius: 5px;
+    }
+
+    &__wrapper {
+        height: 50px;
+        position: relative;
+        box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+        cursor: pointer;
+        outline: none;
+        user-select: none;
+
+        & svg {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            width: 16px;
+            opacity: 0.3;
+            transition: 0.2s ease;
+            user-select: none;
+        }
+    }
+
+    &__wrapper.opened {
+        & svg {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        & + .select-box__list {
+            opacity: 1;
+            pointer-events: all !important;
+            animation-name: none;
+        }
+
+        & + .select-box__option {
+            cursor: pointer;
+        }
+    }
+
+    &__input-text {
+        display: none;
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        background-color:  $component-item-bg-color;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    &__value.visible {
+        display: flex;
+
+        & .select-box__input-text {
+            display: block;
+        }
+    }
+
+    &__input {
+        display: none;
+    }
+
+    &__list {
+        position: absolute;
+        width: 100%;
+        padding: 0;
+        list-style: none;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 101;
+        margin: 0;
+        margin-top: 8px;
+        overflow-y: scroll;
+        max-height: 250px;
+        border-radius: 5px;
+        font-size: 14px;
+
+        animation-name: SelectBoxHideList;
+        animation-duration: 1s;
+        animation-delay: 1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: step-start;
+        box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+
+        & li:only-child label {
+            border-radius: 5px !important;
+        }
+
+        & li:first-child label {
+            border-radius: 5px 5px 0 0;
+        }
+
+        & li:last-child label {
+            border-radius: 0 0 5px 5px;
+        }
+    }
+
+    &__option {
+        display: block;
+        padding: 15px;
+        background-color: white;
+        user-select: none;
+        transition: all 200ms ease;
+
+        &:hover, &:focus {
+            color: $primary-color;
+            cursor: pointer;
+        }
+    }
+
+    &__option-selected {
+        color: $primary-color;
+    }
+
+    @keyframes SelectBoxHideList {
+        from {
+            transform: scaleY(1);
+        }
+        to {
+            transform: scaleY(0);
+        }
+    }
+
+    &__placeholder {
+        position: absolute;
+        top: -50%;
+        user-select: none;
+        margin: 0;
+        font-size: 13px;
+        font-family: $font-family-main_bold;
+        color: $font-color_header_dark;
+    }
+}

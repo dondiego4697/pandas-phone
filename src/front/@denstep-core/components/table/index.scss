@@ -1,0 +1,101 @@
+@import '../../const/styles.scss';
+
+.table {
+    width: 100%;
+    color: $font-color_header_dark;
+    font-family: $font-family-main_bold;
+
+    &__container {
+        width: 100%;
+        height: 100%;
+
+        & header {
+            background: $bg-color_dark;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+
+            & h2 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            & .add-item-button {
+                margin-left: auto;
+            }
+        }
+    }
+
+    &__table-content {
+        overflow-y: auto;
+
+        & table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    }
+
+    &__header-item {
+        text-align: left;
+        padding: 6px 10px;
+        padding-top: 5px;
+        padding-bottom: 3px;
+
+        & h2 {
+            margin: 0;
+            font-size: 12px;
+        }
+    }
+
+    &__row {
+        background: $bg-color_light;
+        height: 90px;
+
+        &:nth-child(2n) {
+            background: $bg-color_dark;
+        }
+    }
+
+    &__row-controls-container {
+        display: flex;
+        flex-direction: row;
+        float: right;
+
+        & .image-button {
+            margin-left: 4px;
+        }
+    }
+
+    &__row-item {
+        padding: 10px;
+        min-width: 80px;
+
+        & p {
+            margin: 0;
+            font-size: 13px;
+            font-family: $font-family-main_light;
+        }
+    }
+
+    &__boolean-row-item {
+        height: 20px;
+        width: 20px;
+    }
+
+    &__array-row-item {
+        display: inline-flex;
+        flex-direction: column;
+
+        & p {
+            font-size: 13px;
+            margin: 0;
+            margin-top: 0.3rem;
+            border-radius: 20px;
+            padding: 8px 16px;
+            background: $component-item-bg-color;
+            color: $font-color_header_dark;
+            text-align: center;
+            font-family: $font-family-main_bold;
+        }
+    }
+}

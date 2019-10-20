@@ -5,22 +5,33 @@ before-server-build = $(OUT_DIR)/node_modules
 $(OUT_DIR)/node_modules:
 	mkdir -p $@
 	ln -s ../src/server $@
+	ln -s ../src/common $@
 
 .PHONY: deps
 deps:
 	npm install
+
+.PHONY: prune
+prune:
+	npm prune --production
 
 .PHONY: validate
 validate: lint
 
 .PHONY: lint
 lint:
-	node_modules/.bin/tslint -p src/server/tsconfig.json -t codeFrame && \
-	node_modules/.bin/tslint -p src/client/tsconfig.json -t codeFrame
+	node_modules/.bin/tslint -p src/server/tsconfig.json -c tslint.json -t codeFrame 'src/server/**/*.ts'
+	node_modules/.bin/tslint -p src/front/admin/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/admin/**/*.{ts,tsx}'
+	node_modules/.bin/tslint -c tslint.web.json -t codeFrame 'src/front/lib/**/*.{ts,tsx}'
+	node_modules/.bin/tslint -p src/front/client/tsconfig.json -c tslint.web.json -t codeFrame 'src/front/client/**/*.{ts,tsx}'
 
 .PHONY: dev
 dev:
-	$(MAKE) -j2 server-dev build-client-watch
+	$(MAKE) -j3 server-dev build-client-watch localtunnel
+
+.PHONE: localtunnel
+localtunnel:
+	node_modules/.bin/lt --subdomain panda-phone --port 3000
 
 .PHONY: server-dev
 server-dev:
@@ -28,7 +39,7 @@ server-dev:
 		node_modules/.bin/ts-node --files=true -r tsconfig-paths/register \
 			--project ./src/server/tsconfig.json \
 			./src/server/app.ts" \
-	-w ./src/server \
+	-w ./src \
 	-w ./res \
 	-e ts,mustache
 
@@ -65,8 +76,34 @@ build-client-watch:
 
 .PHONY: build-client-production
 build-client-production:
-	node_modules/.bin/parallel-webpack --mode=production
+	node_modules/.bin/parallel-webpack -- --mode=production
 
-.PHONY: patch minor major
-patch minor major:
-	echo 1
+.PHONY: migration
+migration:
+	node_modules/.bin/ts-node --files=true -r tsconfig-paths/register \
+		--project ./src/server/tsconfig.json \
+		./tools/make-migration.ts
+
+DOCKER_HUB = cr.yandex/crpn0q4tiksugq5qds8d/ubuntu
+get-version = node -p "require('./package.json').version"
+DOCKER_IMAGE_VERSION = $(call get-version)
+
+.PHONY: docker-login
+docker-login:
+	docker login --username oauth --password ${YANDEX_CLOUD_OAUTH_TOKEN} cr.yandex
+
+.PHONY: docker-build
+docker-build:
+	docker build -t ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION)) .
+
+.PHONY: docker-push
+docker-push:
+	docker push ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
+
+.PHONY: docker-pull
+docker-pull:
+	docker pull ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))
+
+.PHONY: docker-echo
+docker-echo:
+	echo ${DOCKER_HUB}:$(shell $(DOCKER_IMAGE_VERSION))

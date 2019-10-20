@@ -15,14 +15,15 @@
         "pretty": true,
 
         "resolveJsonModule": true,
+        "experimentalDecorators": true,
 
         "baseUrl": ".",
         "paths": {
             "server/*": [
-                "./*",
+                "../server/*"
             ],
-            "client/*": [
-                "../client/*",
+            "common/*": [
+                "../common/*"
             ]
         },
         "types": [
@@ -31,7 +32,7 @@
         ]
     },
     "include": [
-        "./**/*",
-        "../client/**/*"
+        "../server/**/*",
+        "../common/**/*"
     ]
 }

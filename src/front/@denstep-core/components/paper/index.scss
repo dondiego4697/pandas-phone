@@ -1,0 +1,10 @@
+.paper{
+    width: 100%;
+
+    &__container {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+    }
+}

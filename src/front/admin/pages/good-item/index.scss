@@ -1,0 +1,53 @@
+.good-item-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+
+    &__text-header {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 32px;
+
+        & .text__header {
+            font-size: 2rem;
+        }
+    }
+
+    &__container {
+        margin: 0 auto;
+        width: 80%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 2vw;
+    }
+
+    &__paper-wrapper {
+        width: 100%;
+        height: 100%;
+
+        & .select-box, & .edit-text {
+            margin-top: 32px;
+        }
+    }
+
+    &__switch-wrapper {
+        display: flex;
+        flex-direction: column;
+        margin-top: 32px;
+    }
+
+    &__switch-item-wrapper {
+        margin-top: 16px;
+
+        &:first-child {
+            margin: 0;
+        }
+    }
+
+    &__control-wrapper {
+        margin-top: 16px;
+        margin-left: auto;
+        grid-column: 2;
+    }
+}

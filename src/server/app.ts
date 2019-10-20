@@ -5,30 +5,30 @@ import * as path from 'path';
 import {Request, Response, NextFunction} from 'express';
 import * as Boom from '@hapi/boom';
 import * as mustache from 'mustache';
-import * as browserClient from 'browser-client';
+import * as cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
 
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
 
-import {buildMiddleware} from 'middlewares/builder';
+import {apiRouter as apiV1Router} from 'server/api/v1';
+import {adminRouter} from 'server/routers/admin';
+import {clientRouter} from 'server/routers/client';
 
 declare global {
     namespace Express {
+        // tslint:disable-next-line
         interface Request {
-            browserClient: {
-                desktop: boolean;
-                tablet: boolean;
-                mobile: boolean;
-            };
+            adminForbidden?: boolean;
         }
     }
 }
 
-const paths = ['/'];
-
 export const app = express()
     .disable('trust proxy')
     .disable('x-powered-by')
+    .use(cookieParser())
+    .use(bodyParser.json())
     .engine('mustache', (filePath, options, callback) => {
         callback(null, mustache.render(
             fs.readFileSync(filePath, 'utf-8'),
@@ -42,12 +42,15 @@ export const app = express()
     .get('/ping', (_req: Request, res: Response) => res.end());
 
 if (config['app.isNodeStatic']) {
-    app.use(config['app.publicPath'], express.static(path.resolve('./out/src/client')));
+    app.use(config['app.publicPath'], express.static(path.resolve('./out/src/front')));
+    app.use(`${config['app.publicPath']}/imgs`, express.static(path.resolve('./res/imgs')));
+    app.use(`${config['app.publicPath']}/fonts`, express.static(path.resolve('./res/fonts')));
 }
 
 app
-    .use(browserClient())
-    .get(paths, buildMiddleware);
+    .use('/api/v1', apiV1Router)
+    .use('/bender-root', adminRouter)
+    .use('/*', clientRouter);
 
 app.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')));
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -64,7 +67,7 @@ function sendError(res: Response, err: Boom): void {
 }
 
 if (!module.parent) {
-    const port = getCustomPort() || 8080;
+    const port = getCustomPort() || 3000;
     app.listen(port, () => {
         logger.info(`Application started on port ${port}`);
     });

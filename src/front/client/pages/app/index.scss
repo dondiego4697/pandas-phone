@@ -1,0 +1,19 @@
+@import '../../../@denstep-core/const/styles.scss';
+@import '../../../@denstep-core/const/fonts.scss';
+
+html, body, #root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: $bg-color_light;
+}
+
+.app {
+    width: 100%;
+    display: flex;
+
+    &__container {
+        margin-top: 82px;
+        width: 100%;
+    }
+}

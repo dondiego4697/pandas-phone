@@ -2,7 +2,7 @@ import * as winston from 'winston';
 
 import {config} from 'server/config';
 
-const format = winston.format.printf(({level, message}) => `[${level}] ${message}`);
+const format = winston.format.printf(({level, message}) => `[${level}] [${new Date().toISOString()}] ${message}`);
 
 export const logger = winston.createLogger(!process.env.DISABLE_LOGGING ? {
     transports: [

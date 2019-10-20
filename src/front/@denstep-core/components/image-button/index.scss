@@ -1,0 +1,26 @@
+@import '../../const/styles.scss';
+
+.image-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    transition: all 500ms ease;
+
+    &:hover {
+        background: $component-item-bg-color;
+    }
+
+    &__container {
+        margin: auto;
+        width: 16px;
+        height: 16px;
+
+        & svg {
+            width: 16px;
+            height: 16px;
+            fill: $font-color_header_dark;
+        }
+    }
+}

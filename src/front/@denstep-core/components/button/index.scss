@@ -1,0 +1,121 @@
+@import '../../const/styles.scss';
+
+.button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    user-select: none;
+
+    &__container {
+        margin: 0;
+        font-family: $font-family-main_bold;
+    }
+
+    &__button {
+        margin-top: 16px;
+
+        font-size: 16px;
+        line-height: 16px;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 0.4rem;
+        font-weight: bolder;
+        cursor: pointer;
+        transition: all 120ms;
+        text-align: center;
+        outline: 0;
+
+        &.dark {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background-color: $primary-color;
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+
+        &.light {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background-color: #FFFFFF;
+            color: $primary-color;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+
+        &.green {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background: linear-gradient(90deg, #01B197, #009A9D);
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+
+        &.red {
+            box-shadow: 0 2px 5px rgba(103, 110, 144, .2);
+            background: linear-gradient(90deg, #FF486D, #FC395F);
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+                box-shadow: 0 0.1rem 0.2rem rgba(0,0,0,.4);
+            }
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 18px;
+        transition: all 120ms;
+        height: 34px;
+
+        &.dark {
+            color: $primary-color;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+
+        &.light {
+            color: #FFFFFF;
+            opacity: .8;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        & svg {
+            fill: currentColor;
+            margin-left: 8px;
+            margin-top: 4px;
+        }
+    }
+
+    &__simple {
+        border-radius: 6px;
+        padding: 12px 36px;
+        text-align: center;
+        transition: all 120ms;
+
+        &.dark {
+            box-shadow: 0 0.1rem 0.1rem transparent;
+            background-color: $secondary-color;
+            color: #FFFFFF;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+    }
+}

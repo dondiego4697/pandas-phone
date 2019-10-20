@@ -1,4 +1,6 @@
 {
     "extends": "tslint-config-loris",
-    "rules": {}
+    "rules": {
+        "interface-name": [true, "always-prefix"]
+    }
 }

@@ -1,0 +1,16 @@
+.orders-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    &__container {
+        margin: 32px auto;
+        width: calc(100vw - 64px);
+    }
+
+    &__pagination-container {
+        margin-top: 16px;
+        display: inline-flex;
+        float: right;
+    }
+}
