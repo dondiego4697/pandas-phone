@@ -22,7 +22,7 @@
     "express": "4.16.4",
     "form-data": "2.5.1",
     "google-libphonenumber": "3.2.5",
-    "got": "9.6.0",
+    "got": "11.8.5",
     "history": "4.9.0",
     "jsonwebtoken": "8.5.1",
     "mobx": "5.13.0",
